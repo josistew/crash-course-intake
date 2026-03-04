@@ -1,0 +1,878 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Claude Code Crash Course — Humanity</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://api.fontshare.com/v2/css?f[]=cabinet-grotesk@800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #2D2A26;
+    --paper: #F5F0E8;
+    --warm: #E8DFD0;
+    --accent: #C4573A;
+    --accent-light: #f0d4c3;
+    --accent-dark: #9a3d24;
+    --sandstone: #C4A882;
+    --field-bg: #FDFAF6;
+    --field-border: #d4cbbf;
+    --field-focus: #C4573A;
+    --subtle: #8A8279;
+    --success: #6B8F71;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Outfit', sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23000000' fill-opacity='0.02'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .wrapper {
+    position: relative;
+    z-index: 1;
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 40px 24px 80px;
+  }
+
+  .header {
+    text-align: center;
+    margin-bottom: 48px;
+    padding-bottom: 40px;
+    border-bottom: 1px solid var(--warm);
+  }
+
+  .header-brand {
+    font-family: 'Cabinet Grotesk', sans-serif;
+    font-size: clamp(52px, 10vw, 80px);
+    font-weight: 800;
+    color: var(--ink);
+    letter-spacing: -2.5px;
+    line-height: 1;
+    margin-bottom: 24px;
+  }
+
+  .header-brand span {
+    color: var(--accent);
+  }
+
+  .header-badge {
+    display: inline-block;
+    background: var(--accent);
+    color: white;
+    font-family: 'Outfit', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 8px 20px;
+    border-radius: 100px;
+    margin-bottom: 16px;
+  }
+
+  .header h1 {
+    font-family: 'Fraunces', serif;
+    line-height: 1.2;
+    color: var(--ink);
+  }
+
+  .header p {
+    font-size: 16px;
+    color: var(--subtle);
+    max-width: 540px;
+    margin: 0 auto;
+  }
+
+  .section {
+    background: var(--field-bg);
+    border: 1px solid var(--field-border);
+    border-radius: 16px;
+    padding: 32px;
+    margin-bottom: 24px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    transition: box-shadow 0.3s ease;
+  }
+
+  .section:hover {
+    box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+  }
+
+  .section-number {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    background: var(--accent);
+    color: white;
+    font-size: 13px;
+    font-weight: 700;
+    border-radius: 50%;
+    margin-bottom: 12px;
+  }
+
+  .section h2 {
+    font-family: 'Fraunces', serif;
+    font-size: 22px;
+    font-weight: 400;
+    margin-bottom: 4px;
+  }
+
+  .section-desc {
+    font-size: 14px;
+    color: var(--subtle);
+    margin-bottom: 24px;
+  }
+
+  .field {
+    margin-bottom: 24px;
+  }
+
+  .field:last-child {
+    margin-bottom: 0;
+  }
+
+  .field label {
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: var(--ink);
+  }
+
+  .field label .hint {
+    font-weight: 400;
+    color: var(--subtle);
+    font-size: 13px;
+  }
+
+  .field input[type="text"],
+  .field input[type="email"],
+  .field input[type="number"],
+  .field select,
+  .field textarea {
+    width: 100%;
+    padding: 12px 16px;
+    font-family: 'Outfit', sans-serif;
+    font-size: 15px;
+    border: 1.5px solid var(--field-border);
+    border-radius: 10px;
+    background: var(--field-bg);
+    color: var(--ink);
+    transition: border-color 0.2s, box-shadow 0.2s;
+    outline: none;
+  }
+
+  .field input:focus,
+  .field select:focus,
+  .field textarea:focus {
+    border-color: var(--field-focus);
+    box-shadow: 0 0 0 3px var(--accent-light);
+  }
+
+  .field textarea {
+    min-height: 100px;
+    resize: vertical;
+  }
+
+  .field select {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1.5L6 6.5L11 1.5' stroke='%237a706a' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    padding-right: 40px;
+    cursor: pointer;
+  }
+
+  .checkbox-group {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  @media (max-width: 520px) {
+    .checkbox-group { grid-template-columns: 1fr; }
+  }
+
+  .checkbox-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 12px 14px;
+    border: 1.5px solid var(--field-border);
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s;
+    user-select: none;
+  }
+
+  .checkbox-item:hover {
+    border-color: var(--accent);
+    background: #F8F3EB;
+  }
+
+  .checkbox-item.checked {
+    border-color: var(--accent);
+    background: var(--accent-light);
+  }
+
+  .checkbox-item input[type="checkbox"] {
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    min-width: 20px;
+    border: 2px solid var(--field-border);
+    border-radius: 5px;
+    margin-top: 1px;
+    cursor: pointer;
+    position: relative;
+    transition: all 0.15s;
+  }
+
+  .checkbox-item input[type="checkbox"]:checked {
+    background: var(--accent);
+    border-color: var(--accent);
+  }
+
+  .checkbox-item input[type="checkbox"]:checked::after {
+    content: '';
+    position: absolute;
+    left: 5px;
+    top: 2px;
+    width: 6px;
+    height: 10px;
+    border: solid white;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+  }
+
+  .checkbox-label {
+    font-size: 14px;
+    line-height: 1.4;
+  }
+
+  .radio-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .radio-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 14px;
+    border: 1.5px solid var(--field-border);
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s;
+    user-select: none;
+  }
+
+  .radio-item:hover {
+    border-color: var(--accent);
+    background: #F8F3EB;
+  }
+
+  .radio-item.checked {
+    border-color: var(--accent);
+    background: var(--accent-light);
+  }
+
+  .radio-item input[type="radio"] {
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    min-width: 20px;
+    border: 2px solid var(--field-border);
+    border-radius: 50%;
+    cursor: pointer;
+    position: relative;
+    transition: all 0.15s;
+  }
+
+  .radio-item input[type="radio"]:checked {
+    border-color: var(--accent);
+  }
+
+  .radio-item input[type="radio"]:checked::after {
+    content: '';
+    position: absolute;
+    inset: 3px;
+    background: var(--accent);
+    border-radius: 50%;
+  }
+
+  .radio-label {
+    font-size: 14px;
+  }
+
+  .scale-row {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    margin-top: 4px;
+  }
+
+  .scale-labels {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    color: var(--subtle);
+    margin-top: 6px;
+  }
+
+  .scale-btn {
+    flex: 1;
+    padding: 10px 0;
+    text-align: center;
+    border: 1.5px solid var(--field-border);
+    border-radius: 8px;
+    font-family: 'Outfit', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    background: var(--field-bg);
+    cursor: pointer;
+    transition: all 0.15s;
+    color: var(--ink);
+  }
+
+  .scale-btn:hover {
+    border-color: var(--accent);
+    background: #F8F3EB;
+  }
+
+  .scale-btn.selected {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: white;
+  }
+
+  .submit-section {
+    text-align: center;
+    margin-top: 40px;
+  }
+
+  .submit-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 16px 48px;
+    background: var(--accent);
+    color: white;
+    font-family: 'Outfit', sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 0 2px 8px rgba(196, 93, 44, 0.3);
+  }
+
+  .submit-btn:hover {
+    background: var(--accent-dark);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 16px rgba(196, 93, 44, 0.4);
+  }
+
+  .submit-btn:active {
+    transform: translateY(0);
+  }
+
+  .submit-note {
+    font-size: 13px;
+    color: var(--subtle);
+    margin-top: 16px;
+  }
+
+  .success-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(246, 241, 235, 0.96);
+    z-index: 100;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    text-align: center;
+    padding: 24px;
+    animation: fadeIn 0.4s ease;
+  }
+
+  .success-overlay.visible {
+    display: flex;
+  }
+
+  .success-icon {
+    width: 72px;
+    height: 72px;
+    background: var(--success);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 24px;
+    animation: popIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  .success-icon svg { width: 36px; height: 36px; }
+
+  .success-overlay h2 {
+    font-family: 'Fraunces', serif;
+    font-size: 28px;
+    font-weight: 400;
+    margin-bottom: 12px;
+  }
+
+  .success-overlay p {
+    color: var(--subtle);
+    font-size: 16px;
+    max-width: 400px;
+  }
+
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes popIn { from { transform: scale(0); } to { transform: scale(1); } }
+
+  .footer {
+    text-align: center;
+    margin-top: 48px;
+    padding-top: 24px;
+    border-top: 1px solid var(--warm);
+    font-size: 13px;
+    color: var(--subtle);
+  }
+</style>
+</head>
+<body>
+
+<div class="wrapper">
+  <div class="header">
+    <div class="header-brand">Humanity<span>.</span></div>
+    <h1 class="header-badge">Pre-Session Intake</h1>
+    <p>Fill this out before our session so I can build a crash course tailored to exactly what you need. Takes about 5 minutes.</p>
+  </div>
+
+  <form id="intakeForm">
+
+    <!-- Section 1: Basics -->
+    <div class="section">
+      <div class="section-number">1</div>
+      <h2>The Basics</h2>
+      <p class="section-desc">Quick info so I can tailor the session.</p>
+
+      <div class="field">
+        <label>What computer will you be using during the session?</label>
+        <div class="radio-group">
+          <label class="radio-item">
+            <input type="radio" name="computer" value="mac">
+            <span class="radio-label">Mac (MacBook, iMac, Mac Mini, etc.)</span>
+          </label>
+          <label class="radio-item">
+            <input type="radio" name="computer" value="windows">
+            <span class="radio-label">Windows PC</span>
+          </label>
+          <label class="radio-item">
+            <input type="radio" name="computer" value="both">
+            <span class="radio-label">We each have different setups</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>How many total locations do you operate across Moto Medi and Tikka Shack?</label>
+        <input type="number" name="locations" placeholder="e.g. 6" min="1">
+      </div>
+    </div>
+
+    <!-- Section 2: Where You're At -->
+    <div class="section">
+      <div class="section-number">2</div>
+      <h2>Where You're At</h2>
+      <p class="section-desc">So I know where to start, not what to skip.</p>
+
+      <div class="field">
+        <label>Have you used the terminal / command line before?</label>
+        <div class="radio-group">
+          <label class="radio-item">
+            <input type="radio" name="terminal_exp" value="never">
+            <span class="radio-label">Never opened it</span>
+          </label>
+          <label class="radio-item">
+            <input type="radio" name="terminal_exp" value="a_little">
+            <span class="radio-label">Opened it a few times, mostly followed tutorials</span>
+          </label>
+          <label class="radio-item">
+            <input type="radio" name="terminal_exp" value="comfortable">
+            <span class="radio-label">Comfortable navigating and running commands</span>
+          </label>
+          <label class="radio-item">
+            <input type="radio" name="terminal_exp" value="daily">
+            <span class="radio-label">Use it regularly</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Any coding experience? <span class="hint">(Either of you)</span></label>
+        <div class="radio-group">
+          <label class="radio-item">
+            <input type="radio" name="coding_exp" value="none">
+            <span class="radio-label">None</span>
+          </label>
+          <label class="radio-item">
+            <input type="radio" name="coding_exp" value="ai_assisted">
+            <span class="radio-label">Only with AI help (copy-pasting from ChatGPT, etc.)</span>
+          </label>
+          <label class="radio-item">
+            <input type="radio" name="coding_exp" value="some">
+            <span class="radio-label">Some — can read and tweak basic code</span>
+          </label>
+          <label class="radio-item">
+            <input type="radio" name="coding_exp" value="solid">
+            <span class="radio-label">Solid — comfortable building things</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Which AI tools have you used? <span class="hint">(Check all that apply)</span></label>
+        <div class="checkbox-group">
+          <label class="checkbox-item">
+            <input type="checkbox" name="ai_used" value="chatgpt">
+            <span class="checkbox-label">ChatGPT</span>
+          </label>
+          <label class="checkbox-item">
+            <input type="checkbox" name="ai_used" value="claude_web">
+            <span class="checkbox-label">Claude (web / app)</span>
+          </label>
+          <label class="checkbox-item">
+            <input type="checkbox" name="ai_used" value="claude_code">
+            <span class="checkbox-label">Claude Code (terminal)</span>
+          </label>
+          <label class="checkbox-item">
+            <input type="checkbox" name="ai_used" value="cursor">
+            <span class="checkbox-label">Cursor / Windsurf / AI code editor</span>
+          </label>
+          <label class="checkbox-item">
+            <input type="checkbox" name="ai_used" value="zapier">
+            <span class="checkbox-label">Zapier / Make / n8n</span>
+          </label>
+          <label class="checkbox-item">
+            <input type="checkbox" name="ai_used" value="other_ai">
+            <span class="checkbox-label">Other AI tools</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>What have you already tried building or automating with AI?</label>
+        <textarea name="already_tried" placeholder="e.g. I used ChatGPT to write some social media captions, tried to set up a Zapier flow for review responses, attempted to build a spreadsheet automation..."></textarea>
+      </div>
+    </div>
+
+    <!-- Section 3: Your Tech Stack -->
+    <div class="section">
+      <div class="section-number">3</div>
+      <h2>Your Current Tools</h2>
+      <p class="section-desc">Knowing what you already use helps me show you how Claude Code can connect to it.</p>
+
+      <div class="field">
+        <label>What tools and platforms does your business run on? <span class="hint">(Check all that apply)</span></label>
+        <div class="checkbox-group">
+          <label class="checkbox-item">
+            <input type="checkbox" name="tools" value="square">
+            <span class="checkbox-label">Square (POS / online orders)</span>
+          </label>
+          <label class="checkbox-item">
+            <input type="checkbox" name="tools" value="google_workspace">
+            <span class="checkbox-label">Google Workspace (Sheets, Docs)</span>
+          </label>
+          <label class="checkbox-item">
+            <input type="checkbox" name="tools" value="quickbooks">
+            <span class="checkbox-label">QuickBooks / accounting software</span>
+          </label>
+          <label class="checkbox-item">
+            <input type="checkbox" name="tools" value="payroll">
+            <span class="checkbox-label">Gusto / ADP / payroll software</span>
+          </label>
+          <label class="checkbox-item">
+            <input type="checkbox" name="tools" value="meta">
+            <span class="checkbox-label">Meta Business / Instagram</span>
+          </label>
+          <label class="checkbox-item">
+            <input type="checkbox" name="tools" value="google_business">
+            <span class="checkbox-label">Google Business Profile</span>
+          </label>
+          <label class="checkbox-item">
+            <input type="checkbox" name="tools" value="scheduling">
+            <span class="checkbox-label">7shifts / Homebase / scheduling</span>
+          </label>
+          <label class="checkbox-item">
+            <input type="checkbox" name="tools" value="delivery">
+            <span class="checkbox-label">DoorDash / UberEats / delivery apps</span>
+          </label>
+          <label class="checkbox-item">
+            <input type="checkbox" name="tools" value="ghl">
+            <span class="checkbox-label">GoHighLevel (GHL)</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Anything else? <span class="hint">(Inventory, CRM, email marketing, etc.)</span></label>
+        <textarea name="other_tools" placeholder="e.g. MarketMan for inventory, Mailchimp for emails, a custom spreadsheet for tracking food costs..." rows="3"></textarea>
+      </div>
+    </div>
+
+    <!-- Section 4: What You Want to Build -->
+    <div class="section">
+      <div class="section-number">4</div>
+      <h2>What You Want to Build</h2>
+      <p class="section-desc">The stuff you actually want Claude Code to help with.</p>
+
+      <div class="field">
+        <label>Which areas do you most want to automate or get AI help with? <span class="hint">(Check all that apply)</span></label>
+        <div class="checkbox-group">
+          <label class="checkbox-item">
+            <input type="checkbox" name="areas" value="finance_reports">
+            <span class="checkbox-label">Financial reports & summaries</span>
+          </label>
+          <label class="checkbox-item">
+            <input type="checkbox" name="areas" value="payroll_hr">
+            <span class="checkbox-label">Payroll & HR tasks</span>
+          </label>
+          <label class="checkbox-item">
+            <input type="checkbox" name="areas" value="marketing_content">
+            <span class="checkbox-label">Marketing & content creation</span>
+          </label>
+          <label class="checkbox-item">
+            <input type="checkbox" name="areas" value="reviews_feedback">
+            <span class="checkbox-label">Review responses & customer feedback</span>
+          </label>
+          <label class="checkbox-item">
+            <input type="checkbox" name="areas" value="data_dashboards">
+            <span class="checkbox-label">Data dashboards & analytics</span>
+          </label>
+          <label class="checkbox-item">
+            <input type="checkbox" name="areas" value="inventory">
+            <span class="checkbox-label">Inventory & food cost tracking</span>
+          </label>
+          <label class="checkbox-item">
+            <input type="checkbox" name="areas" value="internal_tools">
+            <span class="checkbox-label">Internal tools & apps for my team</span>
+          </label>
+          <label class="checkbox-item">
+            <input type="checkbox" name="areas" value="website">
+            <span class="checkbox-label">Website updates & improvements</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>What repetitive tasks eat up your time every week?</label>
+        <textarea name="repetitive_tasks" placeholder="e.g. Pulling sales numbers from Square and putting them in a spreadsheet, manually responding to every Google review, copying payroll data between systems..."></textarea>
+      </div>
+
+      <div class="field">
+        <label>If Claude Code could do ONE thing for your business tomorrow, what would it be?</label>
+        <textarea name="one_thing" placeholder="The single biggest impact — the thing that would save you the most time or make you the most money."></textarea>
+      </div>
+    </div>
+
+    <!-- Section 5: Learning Goals -->
+    <div class="section">
+      <div class="section-number">5</div>
+      <h2>What You Want to Learn</h2>
+      <p class="section-desc">So I teach you to fish, not just hand you one.</p>
+
+      <div class="field">
+        <label>What matters most for you in this crash course?</label>
+        <div class="radio-group">
+          <label class="radio-item">
+            <input type="radio" name="learning_priority" value="understand">
+            <span class="radio-label">Understand what's possible so I can direct someone else to build it</span>
+          </label>
+          <label class="radio-item">
+            <input type="radio" name="learning_priority" value="hands_on">
+            <span class="radio-label">Hands-on — I want to build things myself with Claude Code</span>
+          </label>
+          <label class="radio-item">
+            <input type="radio" name="learning_priority" value="both">
+            <span class="radio-label">Both — understand the landscape AND get hands-on</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Which of these Claude Code concepts do you want to cover? <span class="hint">(Check all that apply)</span></label>
+        <div class="checkbox-group">
+          <label class="checkbox-item">
+            <input type="checkbox" name="topics" value="basics">
+            <span class="checkbox-label">The basics — setup, first commands, how it works</span>
+          </label>
+          <label class="checkbox-item">
+            <input type="checkbox" name="topics" value="claude_md">
+            <span class="checkbox-label">CLAUDE.md & project context (teaching Claude about your business)</span>
+          </label>
+          <label class="checkbox-item">
+            <input type="checkbox" name="topics" value="mcp">
+            <span class="checkbox-label">MCP servers & connecting external tools</span>
+          </label>
+          <label class="checkbox-item">
+            <input type="checkbox" name="topics" value="agents">
+            <span class="checkbox-label">Building AI agents that run tasks on their own</span>
+          </label>
+          <label class="checkbox-item">
+            <input type="checkbox" name="topics" value="automation">
+            <span class="checkbox-label">Automating recurring tasks (cron jobs, scheduled runs)</span>
+          </label>
+          <label class="checkbox-item">
+            <input type="checkbox" name="topics" value="web_apps">
+            <span class="checkbox-label">Building web apps & dashboards</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>How deep do you want to go?</label>
+        <div class="radio-group">
+          <label class="radio-item">
+            <input type="radio" name="depth" value="overview">
+            <span class="radio-label">High-level overview — show me what's possible, I'll dig in later</span>
+          </label>
+          <label class="radio-item">
+            <input type="radio" name="depth" value="guided">
+            <span class="radio-label">Guided walkthrough — watch me build things, explain as you go</span>
+          </label>
+          <label class="radio-item">
+            <input type="radio" name="depth" value="hands_on">
+            <span class="radio-label">Hands-on — I want to build real things during the session</span>
+          </label>
+          <label class="radio-item">
+            <input type="radio" name="depth" value="deep_dive">
+            <span class="radio-label">Deep dive — teach me everything, I want to be self-sufficient after</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Do you want to walk away with something built and working by the end?</label>
+        <div class="radio-group">
+          <label class="radio-item">
+            <input type="radio" name="build_live" value="no">
+            <span class="radio-label">Not necessary — just learning is fine</span>
+          </label>
+          <label class="radio-item">
+            <input type="radio" name="build_live" value="one_thing">
+            <span class="radio-label">Yes — at least one real automation or tool working</span>
+          </label>
+          <label class="radio-item">
+            <input type="radio" name="build_live" value="multiple">
+            <span class="radio-label">Yes — I want to tackle multiple projects live</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>What would make you walk away saying "that was exactly what I needed"?</label>
+        <textarea name="success" placeholder="In your own words — what does a home run look like for this session?"></textarea>
+      </div>
+
+      <div class="field">
+        <label>Anything else I should know before we start?</label>
+        <textarea name="anything_else" placeholder="Specific problems, upcoming deadlines, things you've tried that didn't work, concerns, etc."></textarea>
+      </div>
+    </div>
+
+    <div class="submit-section">
+      <button type="submit" class="submit-btn">
+        Submit
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </button>
+      <p class="submit-note">I'll use your answers to build a session tailored to your business.</p>
+    </div>
+
+  </form>
+</div>
+
+<div class="success-overlay" id="successOverlay">
+  <div class="success-icon">
+    <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+  </div>
+  <h2>You're all set</h2>
+  <p>Got it. I'll build a crash course tailored to your restaurants and exactly what you need. See you soon.</p>
+</div>
+
+<div class="footer">
+  <p>Built by Josi</p>
+</div>
+
+<script>
+  document.querySelectorAll('.checkbox-item').forEach(item => {
+    const cb = item.querySelector('input[type="checkbox"]');
+    item.addEventListener('click', (e) => {
+      if (e.target !== cb) cb.checked = !cb.checked;
+      item.classList.toggle('checked', cb.checked);
+    });
+  });
+
+  document.querySelectorAll('.radio-item').forEach(item => {
+    const radio = item.querySelector('input[type="radio"]');
+    item.addEventListener('click', (e) => {
+      if (e.target !== radio) {
+        radio.checked = true;
+        radio.dispatchEvent(new Event('change'));
+      }
+      const name = radio.name;
+      document.querySelectorAll(`input[name="${name}"]`).forEach(r => {
+        r.closest('.radio-item').classList.toggle('checked', r.checked);
+      });
+    });
+  });
+
+  document.querySelectorAll('.scale-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const name = btn.dataset.name;
+      document.querySelector(`input[name="${name}"]`).value = btn.dataset.value;
+      document.querySelectorAll(`.scale-btn[data-name="${name}"]`).forEach(b => {
+        b.classList.toggle('selected', b === btn);
+      });
+    });
+  });
+
+  document.getElementById('intakeForm').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const formData = new FormData(e.target);
+    const data = {};
+    for (const [key, value] of formData.entries()) {
+      if (data[key]) {
+        if (Array.isArray(data[key])) data[key].push(value);
+        else data[key] = [data[key], value];
+      } else {
+        data[key] = value;
+      }
+    }
+    console.log('Survey submission:', JSON.stringify(data, null, 2));
+    document.getElementById('successOverlay').classList.add('visible');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+</script>
+
+</body>
+</html>
