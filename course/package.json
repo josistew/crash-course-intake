@@ -1,0 +1,13 @@
+{
+  "name": "crash-course-terminal",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Terminal server for the Humanity Crash Course",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "node-pty": "^1.0.0",
+    "ws": "^8.18.0"
+  }
+}

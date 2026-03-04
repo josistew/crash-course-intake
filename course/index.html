@@ -7,6 +7,9 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600;9..144,700&family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <link href="https://api.fontshare.com/v2/css?f[]=cabinet-grotesk@800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@xterm/xterm@5.5.0/css/xterm.min.css">
+<script src="https://cdn.jsdelivr.net/npm/@xterm/xterm@5.5.0/lib/xterm.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@xterm/addon-fit@0.10.0/lib/addon-fit.min.js"></script>
 <style>
 :root {
   --ink: #2D2A26;
@@ -25,6 +28,7 @@
   --espresso-mid: #2a2520;
   --espresso-light: #3a342e;
   --sidebar-w: 280px;
+  --terminal-w: 420px;
   --header-h: 0px;
   --mono: 'JetBrains Mono', monospace;
 }
@@ -872,6 +876,448 @@ body {
   .chapter-footer { flex-direction: column; }
   .chapter-nav-btn { width: 100%; justify-content: center; }
 }
+
+/* ═══════════ TERMINAL PANEL ═══════════ */
+.main.terminal-open { margin-right: var(--terminal-w); }
+
+.terminal-panel {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: var(--terminal-w);
+  height: 100vh;
+  background: var(--espresso);
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  transform: translateX(100%);
+  transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.terminal-panel.open { transform: translateX(0); }
+
+.terminal-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px;
+  background: var(--espresso);
+  border-bottom: 1px solid var(--espresso-light);
+  min-height: 44px;
+}
+
+.terminal-status {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--accent);
+  transition: background 0.3s;
+}
+
+.terminal-status.connected { background: var(--sage); }
+
+.terminal-title {
+  font-family: var(--mono);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--sandstone);
+  letter-spacing: 0.5px;
+  flex: 1;
+}
+
+.terminal-close {
+  width: 28px;
+  height: 28px;
+  border: none;
+  background: var(--espresso-light);
+  border-radius: 6px;
+  color: #c9c2b8;
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s;
+}
+
+.terminal-close:hover { background: var(--espresso-mid); }
+
+.terminal-body {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+}
+
+.terminal-body .xterm { height: 100%; }
+
+.terminal-offline {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  padding: 32px;
+  text-align: center;
+  color: #8a8279;
+}
+
+.terminal-offline-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--espresso-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 16px;
+  font-size: 22px;
+}
+
+.terminal-offline h3 {
+  font-family: 'Outfit', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: #c9c2b8;
+  margin-bottom: 8px;
+}
+
+.terminal-offline p {
+  font-size: 13px;
+  line-height: 1.6;
+  margin-bottom: 12px;
+}
+
+.terminal-offline code {
+  display: inline-block;
+  font-family: var(--mono);
+  font-size: 13px;
+  background: var(--espresso-light);
+  color: var(--accent-light);
+  padding: 8px 16px;
+  border-radius: 8px;
+}
+
+/* Resize handle */
+.terminal-resize {
+  position: absolute;
+  top: 0;
+  left: -4px;
+  width: 8px;
+  height: 100%;
+  cursor: col-resize;
+  z-index: 5;
+}
+
+.terminal-resize::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 2px;
+  width: 4px;
+  height: 40px;
+  transform: translateY(-50%);
+  border-radius: 4px;
+  background: var(--espresso-light);
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.terminal-resize:hover::after,
+.terminal-resize:active::after { opacity: 1; }
+
+/* Terminal toggle button */
+.terminal-toggle {
+  position: fixed;
+  top: 12px;
+  right: 16px;
+  z-index: 90;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background: var(--espresso);
+  color: #c9c2b8;
+  border: 1px solid var(--espresso-light);
+  border-radius: 8px;
+  font-family: var(--mono);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  letter-spacing: 0.5px;
+}
+
+.terminal-toggle:hover {
+  background: var(--espresso-mid);
+  border-color: var(--accent);
+  color: #F5F0E8;
+}
+
+.terminal-toggle .toggle-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+  transition: background 0.3s;
+}
+
+.terminal-toggle .toggle-dot.connected { background: var(--sage); }
+
+.terminal-panel.open ~ .terminal-toggle { right: calc(var(--terminal-w) + 16px); }
+
+/* ═══════════ EXERCISES ═══════════ */
+.exercises-section {
+  margin-top: 48px;
+  padding-top: 32px;
+  border-top: 2px solid var(--warm);
+}
+
+.exercises-title {
+  font-family: 'Outfit', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.exercises-title::before {
+  content: '';
+  display: inline-block;
+  width: 20px;
+  height: 2px;
+  background: var(--accent);
+}
+
+.exercise {
+  background: white;
+  border: 1.5px solid var(--warm);
+  border-radius: 12px;
+  margin-bottom: 16px;
+  overflow: hidden;
+  transition: border-color 0.2s;
+}
+
+.exercise:hover { border-color: var(--sandstone); }
+.exercise.done { border-color: var(--sage); }
+
+.exercise-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 20px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.exercise-badge {
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--accent);
+  background: var(--accent-glow);
+  padding: 3px 10px;
+  border-radius: 5px;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+}
+
+.exercise.done .exercise-badge {
+  color: var(--sage-dark);
+  background: var(--sage-light);
+}
+
+.exercise-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--ink);
+  flex: 1;
+}
+
+.exercise-check {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 2px solid var(--warm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+
+.exercise.done .exercise-check {
+  background: var(--sage);
+  border-color: var(--sage);
+}
+
+.exercise.done .exercise-check::after {
+  content: '';
+  width: 10px;
+  height: 10px;
+  background: url("data:image/svg+xml,%3Csvg viewBox='0 0 10 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 4l2.5 2.5L9 1' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/contain no-repeat;
+}
+
+.exercise-body {
+  display: none;
+  padding: 0 20px 20px;
+  font-size: 14.5px;
+}
+
+.exercise.open .exercise-body { display: block; }
+
+.exercise-body p { margin-bottom: 12px; }
+.exercise-body ol, .exercise-body ul { margin-bottom: 12px; padding-left: 20px; }
+.exercise-body li { margin-bottom: 8px; }
+
+.exercise-body .code-block { margin: 12px 0 16px; position: relative; }
+
+.code-actions {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  display: flex;
+  gap: 4px;
+  z-index: 2;
+}
+
+.send-btn, .copy-btn {
+  padding: 4px 10px;
+  border: none;
+  border-radius: 5px;
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.send-btn {
+  background: var(--accent);
+  color: white;
+}
+
+.send-btn:hover { background: var(--accent-dark); }
+
+.send-btn.sent {
+  background: var(--sage);
+  pointer-events: none;
+}
+
+.copy-btn {
+  background: var(--espresso-light);
+  color: #c9c2b8;
+}
+
+.copy-btn:hover { background: var(--espresso-mid); }
+
+.copy-btn.copied {
+  background: var(--sage-dark);
+  color: white;
+}
+
+.exercise-expected {
+  margin: 16px 0;
+  border: 1px solid var(--warm);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.exercise-expected-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--subtle);
+  user-select: none;
+  transition: color 0.15s;
+}
+
+.exercise-expected-toggle:hover { color: var(--ink); }
+
+.exercise-expected-toggle .arrow {
+  transition: transform 0.2s;
+  font-size: 10px;
+}
+
+.exercise-expected.open .exercise-expected-toggle .arrow {
+  transform: rotate(90deg);
+}
+
+.expected-content {
+  display: none;
+  padding: 0 14px 14px;
+  font-size: 13.5px;
+  color: var(--subtle);
+  line-height: 1.6;
+}
+
+.exercise-expected.open .expected-content { display: block; }
+
+.exercise-done-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  border: 2px solid var(--sage);
+  border-radius: 8px;
+  background: white;
+  font-family: 'Outfit', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--sage-dark);
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-top: 8px;
+}
+
+.exercise-done-btn:hover {
+  background: var(--sage);
+  color: white;
+}
+
+.exercise.done .exercise-done-btn {
+  background: var(--sage);
+  color: white;
+  pointer-events: none;
+}
+
+/* Progress update for exercises */
+.progress-exercises {
+  font-size: 11px;
+  color: var(--subtle);
+  margin-top: 6px;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Terminal-open responsive */
+@media (max-width: 1100px) {
+  :root { --terminal-w: 340px; }
+}
+
+@media (max-width: 768px) {
+  .terminal-panel {
+    width: 100%;
+    height: 50vh;
+    top: auto;
+    bottom: 0;
+    transform: translateY(100%);
+  }
+  .terminal-panel.open { transform: translateY(0); }
+  .main.terminal-open { margin-right: 0; }
+  .terminal-resize { display: none; }
+  .terminal-toggle { top: auto; bottom: 16px; right: 16px; }
+  .terminal-panel.open ~ .terminal-toggle { bottom: calc(50vh + 16px); right: 16px; }
+  .send-btn { display: none; }
+}
 </style>
 </head>
 <body>
@@ -905,6 +1351,7 @@ body {
     <div class="progress-bar">
       <div class="progress-fill" id="progressFill"></div>
     </div>
+    <div class="progress-exercises" id="progressExercises"></div>
   </div>
 
   <div class="sidebar-nav" id="sidebarNav">
@@ -1197,6 +1644,89 @@ body {
   <div class="callout callout-opportunity">
     <div class="callout-title">Your Opportunity</div>
     <p>You run Moltbot agents on your Mac Mini. Hooks could auto-notify you via Telegram (Bean/Egg) when Claude Code finishes long tasks, auto-lint code, or auto-commit after successful builds.</p>
+  </div>
+
+  <!-- Exercises -->
+  <div class="exercises-section">
+    <div class="exercises-title">Hands-On Exercises</div>
+
+    <div class="exercise" data-ex="2-1" onclick="toggleExercise(this, event)">
+      <div class="exercise-header">
+        <span class="exercise-badge">Ex 2.1</span>
+        <span class="exercise-title">Set Up a Notification Hook</span>
+        <span class="exercise-check"></span>
+      </div>
+      <div class="exercise-body">
+        <p>Create a hook that sends a macOS notification whenever Claude finishes a task.</p>
+        <ol>
+          <li>Open Claude Code in the terminal panel (type <code>claude</code>)</li>
+          <li>Ask Claude: "Show me my current ~/.claude/settings.json"</li>
+          <li>Add this Notification hook to your settings:</li>
+        </ol>
+        <div class="code-block">
+          <div class="code-actions">
+            <button class="send-btn" onclick="sendToTerminal('cat ~/.claude/settings.json\n', this, event)">&#9654; Send</button>
+            <button class="copy-btn" onclick="copyCode(this, event)">Copy</button>
+          </div>
+          <div class="code-label">Check current settings</div>
+          <pre><code>cat ~/.claude/settings.json</code></pre>
+        </div>
+        <p>Then ask Claude to add this hook for you:</p>
+        <div class="code-block">
+          <div class="code-actions">
+            <button class="send-btn" onclick="sendToTerminal('Add a Notification hook to my ~/.claude/settings.json that runs: osascript -e \'display notification \"$CLAUDE_NOTIFICATION\" with title \"Claude Code\"\'\n', this, event)">&#9654; Send</button>
+            <button class="copy-btn" onclick="copyCode(this, event)">Copy</button>
+          </div>
+          <div class="code-label">Ask Claude to add the hook</div>
+          <pre><code>Add a Notification hook to my ~/.claude/settings.json
+that runs: osascript -e 'display notification
+"$CLAUDE_NOTIFICATION" with title "Claude Code"'</code></pre>
+        </div>
+        <div class="exercise-expected" onclick="toggleExpected(this, event)">
+          <div class="exercise-expected-toggle"><span class="arrow">&#9656;</span> Expected Result</div>
+          <div class="expected-content">Your settings.json should now have a <code>hooks.Notification</code> array with a command hook. Next time Claude finishes a background task, you'll get a native macOS notification.</div>
+        </div>
+        <button class="exercise-done-btn" onclick="completeExercise('2-1', this, event)">&#10003; Done &mdash; I see the hook in my settings</button>
+      </div>
+    </div>
+
+    <div class="exercise" data-ex="2-2" onclick="toggleExercise(this, event)">
+      <div class="exercise-header">
+        <span class="exercise-badge">Ex 2.2</span>
+        <span class="exercise-title">Create a File Edit Logger</span>
+        <span class="exercise-check"></span>
+      </div>
+      <div class="exercise-body">
+        <p>Create a PostToolUse hook that logs every file Claude writes or edits.</p>
+        <ol>
+          <li>In Claude Code, ask:</li>
+        </ol>
+        <div class="code-block">
+          <div class="code-actions">
+            <button class="send-btn" onclick="sendToTerminal('Add a PostToolUse hook that matches Write|Edit and runs: echo \"$(date): $CLAUDE_FILE_PATH\" >> ~/claude-edits.log\n', this, event)">&#9654; Send</button>
+            <button class="copy-btn" onclick="copyCode(this, event)">Copy</button>
+          </div>
+          <div class="code-label">Ask Claude</div>
+          <pre><code>Add a PostToolUse hook that matches Write|Edit
+and runs: echo "$(date): $CLAUDE_FILE_PATH"
+>> ~/claude-edits.log</code></pre>
+        </div>
+        <p>Then make any edit to test it, and check the log:</p>
+        <div class="code-block">
+          <div class="code-actions">
+            <button class="send-btn" onclick="sendToTerminal('cat ~/claude-edits.log\n', this, event)">&#9654; Send</button>
+            <button class="copy-btn" onclick="copyCode(this, event)">Copy</button>
+          </div>
+          <div class="code-label">Check the log</div>
+          <pre><code>cat ~/claude-edits.log</code></pre>
+        </div>
+        <div class="exercise-expected" onclick="toggleExpected(this, event)">
+          <div class="exercise-expected-toggle"><span class="arrow">&#9656;</span> Expected Result</div>
+          <div class="expected-content">You should see a log entry with a timestamp and the file path that was edited. Every future file write/edit by Claude will be logged here.</div>
+        </div>
+        <button class="exercise-done-btn" onclick="completeExercise('2-2', this, event)">&#10003; Done &mdash; I see entries in the log</button>
+      </div>
+    </div>
   </div>
 
   <div class="chapter-footer">
@@ -1863,6 +2393,31 @@ details.</code></pre>
 
 </main>
 
+<!-- Terminal toggle -->
+<button class="terminal-toggle" id="terminalToggle" onclick="toggleTerminal()">
+  <span class="toggle-dot" id="toggleDot"></span>
+  Terminal
+</button>
+
+<!-- Terminal panel -->
+<div class="terminal-panel" id="terminalPanel">
+  <div class="terminal-resize" id="terminalResize"></div>
+  <div class="terminal-header">
+    <div class="terminal-status" id="terminalStatus"></div>
+    <span class="terminal-title">Terminal</span>
+    <button class="terminal-close" onclick="toggleTerminal()">&times;</button>
+  </div>
+  <div class="terminal-body" id="terminalBody">
+    <div class="terminal-offline" id="terminalOffline">
+      <div class="terminal-offline-icon">&#9002;</div>
+      <h3>Terminal not connected</h3>
+      <p>Start the terminal server to enable<br>interactive exercises.</p>
+      <code>cd course &amp;&amp; npm i &amp;&amp; npm start</code>
+    </div>
+    <div id="xtermContainer" style="height:100%;display:none"></div>
+  </div>
+</div>
+
 <script>
 const TOTAL = 12;
 const STORAGE_KEY = 'humanity-crash-course';
@@ -2006,6 +2561,149 @@ document.addEventListener('keydown', (e) => {
     if (ch > 1) goTo(ch - 1);
   }
 });
+
+// ═══════════ TERMINAL ═══════════
+let term = null, ws = null, fitAddon = null, termConnected = false;
+
+function toggleTerminal() {
+  const panel = document.getElementById('terminalPanel');
+  const main = document.querySelector('.main');
+  panel.classList.toggle('open');
+  main.classList.toggle('terminal-open');
+  if (panel.classList.contains('open') && !term) initTerminal();
+  if (term && fitAddon) setTimeout(() => fitAddon.fit(), 350);
+}
+
+function initTerminal() {
+  term = new window.Terminal({
+    theme: {
+      background: '#2a2520', foreground: '#d4cfc7', cursor: '#C4573A',
+      selectionBackground: 'rgba(196,87,58,0.3)',
+      black: '#1A1714', red: '#C4573A', green: '#6B8F71', yellow: '#C4A882',
+      blue: '#7a8fa6', magenta: '#a67a8f', cyan: '#7aa6a0', white: '#d4cfc7',
+    },
+    fontFamily: "'JetBrains Mono', monospace",
+    fontSize: 13,
+    cursorBlink: true,
+    scrollback: 5000,
+  });
+  fitAddon = new window.FitAddon.FitAddon();
+  term.loadAddon(fitAddon);
+  document.getElementById('xtermContainer').style.display = 'block';
+  term.open(document.getElementById('xtermContainer'));
+  fitAddon.fit();
+  term.onData((data) => { if (ws && ws.readyState === 1) ws.send(JSON.stringify({ type: 'input', data })); });
+  connectWS();
+  window.addEventListener('resize', () => { if (fitAddon) fitAddon.fit(); });
+}
+
+function connectWS() {
+  try { ws = new WebSocket('ws://localhost:8767'); } catch(e) { return; }
+  ws.onopen = () => {
+    termConnected = true;
+    updateTermStatus();
+    document.getElementById('terminalOffline').style.display = 'none';
+    document.getElementById('xtermContainer').style.display = 'block';
+    if (fitAddon) { fitAddon.fit(); ws.send(JSON.stringify({ type: 'resize', cols: term.cols, rows: term.rows })); }
+    term.onResize(({ cols, rows }) => { if (ws && ws.readyState === 1) ws.send(JSON.stringify({ type: 'resize', cols, rows })); });
+  };
+  ws.onmessage = (e) => {
+    try { const msg = JSON.parse(e.data); if (msg.type === 'output') term.write(msg.data); } catch(err) {}
+  };
+  ws.onclose = () => {
+    termConnected = false;
+    updateTermStatus();
+    setTimeout(connectWS, 3000);
+  };
+  ws.onerror = () => { ws.close(); };
+}
+
+function updateTermStatus() {
+  document.getElementById('terminalStatus').classList.toggle('connected', termConnected);
+  document.getElementById('toggleDot').classList.toggle('connected', termConnected);
+  if (!termConnected && document.getElementById('xtermContainer')) {
+    document.getElementById('terminalOffline').style.display = 'flex';
+    document.getElementById('xtermContainer').style.display = 'none';
+  }
+}
+
+function sendToTerminal(text, btn, e) {
+  if (e) e.stopPropagation();
+  if (ws && ws.readyState === 1) {
+    ws.send(JSON.stringify({ type: 'input', data: text }));
+    if (btn) { btn.textContent = 'Sent!'; btn.classList.add('sent'); setTimeout(() => { btn.textContent = '\u25b6 Send'; btn.classList.remove('sent'); }, 2000); }
+    if (!document.getElementById('terminalPanel').classList.contains('open')) toggleTerminal();
+  } else {
+    copyCodeFromBtn(btn, e);
+  }
+}
+
+function copyCode(btn, e) {
+  if (e) e.stopPropagation();
+  copyCodeFromBtn(btn, e);
+}
+
+function copyCodeFromBtn(btn, e) {
+  const block = btn.closest('.code-block');
+  const code = block.querySelector('code').textContent;
+  navigator.clipboard.writeText(code).then(() => {
+    const orig = btn.textContent;
+    btn.textContent = 'Copied!'; btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = orig; btn.classList.remove('copied'); }, 2000);
+  });
+}
+
+// ═══════════ RESIZE HANDLE ═══════════
+(function() {
+  const handle = document.getElementById('terminalResize');
+  let dragging = false;
+  handle.addEventListener('mousedown', (e) => { dragging = true; e.preventDefault(); document.body.style.cursor = 'col-resize'; document.body.style.userSelect = 'none'; });
+  document.addEventListener('mousemove', (e) => {
+    if (!dragging) return;
+    const w = Math.max(280, Math.min(window.innerWidth - 500, window.innerWidth - e.clientX));
+    document.documentElement.style.setProperty('--terminal-w', w + 'px');
+    if (fitAddon) fitAddon.fit();
+  });
+  document.addEventListener('mouseup', () => { if (dragging) { dragging = false; document.body.style.cursor = ''; document.body.style.userSelect = ''; } });
+})();
+
+// ═══════════ EXERCISES ═══════════
+function getExProgress() {
+  try { return JSON.parse(localStorage.getItem('humanity-crash-exercises')) || {}; } catch { return {}; }
+}
+
+function toggleExercise(el, e) {
+  if (e.target.closest('.exercise-done-btn, .send-btn, .copy-btn, .exercise-expected')) return;
+  el.classList.toggle('open');
+}
+
+function toggleExpected(el, e) {
+  if (e) e.stopPropagation();
+  el.classList.toggle('open');
+}
+
+function completeExercise(id, btn, e) {
+  if (e) e.stopPropagation();
+  const prog = getExProgress();
+  prog[id] = true;
+  localStorage.setItem('humanity-crash-exercises', JSON.stringify(prog));
+  const ex = btn.closest('.exercise');
+  ex.classList.add('done');
+  updateExUI();
+}
+
+function updateExUI() {
+  const prog = getExProgress();
+  document.querySelectorAll('.exercise[data-ex]').forEach(ex => {
+    if (prog[ex.dataset.ex]) ex.classList.add('done');
+  });
+  const total = document.querySelectorAll('.exercise[data-ex]').length;
+  const done = Object.keys(prog).length;
+  const el = document.querySelector('.progress-exercises');
+  if (el) el.textContent = done + ' / ' + total + ' exercises';
+}
+
+updateExUI();
 </script>
 
 </body>
