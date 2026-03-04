@@ -473,7 +473,10 @@
     <p><strong>Hey Rez,</strong> fill this out before our session so I can build a crash course tailored to Moto Medi and Tikka Shack. Takes about 5 minutes.</p>
   </div>
 
-  <form id="intakeForm">
+  <form id="intakeForm" action="https://api.web3forms.com/submit" method="POST">
+    <input type="hidden" name="access_key" value="76ac3471-94c5-4559-bf0f-954190728ce1">
+    <input type="hidden" name="subject" value="Crash Course Intake — New Submission">
+    <input type="hidden" name="from_name" value="Crash Course Intake">
 
     <!-- Section 1: Basics -->
     <div class="section">
@@ -863,19 +866,30 @@
 
   document.getElementById('intakeForm').addEventListener('submit', (e) => {
     e.preventDefault();
-    const formData = new FormData(e.target);
-    const data = {};
-    for (const [key, value] of formData.entries()) {
-      if (data[key]) {
-        if (Array.isArray(data[key])) data[key].push(value);
-        else data[key] = [data[key], value];
+    const form = e.target;
+    const formData = new FormData(form);
+    const btn = form.querySelector('.submit-btn');
+    btn.disabled = true;
+    btn.textContent = 'Sending...';
+
+    fetch('https://api.web3forms.com/submit', {
+      method: 'POST',
+      body: formData
+    })
+    .then(res => res.json())
+    .then(data => {
+      if (data.success) {
+        document.getElementById('successOverlay').classList.add('visible');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
       } else {
-        data[key] = value;
+        btn.disabled = false;
+        btn.textContent = 'Submit';
       }
-    }
-    console.log('Survey submission:', JSON.stringify(data, null, 2));
-    document.getElementById('successOverlay').classList.add('visible');
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    })
+    .catch(() => {
+      btn.disabled = false;
+      btn.textContent = 'Submit';
+    });
   });
 </script>
 
