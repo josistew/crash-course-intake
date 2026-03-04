@@ -1,0 +1,1316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Crash Course — Rez Edition | Humanity AI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600;9..144,700&family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://api.fontshare.com/v2/css?f[]=cabinet-grotesk@700,800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink: #2D2A26;
+  --paper: #F5F0E8;
+  --warm: #E8DFD0;
+  --warm-mid: #DDD4C4;
+  --accent: #C4573A;
+  --accent-hover: #A8452D;
+  --accent-light: rgba(196,87,58,0.08);
+  --accent-glow: rgba(196,87,58,0.15);
+  --field-bg: #FDFAF6;
+  --subtle: #8A8279;
+  --success: #6B8F71;
+  --code-bg: #1A1714;
+  --code-fg: #e8ddd0;
+  --code-comment: #6B6560;
+  --code-string: #C4A882;
+  --code-key: #C4573A;
+  --sidebar-w: 280px;
+  --header-h: 0px;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html { scroll-behavior: smooth; scroll-padding-top: 24px; }
+
+body {
+  font-family: 'Outfit', sans-serif;
+  background: var(--paper);
+  color: var(--ink);
+  line-height: 1.7;
+  font-size: 15px;
+  overflow-x: hidden;
+}
+
+/* ── Sidebar ── */
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: var(--sidebar-w);
+  height: 100vh;
+  background: var(--ink);
+  color: var(--paper);
+  overflow-y: auto;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  scrollbar-width: thin;
+  scrollbar-color: #4a453f #2D2A26;
+}
+
+.sidebar-header {
+  padding: 28px 24px 20px;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  flex-shrink: 0;
+}
+
+.sidebar-brand {
+  font-family: 'Cabinet Grotesk', sans-serif;
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  color: var(--paper);
+  line-height: 1;
+  margin-bottom: 4px;
+}
+
+.sidebar-brand span { color: var(--accent); }
+
+.sidebar-subtitle {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--subtle);
+  margin-top: 10px;
+}
+
+.sidebar-nav {
+  flex: 1;
+  padding: 12px 0;
+  overflow-y: auto;
+}
+
+.nav-part {
+  padding: 12px 24px 4px;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 2.5px;
+  color: var(--accent);
+}
+
+.nav-link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 24px;
+  color: rgba(245,240,232,0.55);
+  text-decoration: none;
+  font-size: 13.5px;
+  font-weight: 400;
+  transition: all 0.2s;
+  border-left: 2px solid transparent;
+  line-height: 1.3;
+}
+
+.nav-link:hover {
+  color: var(--paper);
+  background: rgba(255,255,255,0.04);
+}
+
+.nav-link.active {
+  color: var(--paper);
+  background: rgba(196,87,58,0.12);
+  border-left-color: var(--accent);
+  font-weight: 500;
+}
+
+.nav-num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--subtle);
+  min-width: 20px;
+}
+
+.nav-link.active .nav-num { color: var(--accent); }
+
+.sidebar-footer {
+  padding: 16px 24px;
+  border-top: 1px solid rgba(255,255,255,0.06);
+  font-size: 11px;
+  color: var(--subtle);
+  flex-shrink: 0;
+}
+
+/* ── Mobile menu toggle ── */
+.menu-toggle {
+  display: none;
+  position: fixed;
+  top: 16px;
+  left: 16px;
+  z-index: 200;
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: var(--ink);
+  border: none;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.2);
+}
+
+.menu-toggle svg { stroke: var(--paper); }
+
+.menu-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.4);
+  z-index: 90;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.menu-overlay.visible { opacity: 1; }
+
+/* ── Main content ── */
+.main {
+  margin-left: var(--sidebar-w);
+  min-height: 100vh;
+}
+
+.content {
+  max-width: 780px;
+  margin: 0 auto;
+  padding: 48px 40px 120px;
+}
+
+/* ── Chapter sections ── */
+.chapter {
+  margin-bottom: 80px;
+  animation: fadeUp 0.4s ease-out both;
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.chapter-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px;
+  background: var(--accent-light);
+  border-radius: 100px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--accent);
+  margin-bottom: 16px;
+}
+
+h1 {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(28px, 5vw, 40px);
+  font-weight: 500;
+  line-height: 1.2;
+  letter-spacing: -0.5px;
+  margin-bottom: 8px;
+  color: var(--ink);
+}
+
+.chapter-lead {
+  font-size: 17px;
+  color: var(--subtle);
+  margin-bottom: 32px;
+  line-height: 1.7;
+}
+
+h2 {
+  font-family: 'Fraunces', serif;
+  font-size: 24px;
+  font-weight: 500;
+  margin: 48px 0 16px;
+  padding-top: 24px;
+  color: var(--ink);
+}
+
+h3 {
+  font-family: 'Outfit', sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  margin: 32px 0 12px;
+  color: var(--ink);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+p { margin: 12px 0; }
+
+strong { font-weight: 600; }
+
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+hr {
+  border: none;
+  height: 1px;
+  background: var(--warm-mid);
+  margin: 48px 0;
+}
+
+/* ── Tables ── */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0;
+  font-size: 14px;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid var(--warm-mid);
+}
+
+thead th {
+  background: var(--ink);
+  color: var(--paper);
+  text-align: left;
+  padding: 12px 16px;
+  font-weight: 600;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+td {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--warm);
+  vertical-align: top;
+}
+
+tr:last-child td { border-bottom: none; }
+tr:nth-child(even) td { background: rgba(0,0,0,0.015); }
+
+/* ── Code blocks ── */
+.code-wrap {
+  position: relative;
+  margin: 20px 0;
+}
+
+pre {
+  background: var(--code-bg);
+  color: var(--code-fg);
+  padding: 20px 24px;
+  border-radius: 12px;
+  overflow-x: auto;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  line-height: 1.7;
+  border: 1px solid rgba(255,255,255,0.04);
+}
+
+pre code { background: none; padding: 0; color: inherit; font-size: inherit; }
+
+code {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12.5px;
+  background: var(--warm);
+  padding: 2px 7px;
+  border-radius: 5px;
+  color: var(--ink);
+}
+
+.copy-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  padding: 6px 14px;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 8px;
+  color: var(--code-fg);
+  font-family: 'Outfit', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.copy-btn:hover {
+  background: rgba(255,255,255,0.15);
+  border-color: rgba(255,255,255,0.2);
+}
+
+.copy-btn.copied {
+  background: var(--success);
+  border-color: var(--success);
+  color: white;
+}
+
+.copy-btn svg { width: 13px; height: 13px; }
+
+/* ── Callout boxes ── */
+.callout {
+  padding: 20px 24px;
+  border-radius: 12px;
+  margin: 24px 0;
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+.callout-tip {
+  background: rgba(107,143,113,0.08);
+  border-left: 3px solid var(--success);
+}
+
+.callout-warn {
+  background: var(--accent-light);
+  border-left: 3px solid var(--accent);
+}
+
+.callout-info {
+  background: rgba(196,168,130,0.1);
+  border-left: 3px solid #C4A882;
+}
+
+.callout-title {
+  font-weight: 700;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 6px;
+}
+
+.callout-tip .callout-title { color: var(--success); }
+.callout-warn .callout-title { color: var(--accent); }
+.callout-info .callout-title { color: #9A8565; }
+
+/* ── Lists ── */
+ul, ol {
+  padding-left: 24px;
+  margin: 12px 0;
+}
+
+li {
+  margin: 8px 0;
+  line-height: 1.6;
+}
+
+/* ── Blockquotes (example prompts) ── */
+blockquote {
+  border-left: 3px solid var(--accent);
+  padding: 16px 20px;
+  margin: 20px 0;
+  background: var(--field-bg);
+  border-radius: 0 12px 12px 0;
+  font-size: 14.5px;
+  color: var(--ink);
+  font-style: italic;
+}
+
+blockquote strong { font-style: normal; }
+
+/* ── Status badges ── */
+.status {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.status-yes { background: rgba(107,143,113,0.15); color: #4a6e4f; }
+.status-some { background: rgba(196,168,130,0.2); color: #7a6540; }
+.status-no { background: rgba(196,87,58,0.1); color: var(--accent); }
+
+/* ── Progress indicator ── */
+.progress-bar {
+  position: fixed;
+  top: 0;
+  left: var(--sidebar-w);
+  right: 0;
+  height: 3px;
+  background: var(--warm);
+  z-index: 50;
+}
+
+.progress-fill {
+  height: 100%;
+  background: var(--accent);
+  width: 0%;
+  transition: width 0.15s ease-out;
+}
+
+/* ── Responsive ── */
+@media (max-width: 900px) {
+  .sidebar {
+    transform: translateX(-100%);
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    width: 300px;
+  }
+
+  .sidebar.open { transform: translateX(0); }
+
+  .menu-toggle { display: flex; }
+
+  .menu-overlay.visible { display: block; }
+
+  .main { margin-left: 0; }
+
+  .progress-bar { left: 0; }
+
+  .content { padding: 72px 20px 100px; }
+
+  html { scroll-padding-top: 80px; }
+}
+
+@media (max-width: 500px) {
+  .content { padding: 72px 16px 80px; }
+  pre { padding: 16px; font-size: 12px; }
+  table { font-size: 13px; }
+  td, thead th { padding: 10px 12px; }
+}
+</style>
+</head>
+<body>
+
+<!-- Mobile menu toggle -->
+<button class="menu-toggle" id="menuToggle" aria-label="Open navigation">
+  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
+</button>
+<div class="menu-overlay" id="menuOverlay"></div>
+
+<!-- Progress bar -->
+<div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+
+<!-- Sidebar -->
+<nav class="sidebar" id="sidebar">
+  <div class="sidebar-header">
+    <div class="sidebar-brand">Humanity<span>.</span></div>
+    <div class="sidebar-subtitle">Crash Course &mdash; Rez</div>
+  </div>
+
+  <div class="sidebar-nav">
+    <div class="nav-part">Ground Zero</div>
+    <a href="#profile" class="nav-link active"><span class="nav-num">01</span> Your Profile</a>
+    <a href="#terminal" class="nav-link"><span class="nav-num">02</span> The Terminal</a>
+    <a href="#claude-md" class="nav-link"><span class="nav-num">03</span> CLAUDE.md</a>
+
+    <div class="nav-part">Cowork</div>
+    <a href="#cowork" class="nav-link"><span class="nav-num">04</span> What Is Cowork</a>
+    <a href="#connectors" class="nav-link"><span class="nav-num">05</span> Connectors & Plugins</a>
+    <a href="#instructions" class="nav-link"><span class="nav-num">06</span> Instructions & Scheduling</a>
+    <a href="#prompts" class="nav-link"><span class="nav-num">07</span> Prompts That Work</a>
+
+    <div class="nav-part">Claude Code</div>
+    <a href="#mcp" class="nav-link"><span class="nav-num">08</span> MCP Servers</a>
+    <a href="#skills" class="nav-link"><span class="nav-num">09</span> Skills</a>
+    <a href="#agents" class="nav-link"><span class="nav-num">10</span> Agents & Web Apps</a>
+
+    <div class="nav-part">Live Builds</div>
+    <a href="#build-payroll" class="nav-link"><span class="nav-num">11</span> Payroll Automation</a>
+    <a href="#build-dashboard" class="nav-link"><span class="nav-num">12</span> Location Dashboard</a>
+
+    <div class="nav-part">System</div>
+    <a href="#power-setup" class="nav-link"><span class="nav-num">13</span> Power Setup</a>
+    <a href="#reference" class="nav-link"><span class="nav-num">14</span> Quick Reference</a>
+  </div>
+
+  <div class="sidebar-footer">Built by Josiah &middot; Humanity AI</div>
+</nav>
+
+<!-- Main content -->
+<div class="main">
+<div class="content">
+
+<!-- ═══════════════════════════════════ CH 01 ═══════════════════════════════════ -->
+<section class="chapter" id="profile">
+  <div class="chapter-badge">Chapter 01</div>
+  <h1>Your Profile</h1>
+  <p class="chapter-lead">What you told us, what you know, and what we're building toward.</p>
+
+  <h2>Current Level</h2>
+  <table>
+    <thead><tr><th>Capability</th><th>Status</th></tr></thead>
+    <tbody>
+      <tr><td>Terminal / command line</td><td><span class="status status-no">Never used</span></td></tr>
+      <tr><td>Coding experience</td><td><span class="status status-no">None</span></td></tr>
+      <tr><td>ChatGPT</td><td><span class="status status-yes">Heavy user</span></td></tr>
+      <tr><td>Claude (web)</td><td><span class="status status-yes">Excel modeling</span></td></tr>
+      <tr><td>Zapier</td><td><span class="status status-yes">Using</span></td></tr>
+      <tr><td>Cowork</td><td><span class="status status-some">Light integration</span></td></tr>
+      <tr><td>Claude Code</td><td><span class="status status-no">Not installed</span></td></tr>
+      <tr><td>CLAUDE.md</td><td><span class="status status-no">Not set up</span></td></tr>
+      <tr><td>MCP servers</td><td><span class="status status-no">Not using</span></td></tr>
+      <tr><td>Agents / skills</td><td><span class="status status-no">Not using</span></td></tr>
+    </tbody>
+  </table>
+
+  <h2>Your Businesses</h2>
+  <table>
+    <thead><tr><th>Brand</th><th>Type</th><th>Locations</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Moto Medi</strong></td><td>Mediterranean fast casual</td><td>3 (Lubbock / Amarillo)</td></tr>
+      <tr><td><strong>Tikka Shack</strong></td><td>Indian fast casual franchise</td><td>2+</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Your Stack</h2>
+  <ul>
+    <li><strong>Square POS</strong> &mdash; all locations</li>
+    <li><strong>Google Workspace</strong> &mdash; Sheets, Docs, Drive</li>
+    <li><strong>Payroll software</strong></li>
+    <li><strong>Meta Business Suite</strong> &mdash; ads</li>
+    <li><strong>Google Business Profile</strong> &mdash; reviews</li>
+    <li><strong>Scheduling tool</strong></li>
+    <li><strong>Delivery platforms</strong></li>
+    <li><strong>Custom spreadsheets</strong> &mdash; cost tracking, collaborative Sheets</li>
+  </ul>
+
+  <h2>What Hurts</h2>
+  <ol>
+    <li>Manually pulling numbers from Square POS and other dashboards</li>
+    <li>Pulling COGS data weekly by hand</li>
+    <li>Manual payroll reports</li>
+    <li>No consolidated view across 5 locations</li>
+  </ol>
+
+  <div class="callout callout-warn">
+    <div class="callout-title">Your #1 Goal</div>
+    <strong>Automate all manual reporting.</strong> Payroll is the immediate need. Walk away understanding the full capacity of Claude Code and Cowork, with agents built for your business, and enough knowledge to create and deploy your own solutions going forward.
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════ CH 02 ═══════════════════════════════════ -->
+<section class="chapter" id="terminal">
+  <div class="chapter-badge">Chapter 02</div>
+  <h1>The Terminal</h1>
+  <p class="chapter-lead">You've never opened it. That's fine. This section gets you from zero to running Claude Code.</p>
+
+  <h2>What Is the Terminal?</h2>
+  <p>Your Mac has a built-in app called <strong>Terminal</strong>. It's a text-based way to talk to your computer. Instead of clicking buttons, you type commands.</p>
+
+  <div class="callout callout-tip">
+    <div class="callout-title">Open it now</div>
+    Press <code>Cmd + Space</code>, type <strong>Terminal</strong>, hit Enter.
+  </div>
+
+  <h2>Commands You Need</h2>
+  <p>This is the complete list. You don't need more than this.</p>
+  <table>
+    <thead><tr><th>Command</th><th>What it does</th><th>Example</th></tr></thead>
+    <tbody>
+      <tr><td><code>ls</code></td><td>List files in current folder</td><td><code>ls</code></td></tr>
+      <tr><td><code>cd</code></td><td>Change directory (folder)</td><td><code>cd ~/Desktop</code></td></tr>
+      <tr><td><code>pwd</code></td><td>Print where you are</td><td><code>pwd</code></td></tr>
+      <tr><td><code>mkdir</code></td><td>Make a new folder</td><td><code>mkdir my-project</code></td></tr>
+      <tr><td><code>open .</code></td><td>Open current folder in Finder</td><td><code>open .</code></td></tr>
+    </tbody>
+  </table>
+
+  <p>The <code>~</code> symbol means your home folder (e.g. <code>/Users/rez</code>).</p>
+
+  <h2>Installing Claude Code</h2>
+
+  <p>First, check if you have Node.js:</p>
+  <div class="code-wrap">
+    <pre><code>node --version</code></pre>
+  </div>
+
+  <p>If that errors, install Node.js from <a href="https://nodejs.org" target="_blank">nodejs.org</a> &mdash; download the LTS version, run the installer.</p>
+
+  <p>Then install Claude Code:</p>
+  <div class="code-wrap">
+    <pre><code>npm install -g @anthropic-ai/claude-code</code></pre>
+  </div>
+
+  <p>Launch it:</p>
+  <div class="code-wrap">
+    <pre><code>claude</code></pre>
+  </div>
+
+  <div class="callout callout-tip">
+    <div class="callout-title">That's it</div>
+    You're in. Claude Code is now running in your terminal. You type naturally &mdash; just like ChatGPT &mdash; but now Claude can actually <em>do things</em> on your computer: create files, run code, build apps, deploy websites.
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════ CH 03 ═══════════════════════════════════ -->
+<section class="chapter" id="claude-md">
+  <div class="chapter-badge">Chapter 03</div>
+  <h1>CLAUDE.md</h1>
+  <p class="chapter-lead">The single most important concept. It's how you teach Claude about your business &mdash; once &mdash; so you never have to explain again.</p>
+
+  <h2>What Is It?</h2>
+  <p>A <code>CLAUDE.md</code> file is a set of instructions that Claude reads <strong>every time you start a session</strong>. It's like onboarding a new employee.</p>
+  <ul>
+    <li><code>~/CLAUDE.md</code> &mdash; Global (applies everywhere)</li>
+    <li><code>~/my-project/CLAUDE.md</code> &mdash; Project-specific (applies only in that folder)</li>
+  </ul>
+
+  <h2>Your CLAUDE.md</h2>
+  <p>Copy this into a file at <code>~/CLAUDE.md</code> and customize the bracketed parts:</p>
+
+  <div class="code-wrap">
+    <pre><code># Rez &mdash; Business Context
+
+## Who I Am
+Restaurant operator. 5 locations across 2 brands.
+- Moto Medi: 3 Mediterranean fast casual locations (Lubbock, Amarillo)
+- Tikka Shack: Multi-location Indian fast casual franchise
+
+## My Stack
+- Square POS (all locations)
+- Google Workspace (Sheets, Drive, Gmail)
+- [Your payroll system name]
+- Meta Business Suite (ads)
+- Google Business Profile (reviews)
+- [Scheduling tool name]
+- [Delivery platform names]
+
+## How I Work
+- I'm not a developer. Explain technical concepts simply.
+- I have an ops partner who manages day-to-day at locations.
+- We track costs in collaborative Google Sheets.
+- Reports are currently built by hand from Square + spreadsheets.
+
+## Key Metrics I Track
+- Revenue by location (daily/weekly/monthly)
+- COGS by location and category
+- Labor cost percentage
+- Food cost percentage
+- Average ticket size
+- Online order volume vs dine-in
+
+## Immediate Priorities
+1. Automate payroll reporting
+2. Automate COGS data pull
+3. Consolidate multi-location reporting into one view</code></pre>
+  </div>
+
+  <h2>How to Talk to Claude Code</h2>
+  <p>Claude Code isn't a search engine. It's an <strong>executor</strong>. The way you prompt it changes everything.</p>
+
+  <h3>Bad Prompt (ChatGPT habits)</h3>
+  <blockquote>"Can you help me think about ways to automate my payroll?"</blockquote>
+
+  <h3>Good Prompt (Claude Code style)</h3>
+  <blockquote>"Read my CLAUDE.md for business context. Create a Google Sheet template for weekly payroll reporting across my 5 locations. Columns: employee name, location, hours worked, hourly rate, gross pay, deductions, net pay. Include formulas for totals per location and grand total."</blockquote>
+
+  <div class="callout callout-info">
+    <div class="callout-title">The difference</div>
+    Claude Code <strong>builds things</strong>. Tell it <em>what to build</em>, not what to <em>think about</em>.
+  </div>
+
+  <h2>More Example Prompts</h2>
+  <blockquote>"Create a weekly P&amp;L template with tabs for each of my 5 locations plus a consolidated view. Use the metrics from my CLAUDE.md."</blockquote>
+  <blockquote>"Build me a COGS tracking sheet that I can paste Square sales data into and it auto-calculates food cost percentage by category."</blockquote>
+  <blockquote>"Draft a Meta ad for Moto Medi promoting our lunch combo. Target 18-45, Lubbock area. Include 3 headline variations and 2 body copy options."</blockquote>
+</section>
+
+<!-- ═══════════════════════════════════ CH 04 ═══════════════════════════════════ -->
+<section class="chapter" id="cowork">
+  <div class="chapter-badge">Chapter 04</div>
+  <h1>Cowork</h1>
+  <p class="chapter-lead">You've dipped in. Now we go deep. Cowork is your business operating system.</p>
+
+  <h2>What It Actually Is</h2>
+  <p>Cowork is Claude running on your desktop with the ability to:</p>
+  <ul>
+    <li>Read and create files on your Mac</li>
+    <li>Connect to Google Drive, Gmail, Sheets, and other services</li>
+    <li>Browse the web</li>
+    <li>Run long tasks while you do other things</li>
+    <li>Schedule recurring tasks</li>
+    <li>Coordinate multiple workers in parallel</li>
+  </ul>
+
+  <div class="callout callout-info">
+    <div class="callout-title">Think of it as</div>
+    A business analyst + ops manager + marketing assistant that works 24/7, understands your entire business, and gets better the more context you give it.
+  </div>
+
+  <h2>Setup (5 Minutes)</h2>
+  <ol>
+    <li>Open <strong>Claude Desktop</strong> (make sure it's updated)</li>
+    <li>Click the <strong>"Cowork"</strong> tab in the mode selector</li>
+    <li>You're in.</li>
+  </ol>
+
+  <p><strong>Folder access:</strong> When you start a task involving files, Cowork asks which folder to access. Grant access to specific folders &mdash; Claude can only see what you explicitly allow.</p>
+
+  <h2>Cowork vs Claude Code</h2>
+  <table>
+    <thead><tr><th>Scenario</th><th>Use</th></tr></thead>
+    <tbody>
+      <tr><td>Creating documents, spreadsheets, presentations</td><td><strong>Cowork</strong></td></tr>
+      <tr><td>Writing code, debugging, deploying</td><td><strong>Claude Code</strong></td></tr>
+      <tr><td>Google Drive / Gmail / Slack integration</td><td><strong>Cowork</strong></td></tr>
+      <tr><td>Building apps and running terminal commands</td><td><strong>Claude Code</strong></td></tr>
+      <tr><td>Multi-step knowledge work</td><td><strong>Cowork</strong></td></tr>
+      <tr><td>Building MCP servers and custom tools</td><td><strong>Claude Code</strong></td></tr>
+    </tbody>
+  </table>
+  <p>Think of Claude Code as the <strong>dev tool</strong> and Cowork as the <strong>business tool</strong>. They share the same brain.</p>
+</section>
+
+<!-- ═══════════════════════════════════ CH 05 ═══════════════════════════════════ -->
+<section class="chapter" id="connectors">
+  <div class="chapter-badge">Chapter 05</div>
+  <h1>Connectors & Plugins</h1>
+  <p class="chapter-lead">How you wire Claude into the tools you already use.</p>
+
+  <h2>Connectors</h2>
+  <p>Connectors link Cowork to external services. These are what matter for your restaurants:</p>
+  <table>
+    <thead><tr><th>Connector</th><th>What it does for you</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Google Drive</strong></td><td>Read/write docs, sheets &mdash; your cost tracking, reports</td></tr>
+      <tr><td><strong>Google Sheets</strong></td><td>Direct spreadsheet access &mdash; COGS, payroll, P&amp;Ls</td></tr>
+      <tr><td><strong>Gmail</strong></td><td>Read/draft emails &mdash; vendor comms, team updates</td></tr>
+      <tr><td><strong>Google Calendar</strong></td><td>Schedule awareness &mdash; know what's coming</td></tr>
+      <tr><td><strong>Web browsing</strong></td><td>Pull data from Square, Google Business, delivery platforms</td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout callout-tip">
+    <div class="callout-title">Setup</div>
+    Claude Desktop &rarr; Settings &rarr; Cowork &rarr; Connectors. Toggle on, authenticate with Google.
+  </div>
+
+  <h2>Plugins</h2>
+  <p>Plugins bundle capabilities into roles. Install these:</p>
+  <table>
+    <thead><tr><th>Plugin</th><th>Why</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Finance</strong></td><td>P&amp;L modeling, cost calculations, financial analysis</td></tr>
+      <tr><td><strong>Operations</strong></td><td>SOPs, checklists, process documentation</td></tr>
+      <tr><td><strong>Marketing</strong></td><td>Content creation, campaign planning, ad copy</td></tr>
+      <tr><td><strong>Data Analysis</strong></td><td>Spreadsheet formulas, data visualization</td></tr>
+    </tbody>
+  </table>
+
+  <p><strong>How to install:</strong> Cowork &rarr; Customize (left sidebar) &rarr; Browse Plugins &rarr; Install.</p>
+  <p><strong>Customize after installing:</strong> Click "Customize" on each plugin to inject your business context. Tell the Finance plugin about your 5 locations. Tell Marketing about your brands.</p>
+</section>
+
+<!-- ═══════════════════════════════════ CH 06 ═══════════════════════════════════ -->
+<section class="chapter" id="instructions">
+  <div class="chapter-badge">Chapter 06</div>
+  <h1>Instructions & Scheduling</h1>
+  <p class="chapter-lead">Making Cowork permanently yours, and setting up recurring automation.</p>
+
+  <h2>Global Instructions</h2>
+  <p>These apply to every Cowork session. Set them in <strong>Settings &rarr; Cowork &rarr; Edit Global Instructions</strong>.</p>
+
+  <div class="code-wrap">
+    <pre><code>I'm Rez. I own Moto Medi (3 Mediterranean fast casual locations
+in Lubbock/Amarillo) and Tikka Shack (multi-location Indian fast
+casual franchise). All locations use Square POS.
+
+I have zero coding background. Explain everything simply.
+My ops partner also uses this &mdash; keep outputs clear for both of us.
+
+When creating spreadsheets: always include location breakdowns
++ consolidated totals.
+When analyzing costs: food cost % and labor cost % are the two
+numbers I care about most.
+
+Format everything for quick scanning &mdash; bold key numbers,
+use tables, highlight anything that needs attention.</code></pre>
+  </div>
+
+  <h2>Folder Instructions</h2>
+  <p>Created per-folder for project-specific context:</p>
+  <ul>
+    <li><strong>Finance folder:</strong> chart of accounts, vendor list, pay periods</li>
+    <li><strong>Marketing folder:</strong> brand voice, demographics, location details</li>
+    <li><strong>Operations folder:</strong> SOPs, checklists, staff procedures</li>
+  </ul>
+
+  <h2>Scheduling</h2>
+  <p>The <code>/schedule</code> command sets up tasks that run automatically.</p>
+
+  <blockquote>"<strong>/schedule every Monday at 7am:</strong> Pull last week's sales from the COGS tracking sheet, calculate food cost % by location, and create a weekly summary in my Drive"</blockquote>
+
+  <blockquote>"<strong>/schedule every Friday at 6pm:</strong> Draft a weekend social media post for each Moto Medi location highlighting our most popular dishes this week"</blockquote>
+
+  <blockquote>"<strong>/schedule first of month:</strong> Create a monthly P&amp;L summary across all 5 locations and email it to me"</blockquote>
+
+  <div class="callout callout-tip">
+    <div class="callout-title">This replaces your manual Monday morning</div>
+    No more pulling numbers from Square by hand. Schedule it once, it runs forever.
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════ CH 07 ═══════════════════════════════════ -->
+<section class="chapter" id="prompts">
+  <div class="chapter-badge">Chapter 07</div>
+  <h1>Prompts That Work</h1>
+  <p class="chapter-lead">Real prompts for your real business. Copy these, customize them, use them today.</p>
+
+  <h2>Finance & Reporting</h2>
+  <blockquote>"Here's this week's Square export [paste CSV]. Calculate COGS percentage by location, compare to last week, and flag any location where food cost exceeded 32%."</blockquote>
+  <blockquote>"Create a monthly P&amp;L template for all 5 locations. Include revenue, COGS breakdown (food, paper, beverage), labor, occupancy, and operating expenses. Build in formulas that calculate percentages automatically."</blockquote>
+  <blockquote>"Analyze my last 3 months of labor data [paste from payroll]. Tell me which locations are overstaffed on which days based on revenue per labor hour."</blockquote>
+
+  <h2>Payroll</h2>
+  <blockquote>"Build a payroll processing checklist for my ops partner. Steps: pull hours from scheduling tool, verify against Square clock-in data, calculate overtime, run the report, reconcile discrepancies."</blockquote>
+  <blockquote>"Here's this pay period's hours [paste data]. Flag anyone over 40 hours, calculate estimated gross pay, and organize by location."</blockquote>
+
+  <h2>Marketing & Reviews</h2>
+  <blockquote>"Go to Google Business Profile and summarize the last month of reviews across all Moto Medi locations. Categorize by: food quality, service, speed, cleanliness. Flag any reviews under 3 stars that need a response."</blockquote>
+  <blockquote>"Draft Google Business responses for these negative reviews [paste]. Tone: professional, empathetic, solution-oriented. Invite them back."</blockquote>
+  <blockquote>"Create a week of Instagram content for Tikka Shack. 3 posts (food shots with captions) + 2 stories (polls, behind-the-scenes). Voice: warm, authentic, flavor-forward."</blockquote>
+
+  <h2>Operations</h2>
+  <blockquote>"Build an opening checklist for Moto Medi that covers food prep, equipment checks, POS setup, and front-of-house readiness. Format as a printable single-page PDF."</blockquote>
+  <blockquote>"Analyze my delivery platform data [paste]. Which platform has the highest margin after fees? Which menu items perform best on delivery vs dine-in?"</blockquote>
+</section>
+
+<!-- ═══════════════════════════════════ CH 08 ═══════════════════════════════════ -->
+<section class="chapter" id="mcp">
+  <div class="chapter-badge">Chapter 08</div>
+  <h1>MCP Servers</h1>
+  <p class="chapter-lead">MCP servers give Claude new abilities. Each one adds tools Claude can call &mdash; like installing plugins for a browser.</p>
+
+  <h2>What Are They?</h2>
+  <p>MCP (Model Context Protocol) servers are plugins that connect Claude to external tools and data. They're configured in a settings file.</p>
+
+  <h2>Servers That Matter for You</h2>
+  <table>
+    <thead><tr><th>Server</th><th>What it gives Claude</th><th>Your use case</th></tr></thead>
+    <tbody>
+      <tr><td>Google Sheets MCP</td><td>Read/write spreadsheets</td><td>COGS tracking, payroll, P&amp;Ls</td></tr>
+      <tr><td>Google Drive MCP</td><td>Read/write documents</td><td>Reports, SOPs, templates</td></tr>
+      <tr><td>Web Fetch MCP</td><td>Read any web page</td><td>Pull data from Square dashboard</td></tr>
+      <tr><td>Filesystem MCP</td><td>Access specific folders</td><td>Work with local files</td></tr>
+    </tbody>
+  </table>
+
+  <h2>How to Set One Up</h2>
+  <p>MCP configs live in <code>~/.claude/settings.json</code>:</p>
+
+  <div class="code-wrap">
+    <pre><code>{
+  "mcpServers": {
+    "google-sheets": {
+      "command": "npx",
+      "args": ["-y", "@anthropic/mcp-google-sheets"],
+      "env": {
+        "GOOGLE_CLIENT_ID": "&lt;from-google-cloud&gt;",
+        "GOOGLE_CLIENT_SECRET": "&lt;from-google-cloud&gt;"
+      }
+    },
+    "fetch": {
+      "command": "npx",
+      "args": ["-y", "@anthropic/mcp-server-fetch"]
+    }
+  }
+}</code></pre>
+  </div>
+
+  <div class="callout callout-tip">
+    <div class="callout-title">Don't memorize this</div>
+    Just tell Claude Code: <em>"Set up a Google Sheets MCP server for me"</em> and it will walk you through it.
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════ CH 09 ═══════════════════════════════════ -->
+<section class="chapter" id="skills">
+  <div class="chapter-badge">Chapter 09</div>
+  <h1>Skills</h1>
+  <p class="chapter-lead">Custom slash commands you build once, use forever. Type <code>/weekly-numbers</code> and your report runs.</p>
+
+  <h2>What Are Skills?</h2>
+  <p>Skills are markdown files in <code>.claude/skills/</code>. Each file becomes a slash command. You describe what you want, Claude Code creates it.</p>
+
+  <h2>/weekly-numbers</h2>
+  <div class="code-wrap">
+    <pre><code># /weekly-numbers
+
+Pull weekly performance data across all locations.
+
+## Instructions
+
+1. Read the COGS tracking Google Sheet
+2. For each location, calculate:
+   - Total revenue
+   - Food cost %
+   - Labor cost %
+   - Average ticket size
+3. Compare to the previous week
+4. Flag any metric that's off by more than 5%
+5. Format as a clean summary table
+
+## Context
+
+- 5 locations: 3 Moto Medi (Lubbock x2, Amarillo), 2+ Tikka Shack
+- Target food cost: under 32%
+- Target labor cost: under 28%
+- Square POS is the source of truth for revenue</code></pre>
+  </div>
+
+  <h2>/payroll-prep</h2>
+  <div class="code-wrap">
+    <pre><code># /payroll-prep
+
+Prepare payroll data for processing.
+
+## Instructions
+
+1. Read the current pay period's hours from the scheduling export
+2. Cross-reference with Square clock-in data if available
+3. Flag overtime (anyone over 40 hours)
+4. Calculate estimated gross pay per employee
+5. Organize by location
+6. Output a clean summary ready for payroll processing
+
+## Context
+
+- Pay period: [biweekly/weekly]
+- 5 locations across 2 brands
+- Overtime threshold: 40 hours</code></pre>
+  </div>
+
+  <h2>/review-check</h2>
+  <div class="code-wrap">
+    <pre><code># /review-check
+
+Check Google Business reviews across all locations.
+
+## Instructions
+
+1. Check Google Business Profile for each location
+2. Find any new reviews since last check
+3. Summarize ratings and sentiment
+4. Draft responses for any reviews under 4 stars
+5. Flag any recurring complaints
+
+## Context
+
+- 3 Moto Medi locations + Tikka Shack locations
+- Response tone: professional, warm, solution-oriented
+- Always invite unhappy customers back</code></pre>
+  </div>
+
+  <div class="callout callout-info">
+    <div class="callout-title">To create a skill</div>
+    In Claude Code, just say: <em>"Create a skill called /weekly-numbers that pulls my weekly performance report"</em> &mdash; Claude creates the file for you.
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════ CH 10 ═══════════════════════════════════ -->
+<section class="chapter" id="agents">
+  <div class="chapter-badge">Chapter 10</div>
+  <h1>Agents & Web Apps</h1>
+  <p class="chapter-lead">Workers that run in parallel, and how Claude Code builds real software for you.</p>
+
+  <h2>Agents (Subagents)</h2>
+  <p>When you give Claude a complex task, it can spawn <strong>subagents</strong> &mdash; independent workers that handle different pieces simultaneously.</p>
+
+  <h3>Single-agent (slow)</h3>
+  <blockquote>"Check my reviews, then check my sales, then check my payroll data"</blockquote>
+
+  <h3>Multi-agent (fast)</h3>
+  <blockquote>"Do these three things at the same time: check Google Business reviews across all locations, pull this week's sales data from my COGS sheet, and analyze the payroll hours for overtime flags"</blockquote>
+
+  <p>Claude spins up 3 workers. Each handles one task. Results come back together.</p>
+
+  <div class="callout callout-info">
+    <div class="callout-title">Your use case</div>
+    Monday morning briefing across all 5 locations &mdash; reviews, sales, labor, inventory &mdash; all at once instead of one-by-one.
+  </div>
+
+  <h2>Building a Web App (Yes, You)</h2>
+  <p>Claude Code can build, deploy, and host web applications. You describe what you want. Claude writes the code, tests it, and deploys it.</p>
+
+  <p><strong>Why this matters:</strong> Instead of paying for expensive SaaS dashboards, Claude builds exactly what you need.</p>
+
+  <h3>Example prompt</h3>
+  <blockquote>"Build me a web dashboard that reads from my Google Sheet and shows: revenue by location (bar chart), food cost % trend over 8 weeks (line chart), labor cost % by location (gauges), and a table of this week vs last week. Mobile-friendly. Dark theme."</blockquote>
+
+  <p>Claude Code will create the project, write the code, connect it to your Sheet, deploy it to Vercel (free hosting), and give you a URL to bookmark on your phone.</p>
+
+  <div class="callout callout-warn">
+    <div class="callout-title">This is real</div>
+    A real, live web app. Built in one session. Updated automatically when your Sheet updates. No monthly SaaS fee.
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════ CH 11 ═══════════════════════════════════ -->
+<section class="chapter" id="build-payroll">
+  <div class="chapter-badge">Chapter 11 &mdash; Live Build</div>
+  <h1>Payroll Automation</h1>
+  <p class="chapter-lead">Your #1 immediate need. We build it now.</p>
+
+  <h2>The Problem</h2>
+  <p>You manually pull hours, cross-reference data, calculate overtime, and prep payroll reports. Across 5 locations, this eats hours every pay period.</p>
+
+  <h2>What We're Building</h2>
+  <ol>
+    <li>A Google Sheet template structured for multi-location payroll</li>
+    <li>A Claude Code skill (<code>/payroll-prep</code>) that processes raw hours data</li>
+    <li>Automated calculations: overtime flagging, gross pay estimates, location breakdowns</li>
+    <li>A Cowork scheduled task that preps the data before each pay period</li>
+  </ol>
+
+  <h2>What You Walk Away With</h2>
+  <ul>
+    <li>A repeatable payroll prep workflow that takes <strong>minutes instead of hours</strong></li>
+    <li>A skill you can run anytime with one command</li>
+    <li>Understanding of how to modify it as your needs change</li>
+  </ul>
+
+  <div class="callout callout-tip">
+    <div class="callout-title">Hands-on</div>
+    Open your laptop. We're building this together right now.
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════ CH 12 ═══════════════════════════════════ -->
+<section class="chapter" id="build-dashboard">
+  <div class="chapter-badge">Chapter 12 &mdash; Live Build</div>
+  <h1>Location Dashboard</h1>
+  <p class="chapter-lead">One URL. All 5 locations. Real-time numbers on your phone.</p>
+
+  <h2>The Problem</h2>
+  <p>You manually pull numbers from Square, spreadsheets, and other dashboards to understand how your locations are performing. No single view.</p>
+
+  <h2>What We're Building</h2>
+  <ol>
+    <li>A consolidated Google Sheet that acts as your data hub</li>
+    <li>A live web dashboard that reads from that Sheet</li>
+    <li>Location-by-location metrics: revenue, COGS, labor, trends</li>
+    <li>Mobile-friendly &mdash; check it from your phone between location visits</li>
+    <li>Auto-updating &mdash; new data in the Sheet = new data on the dashboard</li>
+  </ol>
+
+  <h2>What You Walk Away With</h2>
+  <ul>
+    <li>A deployed dashboard at a URL you own</li>
+    <li>Understanding of how Claude Code builds and deploys web apps</li>
+    <li>The ability to ask Claude to add features later (new charts, alerts, etc.)</li>
+  </ul>
+
+  <div class="callout callout-tip">
+    <div class="callout-title">Hands-on</div>
+    Open your laptop. We're building this together right now.
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════ CH 13 ═══════════════════════════════════ -->
+<section class="chapter" id="power-setup">
+  <div class="chapter-badge">Chapter 13</div>
+  <h1>Power Setup</h1>
+  <p class="chapter-lead">Your daily system, the Zapier migration path, and how to split responsibilities with your ops partner.</p>
+
+  <h2>Your Configuration</h2>
+
+  <h3>Cowork (primary daily tool)</h3>
+  <ol>
+    <li>Global instructions set with business context</li>
+    <li>Finance + Operations + Marketing plugins installed and customized</li>
+    <li>Google Drive + Gmail + Sheets connectors active</li>
+    <li>Folder instructions for finance, marketing, operations</li>
+    <li>Scheduled tasks: weekly numbers, monthly P&amp;L, review monitoring</li>
+  </ol>
+
+  <h3>Claude Code (power tool for building)</h3>
+  <ol>
+    <li>CLAUDE.md with full business context</li>
+    <li>MCP servers: Google Sheets, web fetch</li>
+    <li>Custom skills: <code>/weekly-numbers</code>, <code>/payroll-prep</code>, <code>/review-check</code></li>
+    <li>Dashboard project deployed on Vercel</li>
+  </ol>
+
+  <h2>Daily Workflow</h2>
+  <table>
+    <thead><tr><th>When</th><th>Tool</th><th>What</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Morning</strong></td><td>Cowork</td><td>"Morning briefing: reviews, yesterday's sales, anything that needs attention"</td></tr>
+      <tr><td><strong>During week</strong></td><td>Cowork</td><td>Vendor emails, social content, meeting prep, ad copy</td></tr>
+      <tr><td><strong>Pay period</strong></td><td>Claude Code</td><td><code>/payroll-prep</code> &mdash; one command, payroll ready</td></tr>
+      <tr><td><strong>End of month</strong></td><td>Cowork</td><td>"Monthly P&amp;L for all 5 locations, compare to last month"</td></tr>
+      <tr><td><strong>Need something new</strong></td><td>Claude Code</td><td>Describe it &rarr; Claude builds it &rarr; deploys it</td></tr>
+    </tbody>
+  </table>
+
+  <h2>From Zapier to Claude</h2>
+  <table>
+    <thead><tr><th>Zapier</th><th>Claude</th></tr></thead>
+    <tbody>
+      <tr><td>Trigger &rarr; Action (rigid)</td><td>Natural language (flexible)</td></tr>
+      <tr><td>Per-zap pricing</td><td>Included in Max subscription</td></tr>
+      <tr><td>Can't analyze data, just moves it</td><td>Analyzes, summarizes, decides, then acts</td></tr>
+      <tr><td>Separate tool to manage</td><td>Lives in your daily workflow</td></tr>
+      <tr><td>Pre-built integrations only</td><td>Claude builds custom integrations</td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout callout-info">
+    <div class="callout-title">Transition plan</div>
+    Keep what's working in Zapier. For anything that requires <strong>thinking</strong> (not just moving data from A to B), Claude is the play.
+  </div>
+
+  <h2>You + Your Ops Partner</h2>
+  <table>
+    <thead><tr><th></th><th>Rez</th><th>Ops Partner</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Primary tool</strong></td><td>Claude Code + Cowork</td><td>Cowork</td></tr>
+      <tr><td><strong>Focus</strong></td><td>Building systems, strategy, new automations</td><td>Daily ops, vendor comms, checklists, reviews</td></tr>
+      <tr><td><strong>Skills</strong></td><td>Creates new skills</td><td>Runs existing skills (<code>/weekly-numbers</code>, <code>/payroll-prep</code>)</td></tr>
+      <tr><td><strong>Dashboard</strong></td><td>Adds features, updates</td><td>Checks on phone daily</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ═══════════════════════════════════ CH 14 ═══════════════════════════════════ -->
+<section class="chapter" id="reference">
+  <div class="chapter-badge">Chapter 14</div>
+  <h1>Quick Reference</h1>
+  <p class="chapter-lead">Everything on one page. Bookmark this.</p>
+
+  <h2>Terminal Commands</h2>
+  <table>
+    <thead><tr><th>Command</th><th>What it does</th></tr></thead>
+    <tbody>
+      <tr><td><code>claude</code></td><td>Start Claude Code</td></tr>
+      <tr><td><code>ls</code></td><td>List files</td></tr>
+      <tr><td><code>cd ~/folder</code></td><td>Go to a folder</td></tr>
+      <tr><td><code>pwd</code></td><td>Where am I?</td></tr>
+      <tr><td><code>open .</code></td><td>Open folder in Finder</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Cowork Essentials</h2>
+  <table>
+    <thead><tr><th>Action</th><th>How</th></tr></thead>
+    <tbody>
+      <tr><td>Start Cowork</td><td>Claude Desktop &rarr; Cowork tab</td></tr>
+      <tr><td>Set instructions</td><td>Settings &rarr; Cowork &rarr; Edit Global Instructions</td></tr>
+      <tr><td>Add connector</td><td>Settings &rarr; Cowork &rarr; Connectors</td></tr>
+      <tr><td>Install plugin</td><td>Customize &rarr; Browse Plugins</td></tr>
+      <tr><td>Schedule task</td><td><code>/schedule</code> command</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Claude Code Essentials</h2>
+  <table>
+    <thead><tr><th>Action</th><th>How</th></tr></thead>
+    <tbody>
+      <tr><td>Create CLAUDE.md</td><td>"Create a CLAUDE.md for this project"</td></tr>
+      <tr><td>Create a skill</td><td>"Create a skill called /name that does X"</td></tr>
+      <tr><td>Add MCP server</td><td>"Set up a Google Sheets MCP server"</td></tr>
+      <tr><td>Run a skill</td><td>Type <code>/skillname</code></td></tr>
+      <tr><td>Build a web app</td><td>Describe what you want</td></tr>
+      <tr><td>Deploy</td><td>"Deploy this to Vercel"</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Your Custom Skills</h2>
+  <table>
+    <thead><tr><th>Skill</th><th>What it does</th></tr></thead>
+    <tbody>
+      <tr><td><code>/weekly-numbers</code></td><td>Weekly performance across all 5 locations</td></tr>
+      <tr><td><code>/payroll-prep</code></td><td>Prep payroll data for processing</td></tr>
+      <tr><td><code>/review-check</code></td><td>Scan Google reviews, draft responses</td></tr>
+      <tr><td><code>/cogs-report</code></td><td>Food cost % by location from Square data</td></tr>
+      <tr><td><code>/morning</code></td><td>Full morning briefing</td></tr>
+    </tbody>
+  </table>
+
+  <hr>
+  <p style="text-align:center;color:var(--subtle);font-size:14px;margin-top:40px;">
+    Built for two restaurant operators who want to stop pulling numbers by hand<br>and start running their business through AI.
+  </p>
+</section>
+
+</div>
+</div>
+
+<script>
+// ── Copy buttons ──
+document.querySelectorAll('.code-wrap pre').forEach(pre => {
+  const wrap = pre.closest('.code-wrap');
+  const btn = document.createElement('button');
+  btn.className = 'copy-btn';
+  btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg> Copy';
+  btn.addEventListener('click', () => {
+    const code = pre.querySelector('code');
+    const text = code ? code.textContent : pre.textContent;
+    navigator.clipboard.writeText(text).then(() => {
+      btn.classList.add('copied');
+      btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg> Copied';
+      setTimeout(() => {
+        btn.classList.remove('copied');
+        btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg> Copy';
+      }, 2000);
+    });
+  });
+  wrap.appendChild(btn);
+});
+
+// ── Active nav tracking ──
+const navLinks = document.querySelectorAll('.nav-link');
+const chapters = document.querySelectorAll('.chapter');
+
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const id = entry.target.id;
+      navLinks.forEach(link => {
+        link.classList.toggle('active', link.getAttribute('href') === '#' + id);
+      });
+    }
+  });
+}, { rootMargin: '-10% 0px -80% 0px' });
+
+chapters.forEach(ch => observer.observe(ch));
+
+// ── Progress bar ──
+const progressFill = document.getElementById('progressFill');
+window.addEventListener('scroll', () => {
+  const scrollTop = document.documentElement.scrollTop;
+  const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
+  const progress = scrollHeight > 0 ? (scrollTop / scrollHeight) * 100 : 0;
+  progressFill.style.width = progress + '%';
+});
+
+// ── Mobile menu ──
+const menuToggle = document.getElementById('menuToggle');
+const sidebar = document.getElementById('sidebar');
+const menuOverlay = document.getElementById('menuOverlay');
+
+menuToggle.addEventListener('click', () => {
+  sidebar.classList.toggle('open');
+  menuOverlay.classList.toggle('visible');
+});
+
+menuOverlay.addEventListener('click', () => {
+  sidebar.classList.remove('open');
+  menuOverlay.classList.remove('visible');
+});
+
+navLinks.forEach(link => {
+  link.addEventListener('click', () => {
+    if (window.innerWidth <= 900) {
+      sidebar.classList.remove('open');
+      menuOverlay.classList.remove('visible');
+    }
+  });
+});
+</script>
+
+</body>
+</html>
