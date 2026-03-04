@@ -1,0 +1,2012 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Claude Code & Cowork Crash Course — Humanity</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600;9..144,700&family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://api.fontshare.com/v2/css?f[]=cabinet-grotesk@800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink: #2D2A26;
+  --paper: #F5F0E8;
+  --warm: #E8DFD0;
+  --accent: #C4573A;
+  --accent-light: #f0d4c3;
+  --accent-dark: #9a3d24;
+  --accent-glow: rgba(196,87,58,0.12);
+  --sandstone: #C4A882;
+  --subtle: #8A8279;
+  --sage: #6B8F71;
+  --sage-light: #e3ede5;
+  --sage-dark: #4a6e50;
+  --espresso: #1A1714;
+  --espresso-mid: #2a2520;
+  --espresso-light: #3a342e;
+  --sidebar-w: 280px;
+  --header-h: 0px;
+  --mono: 'JetBrains Mono', monospace;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Outfit', sans-serif;
+  background: var(--paper);
+  color: var(--ink);
+  line-height: 1.7;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ═══════════ SIDEBAR ═══════════ */
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: var(--sidebar-w);
+  height: 100vh;
+  background: var(--espresso);
+  color: #c9c2b8;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: var(--espresso-light) transparent;
+}
+
+.sidebar-brand {
+  padding: 28px 24px 8px;
+  border-bottom: 1px solid var(--espresso-light);
+}
+
+.sidebar-brand a {
+  text-decoration: none;
+}
+
+.sidebar-logo {
+  font-family: 'Cabinet Grotesk', sans-serif;
+  font-size: 32px;
+  font-weight: 800;
+  color: #F5F0E8;
+  letter-spacing: -1px;
+  line-height: 1;
+}
+
+.sidebar-logo span { color: var(--accent); }
+
+.sidebar-subtitle {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: var(--subtle);
+  margin-top: 8px;
+  padding-bottom: 16px;
+}
+
+/* Progress */
+.sidebar-progress {
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--espresso-light);
+}
+
+.progress-label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--subtle);
+  margin-bottom: 10px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.progress-label .progress-count {
+  color: var(--sage);
+  font-variant-numeric: tabular-nums;
+}
+
+.progress-bar {
+  height: 4px;
+  background: var(--espresso-light);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: var(--sage);
+  border-radius: 4px;
+  transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  width: 0%;
+}
+
+/* Nav */
+.sidebar-nav {
+  flex: 1;
+  padding: 16px 0;
+  overflow-y: auto;
+}
+
+.nav-part {
+  padding: 12px 24px 6px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: var(--sandstone);
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 24px;
+  cursor: pointer;
+  transition: all 0.2s;
+  border-left: 3px solid transparent;
+  text-decoration: none;
+  color: #c9c2b8;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.nav-item:hover {
+  background: var(--espresso-mid);
+  color: #F5F0E8;
+}
+
+.nav-item.active {
+  background: var(--espresso-mid);
+  border-left-color: var(--accent);
+  color: #F5F0E8;
+}
+
+.nav-item.completed .nav-dot {
+  background: var(--sage);
+  border-color: var(--sage);
+}
+
+.nav-item.completed .nav-dot::after {
+  content: '';
+  width: 6px;
+  height: 6px;
+  background: url("data:image/svg+xml,%3Csvg viewBox='0 0 10 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 4l2.5 2.5L9 1' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/contain no-repeat;
+  width: 10px;
+  height: 10px;
+}
+
+.nav-dot {
+  width: 20px;
+  height: 20px;
+  min-width: 20px;
+  border-radius: 50%;
+  border: 2px solid var(--espresso-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  background: transparent;
+}
+
+.nav-item.active .nav-dot {
+  border-color: var(--accent);
+  background: var(--accent);
+  box-shadow: 0 0 0 3px rgba(196,87,58,0.25);
+}
+
+.nav-item.active .nav-dot::after {
+  content: '';
+  width: 6px;
+  height: 6px;
+  background: white;
+  border-radius: 50%;
+}
+
+.nav-label { flex: 1; }
+
+/* Close button for mobile */
+.sidebar-close {
+  display: none;
+  position: absolute;
+  top: 20px;
+  right: 16px;
+  width: 36px;
+  height: 36px;
+  border: none;
+  background: var(--espresso-light);
+  border-radius: 8px;
+  cursor: pointer;
+  color: #c9c2b8;
+  font-size: 20px;
+  line-height: 1;
+  z-index: 5;
+}
+
+/* ═══════════ MAIN ═══════════ */
+.main {
+  margin-left: var(--sidebar-w);
+  min-height: 100vh;
+  position: relative;
+}
+
+.main::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: var(--sidebar-w);
+  right: 0;
+  bottom: 0;
+  background: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23000' fill-opacity='0.015'%3E%3Cpath d='M20 20h1v1h-1z'/%3E%3C/g%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Mobile header */
+.mobile-header {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 56px;
+  background: var(--espresso);
+  z-index: 90;
+  align-items: center;
+  padding: 0 16px;
+  gap: 12px;
+}
+
+.hamburger {
+  width: 40px;
+  height: 40px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  padding: 8px;
+}
+
+.hamburger span {
+  display: block;
+  width: 24px;
+  height: 2px;
+  background: #c9c2b8;
+  border-radius: 2px;
+  transition: 0.2s;
+}
+
+.mobile-title {
+  font-family: 'Cabinet Grotesk', sans-serif;
+  font-size: 20px;
+  font-weight: 800;
+  color: #F5F0E8;
+  letter-spacing: -0.5px;
+}
+
+.mobile-title span { color: var(--accent); }
+
+.sidebar-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  z-index: 99;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.sidebar-overlay.visible {
+  opacity: 1;
+}
+
+/* ═══════════ CHAPTER CONTENT ═══════════ */
+.chapter {
+  display: none;
+  position: relative;
+  z-index: 1;
+  max-width: 780px;
+  margin: 0 auto;
+  padding: 56px 48px 120px;
+  animation: chapterIn 0.4s ease;
+}
+
+.chapter.active { display: block; }
+
+@keyframes chapterIn {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.chapter-badge {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--accent);
+  background: var(--accent-glow);
+  padding: 6px 14px;
+  border-radius: 6px;
+  margin-bottom: 16px;
+}
+
+.chapter h1 {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(28px, 4vw, 38px);
+  font-weight: 400;
+  line-height: 1.25;
+  color: var(--ink);
+  margin-bottom: 8px;
+  letter-spacing: -0.5px;
+}
+
+.chapter-intro {
+  font-size: 17px;
+  color: var(--subtle);
+  margin-bottom: 40px;
+  max-width: 600px;
+  line-height: 1.7;
+}
+
+.chapter h2 {
+  font-family: 'Fraunces', serif;
+  font-size: 24px;
+  font-weight: 500;
+  margin: 48px 0 16px;
+  color: var(--ink);
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--warm);
+}
+
+.chapter h3 {
+  font-family: 'Outfit', sans-serif;
+  font-size: 17px;
+  font-weight: 700;
+  margin: 32px 0 12px;
+  color: var(--ink);
+}
+
+.chapter p {
+  margin-bottom: 16px;
+  font-size: 15.5px;
+}
+
+.chapter strong {
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.chapter ul, .chapter ol {
+  margin-bottom: 16px;
+  padding-left: 24px;
+}
+
+.chapter li {
+  margin-bottom: 8px;
+  font-size: 15.5px;
+}
+
+.chapter li strong {
+  color: var(--accent-dark);
+}
+
+/* Tables */
+.chapter table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0 28px;
+  font-size: 14px;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid var(--warm);
+}
+
+.chapter thead {
+  background: var(--espresso);
+  color: #F5F0E8;
+}
+
+.chapter th {
+  padding: 12px 16px;
+  text-align: left;
+  font-weight: 600;
+  font-size: 12px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.chapter td {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--warm);
+  vertical-align: top;
+}
+
+.chapter tbody tr:last-child td { border-bottom: none; }
+.chapter tbody tr:nth-child(even) { background: rgba(0,0,0,0.02); }
+.chapter tbody tr:hover { background: rgba(196,87,58,0.04); }
+
+/* Code blocks */
+.code-block {
+  position: relative;
+  margin: 20px 0 28px;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid var(--espresso-light);
+}
+
+.code-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background: var(--espresso);
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--sandstone);
+  letter-spacing: 0.5px;
+}
+
+.code-label::before {
+  content: '';
+  display: inline-flex;
+  gap: 6px;
+  width: 8px;
+  height: 8px;
+  background: var(--accent);
+  border-radius: 50%;
+}
+
+.code-block pre {
+  padding: 20px;
+  background: var(--espresso-mid);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.code-block code {
+  font-family: var(--mono);
+  font-size: 13px;
+  line-height: 1.7;
+  color: #d4cfc7;
+  white-space: pre;
+}
+
+/* Inline code */
+.chapter code:not(.code-block code) {
+  font-family: var(--mono);
+  font-size: 13.5px;
+  background: rgba(196,87,58,0.08);
+  color: var(--accent-dark);
+  padding: 2px 7px;
+  border-radius: 5px;
+  font-weight: 500;
+}
+
+/* Syntax colors in code blocks */
+.code-block .ck { color: var(--sandstone); }
+.code-block .cs { color: var(--accent); }
+.code-block .cv { color: #8ec8a0; }
+.code-block .cc { color: #7a726a; font-style: italic; }
+
+/* Callout box */
+.callout {
+  padding: 20px 24px;
+  border-radius: 10px;
+  margin: 24px 0;
+  border-left: 4px solid;
+}
+
+.callout-opportunity {
+  background: var(--sage-light);
+  border-color: var(--sage);
+}
+
+.callout-opportunity .callout-title {
+  color: var(--sage-dark);
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.callout-tip {
+  background: rgba(196,168,130,0.15);
+  border-color: var(--sandstone);
+}
+
+.callout-tip .callout-title {
+  color: #8a6f4e;
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.callout p {
+  font-size: 14.5px;
+  margin-bottom: 0;
+}
+
+/* Command reference */
+.cmd-ref {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0;
+  border: 1px solid var(--warm);
+  border-radius: 10px;
+  overflow: hidden;
+  margin: 20px 0 28px;
+}
+
+.cmd-ref dt {
+  padding: 12px 16px;
+  background: var(--espresso);
+  color: var(--accent-light);
+  font-family: var(--mono);
+  font-size: 13px;
+  font-weight: 600;
+  border-bottom: 1px solid var(--espresso-light);
+  display: flex;
+  align-items: center;
+}
+
+.cmd-ref dd {
+  padding: 12px 16px;
+  font-size: 14px;
+  border-bottom: 1px solid var(--warm);
+  display: flex;
+  align-items: center;
+}
+
+.cmd-ref dt:last-of-type, .cmd-ref dd:last-of-type { border-bottom: none; }
+
+/* ═══════════ CHAPTER FOOTER NAV ═══════════ */
+.chapter-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: 56px;
+  padding-top: 32px;
+  border-top: 1px solid var(--warm);
+}
+
+.chapter-nav-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  border: 1.5px solid var(--warm);
+  border-radius: 10px;
+  background: white;
+  font-family: 'Outfit', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink);
+  cursor: pointer;
+  transition: all 0.2s;
+  text-decoration: none;
+}
+
+.chapter-nav-btn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+}
+
+.chapter-nav-btn.primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: white;
+}
+
+.chapter-nav-btn.primary:hover {
+  background: var(--accent-dark);
+  border-color: var(--accent-dark);
+  color: white;
+  box-shadow: 0 4px 16px rgba(196,87,58,0.3);
+}
+
+.chapter-nav-btn svg {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
+
+.complete-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  border: 2px solid var(--sage);
+  border-radius: 10px;
+  background: white;
+  font-family: 'Outfit', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--sage-dark);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.complete-btn:hover {
+  background: var(--sage);
+  color: white;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(107,143,113,0.25);
+}
+
+.complete-btn.done {
+  background: var(--sage);
+  color: white;
+  pointer-events: none;
+}
+
+.complete-btn svg {
+  width: 18px;
+  height: 18px;
+}
+
+.chapter-footer-spacer { flex: 1; }
+
+/* ═══════════ COURSE HOME ═══════════ */
+.course-home {
+  display: none;
+  position: relative;
+  z-index: 1;
+  max-width: 780px;
+  margin: 0 auto;
+  padding: 56px 48px 120px;
+  animation: chapterIn 0.4s ease;
+}
+
+.course-home.active { display: block; }
+
+.home-hero {
+  text-align: center;
+  padding: 40px 0 48px;
+}
+
+.home-hero .chapter-badge {
+  margin-bottom: 20px;
+}
+
+.home-hero h1 {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(32px, 5vw, 44px);
+  font-weight: 400;
+  line-height: 1.2;
+  margin-bottom: 16px;
+  letter-spacing: -1px;
+}
+
+.home-hero p {
+  font-size: 17px;
+  color: var(--subtle);
+  max-width: 520px;
+  margin: 0 auto;
+  line-height: 1.7;
+}
+
+.home-parts {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  margin-top: 16px;
+}
+
+.home-part {
+  background: white;
+  border: 1px solid var(--warm);
+  border-radius: 14px;
+  padding: 28px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+}
+
+.home-part-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 8px;
+}
+
+.home-part h2 {
+  font-family: 'Fraunces', serif;
+  font-size: 22px;
+  font-weight: 500;
+  margin-bottom: 16px;
+}
+
+.home-chapter-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.home-chapter-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.15s;
+  text-decoration: none;
+  color: var(--ink);
+}
+
+.home-chapter-item:hover {
+  background: var(--accent-glow);
+}
+
+.home-ch-num {
+  width: 28px;
+  height: 28px;
+  min-width: 28px;
+  border-radius: 50%;
+  background: var(--warm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--subtle);
+  transition: all 0.2s;
+}
+
+.home-chapter-item:hover .home-ch-num {
+  background: var(--accent);
+  color: white;
+}
+
+.home-chapter-item.completed .home-ch-num {
+  background: var(--sage);
+  color: white;
+}
+
+.home-ch-title {
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.home-ch-arrow {
+  margin-left: auto;
+  color: var(--subtle);
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+
+.home-chapter-item:hover .home-ch-arrow { opacity: 1; }
+
+.home-start-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 16px 40px;
+  background: var(--accent);
+  color: white;
+  font-family: 'Outfit', sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-top: 40px;
+  box-shadow: 0 2px 12px rgba(196,87,58,0.25);
+}
+
+.home-start-btn:hover {
+  background: var(--accent-dark);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 24px rgba(196,87,58,0.35);
+}
+
+.home-start-btn svg { width: 18px; height: 18px; }
+
+/* ═══════════ RESPONSIVE ═══════════ */
+@media (max-width: 860px) {
+  :root { --sidebar-w: 260px; }
+}
+
+@media (max-width: 768px) {
+  .sidebar {
+    transform: translateX(-100%);
+    width: 300px;
+    z-index: 200;
+  }
+
+  .sidebar.open { transform: translateX(0); }
+
+  .sidebar-close { display: flex; align-items: center; justify-content: center; }
+
+  .sidebar-overlay { display: block; pointer-events: none; }
+  .sidebar-overlay.visible { pointer-events: auto; }
+
+  .mobile-header { display: flex; }
+
+  .main {
+    margin-left: 0;
+    padding-top: 56px;
+  }
+
+  .main::before { left: 0; }
+
+  .chapter, .course-home {
+    padding: 32px 20px 100px;
+  }
+
+  .chapter-footer {
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .chapter-footer-spacer { display: none; }
+
+  .complete-btn { width: 100%; justify-content: center; order: -1; }
+
+  .chapter table { font-size: 13px; }
+  .chapter th, .chapter td { padding: 10px 12px; }
+}
+
+@media (max-width: 480px) {
+  .chapter h1 { font-size: 26px; }
+  .chapter h2 { font-size: 20px; }
+  .chapter-footer { flex-direction: column; }
+  .chapter-nav-btn { width: 100%; justify-content: center; }
+}
+</style>
+</head>
+<body>
+
+<!-- Mobile header -->
+<div class="mobile-header">
+  <button class="hamburger" onclick="toggleSidebar()" aria-label="Open navigation">
+    <span></span><span></span><span></span>
+  </button>
+  <div class="mobile-title">Humanity<span>.</span></div>
+</div>
+
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
+
+<!-- Sidebar -->
+<nav class="sidebar" id="sidebar">
+  <button class="sidebar-close" onclick="closeSidebar()" aria-label="Close navigation">&times;</button>
+
+  <div class="sidebar-brand">
+    <a href="#home" onclick="goHome()">
+      <div class="sidebar-logo">Humanity<span>.</span></div>
+    </a>
+    <div class="sidebar-subtitle">Crash Course</div>
+  </div>
+
+  <div class="sidebar-progress">
+    <div class="progress-label">
+      <span>Progress</span>
+      <span class="progress-count" id="progressCount">0 / 12</span>
+    </div>
+    <div class="progress-bar">
+      <div class="progress-fill" id="progressFill"></div>
+    </div>
+  </div>
+
+  <div class="sidebar-nav" id="sidebarNav">
+    <div class="nav-part">Start Here</div>
+    <a class="nav-item" data-ch="1" onclick="goTo(1)">
+      <div class="nav-dot"></div>
+      <span class="nav-label">Your Current Level</span>
+    </a>
+
+    <div class="nav-part">Part 1 &mdash; Claude Code</div>
+    <a class="nav-item" data-ch="2" onclick="goTo(2)">
+      <div class="nav-dot"></div>
+      <span class="nav-label">Hooks Deep Dive</span>
+    </a>
+    <a class="nav-item" data-ch="3" onclick="goTo(3)">
+      <div class="nav-dot"></div>
+      <span class="nav-label">MCP Servers</span>
+    </a>
+    <a class="nav-item" data-ch="4" onclick="goTo(4)">
+      <div class="nav-dot"></div>
+      <span class="nav-label">Skills & Slash Commands</span>
+    </a>
+    <a class="nav-item" data-ch="5" onclick="goTo(5)">
+      <div class="nav-dot"></div>
+      <span class="nav-label">Subagents</span>
+    </a>
+    <a class="nav-item" data-ch="6" onclick="goTo(6)">
+      <div class="nav-dot"></div>
+      <span class="nav-label">Git & Background Tasks</span>
+    </a>
+    <a class="nav-item" data-ch="7" onclick="goTo(7)">
+      <div class="nav-dot"></div>
+      <span class="nav-label">Recent Updates</span>
+    </a>
+
+    <div class="nav-part">Part 2 &mdash; Cowork</div>
+    <a class="nav-item" data-ch="8" onclick="goTo(8)">
+      <div class="nav-dot"></div>
+      <span class="nav-label">What Is Cowork & Setup</span>
+    </a>
+    <a class="nav-item" data-ch="9" onclick="goTo(9)">
+      <div class="nav-dot"></div>
+      <span class="nav-label">Instructions & Plugins</span>
+    </a>
+    <a class="nav-item" data-ch="10" onclick="goTo(10)">
+      <div class="nav-dot"></div>
+      <span class="nav-label">Connectors & Use Cases</span>
+    </a>
+    <a class="nav-item" data-ch="11" onclick="goTo(11)">
+      <div class="nav-dot"></div>
+      <span class="nav-label">Cowork vs Claude Code</span>
+    </a>
+
+    <div class="nav-part">Part 3 &mdash; Power Up</div>
+    <a class="nav-item" data-ch="12" onclick="goTo(12)">
+      <div class="nav-dot"></div>
+      <span class="nav-label">Power Setup & Workflow</span>
+    </a>
+  </div>
+</nav>
+
+<!-- Main content -->
+<main class="main">
+
+<!-- ═══════════ HOME ═══════════ -->
+<div class="course-home active" id="home">
+  <div class="home-hero">
+    <div class="chapter-badge">12 Chapters</div>
+    <h1>Claude Code &amp; Cowork<br>Crash Course</h1>
+    <p>Built around what you already know and what you're missing. Work through it chapter by chapter, or jump to whatever's most useful.</p>
+  </div>
+
+  <div class="home-parts">
+    <div class="home-part">
+      <div class="home-part-label">Start Here</div>
+      <h2>Assessment</h2>
+      <div class="home-chapter-list">
+        <a class="home-chapter-item" onclick="goTo(1)" data-ch="1">
+          <div class="home-ch-num">1</div>
+          <span class="home-ch-title">Your Current Level</span>
+          <svg class="home-ch-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+        </a>
+      </div>
+    </div>
+
+    <div class="home-part">
+      <div class="home-part-label">Part 1</div>
+      <h2>Claude Code &mdash; What You're Missing</h2>
+      <div class="home-chapter-list">
+        <a class="home-chapter-item" onclick="goTo(2)" data-ch="2">
+          <div class="home-ch-num">2</div>
+          <span class="home-ch-title">Hooks Deep Dive</span>
+          <svg class="home-ch-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+        </a>
+        <a class="home-chapter-item" onclick="goTo(3)" data-ch="3">
+          <div class="home-ch-num">3</div>
+          <span class="home-ch-title">MCP Servers Deep Dive</span>
+          <svg class="home-ch-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+        </a>
+        <a class="home-chapter-item" onclick="goTo(4)" data-ch="4">
+          <div class="home-ch-num">4</div>
+          <span class="home-ch-title">Skills & Slash Commands</span>
+          <svg class="home-ch-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+        </a>
+        <a class="home-chapter-item" onclick="goTo(5)" data-ch="5">
+          <div class="home-ch-num">5</div>
+          <span class="home-ch-title">Subagents</span>
+          <svg class="home-ch-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+        </a>
+        <a class="home-chapter-item" onclick="goTo(6)" data-ch="6">
+          <div class="home-ch-num">6</div>
+          <span class="home-ch-title">Git Workflows & Background Tasks</span>
+          <svg class="home-ch-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+        </a>
+        <a class="home-chapter-item" onclick="goTo(7)" data-ch="7">
+          <div class="home-ch-num">7</div>
+          <span class="home-ch-title">Recent Updates</span>
+          <svg class="home-ch-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+        </a>
+      </div>
+    </div>
+
+    <div class="home-part">
+      <div class="home-part-label">Part 2</div>
+      <h2>Claude Cowork &mdash; From Zero</h2>
+      <div class="home-chapter-list">
+        <a class="home-chapter-item" onclick="goTo(8)" data-ch="8">
+          <div class="home-ch-num">8</div>
+          <span class="home-ch-title">What Is Cowork & Setup</span>
+          <svg class="home-ch-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+        </a>
+        <a class="home-chapter-item" onclick="goTo(9)" data-ch="9">
+          <div class="home-ch-num">9</div>
+          <span class="home-ch-title">Instructions & Plugins</span>
+          <svg class="home-ch-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+        </a>
+        <a class="home-chapter-item" onclick="goTo(10)" data-ch="10">
+          <div class="home-ch-num">10</div>
+          <span class="home-ch-title">Connectors & Use Cases</span>
+          <svg class="home-ch-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+        </a>
+        <a class="home-chapter-item" onclick="goTo(11)" data-ch="11">
+          <div class="home-ch-num">11</div>
+          <span class="home-ch-title">Cowork vs Claude Code</span>
+          <svg class="home-ch-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+        </a>
+      </div>
+    </div>
+
+    <div class="home-part">
+      <div class="home-part-label">Part 3</div>
+      <h2>Putting It Together</h2>
+      <div class="home-chapter-list">
+        <a class="home-chapter-item" onclick="goTo(12)" data-ch="12">
+          <div class="home-ch-num">12</div>
+          <span class="home-ch-title">Power Setup & Daily Workflow</span>
+          <svg class="home-ch-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div style="text-align:center">
+    <button class="home-start-btn" onclick="goTo(1)">
+      Start the Course
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </button>
+  </div>
+</div>
+
+<!-- ═══════════ CH 1: YOUR CURRENT LEVEL ═══════════ -->
+<section class="chapter" id="ch1">
+  <div class="chapter-badge">Chapter 1</div>
+  <h1>Your Current Level</h1>
+  <p class="chapter-intro">Here's what you already know, what you've touched, and where the gaps are. This is where we start.</p>
+
+  <table>
+    <thead><tr><th>Feature</th><th>Status</th></tr></thead>
+    <tbody>
+      <tr><td>CLAUDE.md</td><td><strong style="color:var(--sage)">Strong</strong></td></tr>
+      <tr><td>Auto-memory / /memory</td><td><strong style="color:var(--sage)">Using regularly</strong></td></tr>
+      <tr><td>Skills / slash commands</td><td><strong style="color:var(--sandstone)">Using some, wants more</strong></td></tr>
+      <tr><td>Hooks</td><td><strong style="color:var(--sandstone)">Surface level</strong></td></tr>
+      <tr><td>MCP servers</td><td><strong style="color:var(--sandstone)">Surface level</strong></td></tr>
+      <tr><td>Subagents</td><td><strong style="color:var(--accent)">Not using</strong></td></tr>
+      <tr><td>Git workflows</td><td><strong style="color:var(--accent)">Not using</strong></td></tr>
+      <tr><td>Background tasks</td><td><strong style="color:var(--accent)">Not using</strong></td></tr>
+      <tr><td>Cowork</td><td><strong style="color:var(--accent)">Never used</strong></td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout callout-tip">
+    <div class="callout-title">How to Use This Course</div>
+    <p>Work through the chapters in order, or jump straight to what's most relevant. Each chapter stands on its own. Mark chapters complete as you go to track your progress.</p>
+  </div>
+
+  <div class="chapter-footer">
+    <div class="chapter-footer-spacer"></div>
+    <button class="complete-btn" onclick="toggleComplete(1)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+      <span>Mark Complete</span>
+    </button>
+    <button class="chapter-nav-btn primary" onclick="goTo(2)">
+      Next: Hooks
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </button>
+  </div>
+</section>
+
+<!-- ═══════════ CH 2: HOOKS ═══════════ -->
+<section class="chapter" id="ch2">
+  <div class="chapter-badge">Chapter 2</div>
+  <h1>Hooks Deep Dive</h1>
+  <p class="chapter-intro">Hooks are commands that run automatically at specific points in Claude's workflow. Think of them as "if Claude does X, also do Y."</p>
+
+  <p>You configure them in <code>.claude/settings.json</code>.</p>
+
+  <h2>Four Hook Types</h2>
+  <ul>
+    <li><strong>Command hooks</strong> &mdash; Run a shell command (formatting, linting, logging)</li>
+    <li><strong>HTTP hooks</strong> &mdash; POST JSON to a URL (send notifications, trigger webhooks)</li>
+    <li><strong>Prompt hooks</strong> &mdash; Ask an LLM a yes/no question (smart gatekeeping)</li>
+    <li><strong>Agent hooks</strong> &mdash; Spawn a subagent to verify complex conditions</li>
+  </ul>
+
+  <h2>Five Hook Events</h2>
+  <table>
+    <thead><tr><th>Event</th><th>When It Fires</th></tr></thead>
+    <tbody>
+      <tr><td><code>PreToolUse</code></td><td>Before Claude runs any tool (block dangerous commands)</td></tr>
+      <tr><td><code>PostToolUse</code></td><td>After a tool completes (auto-format files, log actions)</td></tr>
+      <tr><td><code>PostToolUseFailure</code></td><td>When a tool fails (custom error handling)</td></tr>
+      <tr><td><code>PermissionRequest</code></td><td>When Claude asks for permission (auto-approve safe patterns)</td></tr>
+      <tr><td><code>Notification</code></td><td>When Claude sends a notification (forward to Slack, Telegram)</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Auto-format on every file write</h3>
+  <div class="code-block">
+    <div class="code-label">settings.json</div>
+    <pre><code>{
+  <span class="ck">"hooks"</span>: {
+    <span class="ck">"PostToolUse"</span>: [
+      {
+        <span class="ck">"matcher"</span>: <span class="cs">"Write|Edit"</span>,
+        <span class="ck">"type"</span>: <span class="cs">"command"</span>,
+        <span class="ck">"command"</span>: <span class="cs">"prettier --write $CLAUDE_FILE_PATH"</span>
+      }
+    ]
+  }
+}</code></pre>
+  </div>
+
+  <h3>Send Telegram notification when Claude finishes</h3>
+  <div class="code-block">
+    <div class="code-label">settings.json</div>
+    <pre><code>{
+  <span class="ck">"hooks"</span>: {
+    <span class="ck">"Notification"</span>: [
+      {
+        <span class="ck">"type"</span>: <span class="cs">"http"</span>,
+        <span class="ck">"url"</span>: <span class="cs">"https://api.telegram.org/bot&lt;TOKEN&gt;/sendMessage"</span>,
+        <span class="ck">"method"</span>: <span class="cs">"POST"</span>,
+        <span class="ck">"body"</span>: {
+          <span class="ck">"chat_id"</span>: <span class="cs">"&lt;YOUR_CHAT_ID&gt;"</span>,
+          <span class="ck">"text"</span>: <span class="cs">"Claude finished: $CLAUDE_NOTIFICATION"</span>
+        }
+      }
+    ]
+  }
+}</code></pre>
+  </div>
+
+  <h3>Block destructive git commands</h3>
+  <div class="code-block">
+    <div class="code-label">settings.json</div>
+    <pre><code>{
+  <span class="ck">"hooks"</span>: {
+    <span class="ck">"PreToolUse"</span>: [
+      {
+        <span class="ck">"matcher"</span>: <span class="cs">"Bash"</span>,
+        <span class="ck">"type"</span>: <span class="cs">"prompt"</span>,
+        <span class="ck">"prompt"</span>: <span class="cs">"Is this command destructive (force push, reset --hard, rm -rf)? Answer YES to block, NO to allow."</span>
+      }
+    ]
+  }
+}</code></pre>
+  </div>
+
+  <div class="callout callout-opportunity">
+    <div class="callout-title">Your Opportunity</div>
+    <p>You run Moltbot agents on your Mac Mini. Hooks could auto-notify you via Telegram (Bean/Egg) when Claude Code finishes long tasks, auto-lint code, or auto-commit after successful builds.</p>
+  </div>
+
+  <div class="chapter-footer">
+    <button class="chapter-nav-btn" onclick="goTo(1)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+      Previous
+    </button>
+    <button class="complete-btn" onclick="toggleComplete(2)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+      <span>Mark Complete</span>
+    </button>
+    <button class="chapter-nav-btn primary" onclick="goTo(3)">
+      Next: MCP Servers
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </button>
+  </div>
+</section>
+
+<!-- ═══════════ CH 3: MCP SERVERS ═══════════ -->
+<section class="chapter" id="ch3">
+  <div class="chapter-badge">Chapter 3</div>
+  <h1>MCP Servers Deep Dive</h1>
+  <p class="chapter-intro">MCP (Model Context Protocol) lets Claude connect to external tools and data sources. Each MCP server exposes "tools" that Claude can call like native capabilities.</p>
+
+  <h2>Where MCP Configs Live</h2>
+  <ul>
+    <li><strong>Global:</strong> <code>~/.claude/settings.json</code> &mdash; available in all projects</li>
+    <li><strong>Project:</strong> <code>.claude/settings.json</code> &mdash; project-specific, committed to git</li>
+    <li><strong>Local:</strong> <code>.claude/settings.local.json</code> &mdash; project-specific, NOT committed (good for secrets)</li>
+  </ul>
+
+  <h3>Config structure</h3>
+  <div class="code-block">
+    <div class="code-label">settings.json</div>
+    <pre><code>{
+  <span class="ck">"mcpServers"</span>: {
+    <span class="ck">"server-name"</span>: {
+      <span class="ck">"command"</span>: <span class="cs">"npx"</span>,
+      <span class="ck">"args"</span>: [<span class="cs">"-y"</span>, <span class="cs">"@modelcontextprotocol/server-filesystem"</span>, <span class="cs">"/path/to/folder"</span>],
+      <span class="ck">"env"</span>: {}
+    }
+  }
+}</code></pre>
+  </div>
+
+  <h2>MCP Servers You Should Know</h2>
+  <table>
+    <thead><tr><th>Server</th><th>What It Does</th><th>Why You'd Use It</th></tr></thead>
+    <tbody>
+      <tr><td><code>@anthropic/claude-code-mcp</code></td><td>Exposes Claude Code itself as an MCP tool</td><td>Let Cowork or other Claude instances call Claude Code</td></tr>
+      <tr><td><code>server-filesystem</code></td><td>Read/write files in specified directories</td><td>Give Claude access to specific folders</td></tr>
+      <tr><td><code>server-github</code></td><td>GitHub API (issues, PRs, repos)</td><td>Manage repos without leaving Claude</td></tr>
+      <tr><td><code>mcp-server-fetch</code></td><td>Fetch web pages</td><td>Let Claude read URLs</td></tr>
+      <tr><td>Google Sheets MCP</td><td>Read/write Google Sheets</td><td>Your LeaseJenny dashboard, lead tracking</td></tr>
+      <tr><td>Slack MCP</td><td>Send/read Slack messages</td><td>Notifications, team updates</td></tr>
+    </tbody>
+  </table>
+
+  <h3>MCP tools in hooks</h3>
+  <p>MCP tools follow the pattern <code>mcp__&lt;server&gt;__&lt;tool&gt;</code>. You can write hooks that trigger on specific MCP tools:</p>
+  <div class="code-block">
+    <div class="code-label">settings.json</div>
+    <pre><code>{
+  <span class="ck">"hooks"</span>: {
+    <span class="ck">"PostToolUse"</span>: [
+      {
+        <span class="ck">"matcher"</span>: <span class="cs">"mcp__github__.*"</span>,
+        <span class="ck">"type"</span>: <span class="cs">"command"</span>,
+        <span class="ck">"command"</span>: <span class="cs">"echo 'GitHub action taken' >> ~/claude-audit.log"</span>
+      }
+    ]
+  }
+}</code></pre>
+  </div>
+
+  <div class="callout callout-opportunity">
+    <div class="callout-title">Your Opportunity</div>
+    <p>Connect Google Sheets MCP for LeaseJenny lead data. Connect GitHub MCP for your repos. Set up a filesystem MCP so Cowork can access your project files.</p>
+  </div>
+
+  <div class="chapter-footer">
+    <button class="chapter-nav-btn" onclick="goTo(2)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+      Previous
+    </button>
+    <button class="complete-btn" onclick="toggleComplete(3)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+      <span>Mark Complete</span>
+    </button>
+    <button class="chapter-nav-btn primary" onclick="goTo(4)">
+      Next: Skills
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </button>
+  </div>
+</section>
+
+<!-- ═══════════ CH 4: SKILLS & SLASH COMMANDS ═══════════ -->
+<section class="chapter" id="ch4">
+  <div class="chapter-badge">Chapter 4</div>
+  <h1>Skills &amp; Slash Commands</h1>
+  <p class="chapter-intro">You use some skills already but want more. Here's the full picture.</p>
+
+  <h2>Built-in Skills You Might Not Know</h2>
+  <ul>
+    <li><strong><code>/simplify</code></strong> &mdash; Reviews changed code for reuse, quality, efficiency, then fixes issues</li>
+    <li><strong><code>/batch</code></strong> &mdash; Run the same operation across multiple files</li>
+    <li><strong><code>/copy</code></strong> &mdash; Interactive picker to copy specific code blocks (NEW)</li>
+    <li><strong><code>/memory</code></strong> &mdash; View and manage auto-memory files</li>
+    <li><strong><code>/model</code></strong> &mdash; Switch models mid-conversation (now shows current model)</li>
+    <li><strong><code>/voice</code></strong> &mdash; Voice input mode (NEW, rolling out gradually)</li>
+  </ul>
+
+  <h2>Custom Skills</h2>
+  <p>Custom skills live in <code>.claude/skills/</code> as markdown files. Each file becomes a slash command.</p>
+
+  <h3>Skill file structure</h3>
+  <div class="code-block">
+    <div class="code-label">.claude/skills/my-skill.md</div>
+    <pre><code><span class="cc"># /my-skill-name</span>
+
+Description of what this skill does.
+
+<span class="cc">## Instructions</span>
+
+Step-by-step instructions Claude follows
+when this skill is invoked.
+
+<span class="cc">## Context</span>
+
+Any context Claude needs (file paths,
+conventions, etc.)</code></pre>
+  </div>
+
+  <h3>Example: /deploy skill</h3>
+  <div class="code-block">
+    <div class="code-label">.claude/skills/deploy.md</div>
+    <pre><code><span class="cc"># /deploy</span>
+
+Deploy the current project to Vercel.
+
+<span class="cc">## Instructions</span>
+
+1. Run the build command to verify no errors
+2. Check git status &mdash; commit any uncommitted
+   changes first
+3. Run `vercel --prod` to deploy
+4. Report the deployment URL when done
+
+<span class="cc">## Context</span>
+
+- Always use `--prod` flag for production deploys
+- If build fails, fix the issue before deploying</code></pre>
+  </div>
+
+  <h3>Example: /morning-report for LeaseJenny</h3>
+  <div class="code-block">
+    <div class="code-label">.claude/skills/morning-report.md</div>
+    <pre><code><span class="cc"># /morning-report</span>
+
+Generate a morning leads report.
+
+<span class="cc">## Instructions</span>
+
+1. Read the Google Sheet for LeaseJenny leads
+2. Count new leads from the last 24 hours
+3. Summarize qualification status
+4. List any leads that need follow-up
+5. Format as a clean summary I can skim
+   in 30 seconds</code></pre>
+  </div>
+
+  <div class="callout callout-opportunity">
+    <div class="callout-title">Your Opportunity</div>
+    <p>Build skills for your recurring workflows &mdash; deploying projects, checking lead status, generating reports, auditing your Moltbot agents.</p>
+  </div>
+
+  <div class="chapter-footer">
+    <button class="chapter-nav-btn" onclick="goTo(3)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+      Previous
+    </button>
+    <button class="complete-btn" onclick="toggleComplete(4)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+      <span>Mark Complete</span>
+    </button>
+    <button class="chapter-nav-btn primary" onclick="goTo(5)">
+      Next: Subagents
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </button>
+  </div>
+</section>
+
+<!-- ═══════════ CH 5: SUBAGENTS ═══════════ -->
+<section class="chapter" id="ch5">
+  <div class="chapter-badge">Chapter 5</div>
+  <h1>Subagents</h1>
+  <p class="chapter-intro">Subagents let Claude spawn independent workers that run in parallel. This is one of the most powerful features you're not touching.</p>
+
+  <h2>When to Use Subagents</h2>
+  <ul>
+    <li>Researching multiple things at once (search 3 codebases simultaneously)</li>
+    <li>Running independent tasks that don't depend on each other</li>
+    <li>Protecting your main context window from getting bloated with search results</li>
+    <li>Exploring a codebase deeply without losing your place</li>
+  </ul>
+
+  <h2>How They Work</h2>
+  <p>Claude automatically uses the <code>Agent</code> tool to spawn subagents. You can also configure agent types in your CLAUDE.md or skills.</p>
+
+  <h2>Built-in Agent Types</h2>
+  <table>
+    <thead><tr><th>Type</th><th>Purpose</th></tr></thead>
+    <tbody>
+      <tr><td><code>Explore</code></td><td>Fast codebase exploration &mdash; find files, search code, answer questions</td></tr>
+      <tr><td><code>Plan</code></td><td>Architecture planning &mdash; design implementation strategies</td></tr>
+      <tr><td><code>general-purpose</code></td><td>Research, search, multi-step tasks</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Example prompt that triggers subagents</h3>
+  <div class="callout callout-tip">
+    <div class="callout-title">Try This</div>
+    <p>"Research how Square's API handles webhook notifications, AND check my LeaseJenny codebase for any existing webhook handlers, AND find examples of Square webhook implementations on GitHub"</p>
+  </div>
+  <p>Claude will spawn 3 parallel agents instead of doing these sequentially.</p>
+
+  <div class="callout callout-opportunity">
+    <div class="callout-title">Your Opportunity</div>
+    <p>When working on multi-project tasks (LeaseJenny + stock screener + Humanity), subagents let you research across all of them simultaneously.</p>
+  </div>
+
+  <div class="chapter-footer">
+    <button class="chapter-nav-btn" onclick="goTo(4)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+      Previous
+    </button>
+    <button class="complete-btn" onclick="toggleComplete(5)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+      <span>Mark Complete</span>
+    </button>
+    <button class="chapter-nav-btn primary" onclick="goTo(6)">
+      Next: Git & Tasks
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </button>
+  </div>
+</section>
+
+<!-- ═══════════ CH 6: GIT & BACKGROUND TASKS ═══════════ -->
+<section class="chapter" id="ch6">
+  <div class="chapter-badge">Chapter 6</div>
+  <h1>Git Workflows &amp; Background Tasks</h1>
+  <p class="chapter-intro">Claude Code is excellent at git operations you're probably doing manually. Plus: run long commands without blocking your conversation.</p>
+
+  <h2>Git Workflows</h2>
+  <ul>
+    <li><strong>Commits:</strong> <code>/commit</code> &mdash; Analyzes changes, writes message, commits</li>
+    <li><strong>PRs:</strong> "Create a PR for this branch" &mdash; Pushes, writes title/description, creates PR via <code>gh</code></li>
+    <li><strong>Branch management:</strong> "Create a feature branch for the new dashboard"</li>
+    <li><strong>Diff review:</strong> "What changed since yesterday?"</li>
+    <li><strong>Conflict resolution:</strong> "Resolve the merge conflicts in this file"</li>
+  </ul>
+
+  <h2>Background Tasks</h2>
+  <p>Run long commands without blocking your conversation:</p>
+  <div class="callout callout-tip">
+    <div class="callout-title">Try These</div>
+    <p>"Run the build in the background and let me know when it finishes"<br>
+    "Deploy to Vercel in the background while I keep working"</p>
+  </div>
+  <p>Claude uses <code>run_in_background</code> on Bash commands and notifies you when they complete. You can keep working on other things in the same session.</p>
+
+  <div class="callout callout-opportunity">
+    <div class="callout-title">Your Opportunity</div>
+    <p>You have multiple GitHub repos (leasejenny-dashboard, crash-course-intake, etc.). Let Claude handle the git ceremony. Deploy one project while working on another. Run tests in the background while writing new code.</p>
+  </div>
+
+  <div class="chapter-footer">
+    <button class="chapter-nav-btn" onclick="goTo(5)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+      Previous
+    </button>
+    <button class="complete-btn" onclick="toggleComplete(6)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+      <span>Mark Complete</span>
+    </button>
+    <button class="chapter-nav-btn primary" onclick="goTo(7)">
+      Next: Updates
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </button>
+  </div>
+</section>
+
+<!-- ═══════════ CH 7: RECENT UPDATES ═══════════ -->
+<section class="chapter" id="ch7">
+  <div class="chapter-badge">Chapter 7</div>
+  <h1>Recent Updates</h1>
+  <p class="chapter-intro">New features you might have missed.</p>
+
+  <table>
+    <thead><tr><th>Feature</th><th>What's New</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Auto-memory</strong></td><td>Now auto-saves useful context without you asking. Manage with <code>/memory</code></td></tr>
+      <tr><td><strong><code>/copy</code> picker</strong></td><td>Interactive selector &mdash; pick specific code blocks, not just full response</td></tr>
+      <tr><td><strong><code>/simplify</code></strong></td><td>Reviews and simplifies changed code automatically</td></tr>
+      <tr><td><strong><code>/batch</code></strong></td><td>Same operation across multiple files at once</td></tr>
+      <tr><td><strong>HTTP hooks</strong></td><td>POST JSON to URLs (webhooks, APIs) &mdash; not just shell commands</td></tr>
+      <tr><td><strong>Voice mode</strong></td><td><code>/voice</code> &mdash; speak your commands (rolling out gradually)</td></tr>
+      <tr><td><strong>Worktree sharing</strong></td><td>Auto-memory and project configs now shared across git worktrees</td></tr>
+      <tr><td><strong>Smarter bash prefixes</strong></td><td>"Always allow" now works per-subcommand in piped commands</td></tr>
+    </tbody>
+  </table>
+
+  <div class="chapter-footer">
+    <button class="chapter-nav-btn" onclick="goTo(6)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+      Previous
+    </button>
+    <button class="complete-btn" onclick="toggleComplete(7)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+      <span>Mark Complete</span>
+    </button>
+    <button class="chapter-nav-btn primary" onclick="goTo(8)">
+      Next: Cowork
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </button>
+  </div>
+</section>
+
+<!-- ═══════════ CH 8: COWORK — WHAT & SETUP ═══════════ -->
+<section class="chapter" id="ch8">
+  <div class="chapter-badge">Chapter 8</div>
+  <h1>Cowork &mdash; What It Is &amp; Setup</h1>
+  <p class="chapter-intro">Claude Code's power applied to knowledge work &mdash; not just coding. It runs in the Claude Desktop app.</p>
+
+  <h2>What Is Cowork?</h2>
+  <p><strong>The shift:</strong> Instead of chatting back and forth, you describe an outcome, Claude plans it, executes it, and you come back to finished work. It's like leaving a task for a coworker.</p>
+
+  <h3>What it can do</h3>
+  <ul>
+    <li>Read, edit, and create files on your computer</li>
+    <li>Generate polished deliverables (spreadsheets with formulas, presentations, reports)</li>
+    <li>Browse the web (with Claude in Chrome extension)</li>
+    <li>Connect to external tools (Google Drive, Gmail, Slack, etc.)</li>
+    <li>Run long tasks while you step away</li>
+    <li>Coordinate multiple sub-agents in parallel</li>
+    <li>Schedule recurring tasks with <code>/schedule</code></li>
+  </ul>
+
+  <h2>Setup (5 Minutes)</h2>
+  <ol>
+    <li>Open <strong>Claude Desktop</strong> (make sure it's updated)</li>
+    <li>Click the <strong>"Cowork"</strong> tab in the mode selector (next to "Chat")</li>
+    <li>You're in. That's it.</li>
+  </ol>
+
+  <h3>Give it folder access</h3>
+  <ul>
+    <li>When you start a task involving files, Cowork will ask which folder to access</li>
+    <li>Grant access to specific folders (e.g., <code>~/LeaseJenny</code>, <code>~/humanity-brand</code>)</li>
+    <li>Claude can only see what you explicitly allow</li>
+  </ul>
+
+  <div class="chapter-footer">
+    <button class="chapter-nav-btn" onclick="goTo(7)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+      Previous
+    </button>
+    <button class="complete-btn" onclick="toggleComplete(8)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+      <span>Mark Complete</span>
+    </button>
+    <button class="chapter-nav-btn primary" onclick="goTo(9)">
+      Next: Instructions
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </button>
+  </div>
+</section>
+
+<!-- ═══════════ CH 9: INSTRUCTIONS & PLUGINS ═══════════ -->
+<section class="chapter" id="ch9">
+  <div class="chapter-badge">Chapter 9</div>
+  <h1>Instructions &amp; Plugins</h1>
+  <p class="chapter-intro">Your Cowork CLAUDE.md equivalent, plus plugins that bundle skills and connectors.</p>
+
+  <h2>Two Levels of Instructions</h2>
+
+  <h3>Global Instructions (apply to every session)</h3>
+  <p>Settings &gt; Cowork &gt; Edit Global Instructions</p>
+  <div class="code-block">
+    <div class="code-label">Global Instructions Example</div>
+    <pre><code>I'm Josiah Stewart. I run Reside Rentals
+(property management) and Humanity AI
+(AI agents for businesses).
+
+I prefer direct, concise communication.
+No fluff. Format outputs for quick scanning
+&mdash; bullets, headers, bold key info.
+
+When creating files, follow the aesthetics
+guide in my CLAUDE.md.
+Ask before making irreversible changes.</code></pre>
+  </div>
+
+  <h3>Folder Instructions (project-specific)</h3>
+  <p>Created automatically or manually in each folder. Great for project-specific context.</p>
+  <div class="code-block">
+    <div class="code-label">~/LeaseJenny/ instructions</div>
+    <pre><code>This is LeaseJenny &mdash; AI-powered lead
+qualification for FB Marketplace rental
+listings.
+
+Stack: Next.js, Tailwind, Google Sheets API,
+GoHighLevel.
+
+Two properties: 2416 31st St Lubbock,
+516 7th St Wolfforth.
+
+See config files in /config/ for per-listing
+details.</code></pre>
+  </div>
+
+  <h2>Plugins</h2>
+  <p>Plugins bundle skills + connectors + slash commands into packages for specific roles.</p>
+
+  <h3>How to install</h3>
+  <ol>
+    <li>In Cowork, click <strong>"Customize"</strong> in the left sidebar</li>
+    <li>Click <strong>"Browse plugins"</strong></li>
+    <li>Click <strong>"Install"</strong> on what you want</li>
+  </ol>
+
+  <h3>Plugins relevant to you</h3>
+  <ul>
+    <li><strong>Marketing</strong> &mdash; Content creation, campaign planning</li>
+    <li><strong>Sales</strong> &mdash; Lead management, outreach</li>
+    <li><strong>Finance</strong> &mdash; Financial analysis, reporting</li>
+    <li><strong>Operations</strong> &mdash; Process optimization, documentation</li>
+    <li><strong>Data Analysis</strong> &mdash; Spreadsheet work, data visualization</li>
+    <li><strong>Plugin Create</strong> &mdash; Build your own custom plugins</li>
+  </ul>
+
+  <div class="callout callout-tip">
+    <div class="callout-title">Tip</div>
+    <p>Click "Customize" on any installed plugin to swap connectors, add your business context, and adjust workflows to match how you actually work.</p>
+  </div>
+
+  <div class="chapter-footer">
+    <button class="chapter-nav-btn" onclick="goTo(8)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+      Previous
+    </button>
+    <button class="complete-btn" onclick="toggleComplete(9)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+      <span>Mark Complete</span>
+    </button>
+    <button class="chapter-nav-btn primary" onclick="goTo(10)">
+      Next: Connectors
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </button>
+  </div>
+</section>
+
+<!-- ═══════════ CH 10: CONNECTORS & USE CASES ═══════════ -->
+<section class="chapter" id="ch10">
+  <div class="chapter-badge">Chapter 10</div>
+  <h1>Connectors &amp; Use Cases</h1>
+  <p class="chapter-intro">Connectors link Cowork to external services. These are MCP servers under the hood.</p>
+
+  <h2>Built-in Connectors</h2>
+  <ul>
+    <li><strong>Google Drive</strong> &mdash; Read/write docs, sheets</li>
+    <li><strong>Gmail</strong> &mdash; Read/send emails</li>
+    <li><strong>Slack</strong> &mdash; Messages, channels</li>
+    <li><strong>GitHub</strong> &mdash; Repos, issues, PRs</li>
+    <li><strong>Web browsing</strong> &mdash; via Claude in Chrome</li>
+  </ul>
+
+  <p><strong>Setup:</strong> Settings &gt; Cowork &gt; Connectors. Toggle on what you need and authenticate.</p>
+
+  <h2>Real Use Cases for Your Business</h2>
+
+  <h3>LeaseJenny</h3>
+  <ul>
+    <li>"Go through the LeaseJenny leads sheet, identify qualified leads from the last week, and draft follow-up messages for each one"</li>
+    <li>"Create a weekly landlord report summarizing new inquiries, qualified leads, and showing trends"</li>
+  </ul>
+
+  <h3>Humanity AI</h3>
+  <ul>
+    <li>"Read the brand strategy doc and create a one-page sales sheet for dental offices"</li>
+    <li>"Draft 5 LinkedIn posts about AI for small business based on my brand voice"</li>
+    <li>"Take the ad performance data and build a report with recommendations"</li>
+  </ul>
+
+  <h3>Stock Screener</h3>
+  <ul>
+    <li>"Analyze my last 2 weeks of trades, calculate win rate, average gain/loss, and suggest parameter tweaks"</li>
+    <li>"Create a daily performance spreadsheet template with the formulas built in"</li>
+  </ul>
+
+  <h3>General</h3>
+  <ul>
+    <li>"Organize my Downloads folder &mdash; sort by type, rename with dates, delete duplicates"</li>
+    <li>"Read all my CLAUDE.md files across projects and create a master inventory of what I'm working on"</li>
+    <li>"Schedule a daily 8am task: check LeaseJenny leads sheet and send me a summary via email"</li>
+  </ul>
+
+  <div class="chapter-footer">
+    <button class="chapter-nav-btn" onclick="goTo(9)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+      Previous
+    </button>
+    <button class="complete-btn" onclick="toggleComplete(10)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+      <span>Mark Complete</span>
+    </button>
+    <button class="chapter-nav-btn primary" onclick="goTo(11)">
+      Next: Cowork vs Code
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </button>
+  </div>
+</section>
+
+<!-- ═══════════ CH 11: COWORK VS CLAUDE CODE ═══════════ -->
+<section class="chapter" id="ch11">
+  <div class="chapter-badge">Chapter 11</div>
+  <h1>Cowork vs Claude Code</h1>
+  <p class="chapter-intro">They share the same foundation. Think of Claude Code as the dev tool and Cowork as the business tool.</p>
+
+  <table>
+    <thead><tr><th>Scenario</th><th>Use</th></tr></thead>
+    <tbody>
+      <tr><td>Writing code, debugging, deploying</td><td><strong>Claude Code</strong> (terminal)</td></tr>
+      <tr><td>Creating documents, spreadsheets, presentations</td><td><strong>Cowork</strong> (desktop)</td></tr>
+      <tr><td>Working within a git repo</td><td><strong>Claude Code</strong></td></tr>
+      <tr><td>Working with files outside of code projects</td><td><strong>Cowork</strong></td></tr>
+      <tr><td>Need terminal/shell access</td><td><strong>Claude Code</strong></td></tr>
+      <tr><td>Need Google Drive / Gmail / Slack integration</td><td><strong>Cowork</strong></td></tr>
+      <tr><td>Quick coding task</td><td><strong>Claude Code</strong></td></tr>
+      <tr><td>Multi-step knowledge work (research, draft, format, deliver)</td><td><strong>Cowork</strong></td></tr>
+      <tr><td>Building and running MCP servers</td><td><strong>Claude Code</strong></td></tr>
+      <tr><td>Using pre-built plugins for business workflows</td><td><strong>Cowork</strong></td></tr>
+    </tbody>
+  </table>
+
+  <div class="chapter-footer">
+    <button class="chapter-nav-btn" onclick="goTo(10)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+      Previous
+    </button>
+    <button class="complete-btn" onclick="toggleComplete(11)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+      <span>Mark Complete</span>
+    </button>
+    <button class="chapter-nav-btn primary" onclick="goTo(12)">
+      Next: Power Setup
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </button>
+  </div>
+</section>
+
+<!-- ═══════════ CH 12: POWER SETUP & WORKFLOW ═══════════ -->
+<section class="chapter" id="ch12">
+  <div class="chapter-badge">Chapter 12</div>
+  <h1>Power Setup &amp; Daily Workflow</h1>
+  <p class="chapter-intro">Your recommended configuration and daily routine bringing it all together.</p>
+
+  <h2>Recommended Claude Code Config</h2>
+  <div class="code-block">
+    <div class="code-label">~/.claude/settings.json</div>
+    <pre><code>{
+  <span class="ck">"mcpServers"</span>: {
+    <span class="ck">"github"</span>: {
+      <span class="ck">"command"</span>: <span class="cs">"npx"</span>,
+      <span class="ck">"args"</span>: [<span class="cs">"-y"</span>, <span class="cs">"@modelcontextprotocol/server-github"</span>],
+      <span class="ck">"env"</span>: { <span class="ck">"GITHUB_TOKEN"</span>: <span class="cs">"&lt;your-token&gt;"</span> }
+    },
+    <span class="ck">"fetch"</span>: {
+      <span class="ck">"command"</span>: <span class="cs">"npx"</span>,
+      <span class="ck">"args"</span>: [<span class="cs">"-y"</span>, <span class="cs">"@anthropic/mcp-server-fetch"</span>]
+    }
+  },
+  <span class="ck">"hooks"</span>: {
+    <span class="ck">"Notification"</span>: [
+      {
+        <span class="ck">"type"</span>: <span class="cs">"command"</span>,
+        <span class="ck">"command"</span>: <span class="cs">"osascript -e 'display notification \"$CLAUDE_NOTIFICATION\" with title \"Claude Code\"'"</span>
+      }
+    ]
+  }
+}</code></pre>
+  </div>
+
+  <h2>Custom Skills to Build</h2>
+  <ol>
+    <li><strong><code>/deploy</code></strong> &mdash; Deploy any project to Vercel</li>
+    <li><strong><code>/leads</code></strong> &mdash; Check LeaseJenny leads status</li>
+    <li><strong><code>/trades</code></strong> &mdash; Check stock screener performance</li>
+    <li><strong><code>/morning</code></strong> &mdash; Morning briefing across all projects</li>
+  </ol>
+
+  <h2>Cowork Setup</h2>
+  <ol>
+    <li>Install Marketing, Sales, and Operations plugins</li>
+    <li>Connect Google Drive + Gmail</li>
+    <li>Set global instructions with your business context</li>
+    <li>Set folder instructions for LeaseJenny, Humanity, stock-screener</li>
+  </ol>
+
+  <h2>Daily Workflow</h2>
+
+  <h3>Morning (Cowork)</h3>
+  <ul>
+    <li>Open Cowork, run "morning briefing" &mdash; checks leads, trades, emails</li>
+    <li>Review and act on what matters</li>
+  </ul>
+
+  <h3>During the day (Claude Code)</h3>
+  <ul>
+    <li>Build features, fix bugs, deploy</li>
+    <li>Use subagents for cross-project research</li>
+    <li>Background tasks for builds/deploys</li>
+  </ul>
+
+  <h3>End of day (Cowork)</h3>
+  <ul>
+    <li>"Summarize what I worked on today"</li>
+    <li>"Draft any follow-up emails needed"</li>
+    <li>"Schedule tomorrow's tasks"</li>
+  </ul>
+
+  <h2>Quick Reference</h2>
+  <dl class="cmd-ref">
+    <dt>/memory</dt><dd>View/manage auto-memory</dd>
+    <dt>/copy</dt><dd>Pick specific code blocks to copy</dd>
+    <dt>/simplify</dt><dd>Review & simplify changed code</dd>
+    <dt>/batch</dt><dd>Same operation across multiple files</dd>
+    <dt>/voice</dt><dd>Voice input mode</dd>
+    <dt>/model</dt><dd>Switch models mid-session</dd>
+    <dt>/commit</dt><dd>Smart git commit</dd>
+    <dt>/clear</dt><dd>Reset context</dd>
+  </dl>
+
+  <div class="callout callout-opportunity">
+    <div class="callout-title">You Made It</div>
+    <p>This course is tailored to your stack and workflow. Come back to any chapter as a reference. The features you're not using yet &mdash; subagents, hooks, background tasks, Cowork &mdash; are where the biggest wins are hiding.</p>
+  </div>
+
+  <div class="chapter-footer">
+    <button class="chapter-nav-btn" onclick="goTo(11)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+      Previous
+    </button>
+    <button class="complete-btn" onclick="toggleComplete(12)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+      <span>Mark Complete</span>
+    </button>
+    <button class="chapter-nav-btn" onclick="goHome()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-4 0a1 1 0 01-1-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 01-1 1"/></svg>
+      Back to Overview
+    </button>
+  </div>
+</section>
+
+</main>
+
+<script>
+const TOTAL = 12;
+const STORAGE_KEY = 'humanity-crash-course';
+
+function getProgress() {
+  try {
+    return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
+  } catch { return {}; }
+}
+
+function saveProgress(data) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+}
+
+function updateUI() {
+  const progress = getProgress();
+  const completed = Object.keys(progress).filter(k => progress[k]).length;
+
+  // Progress bar
+  document.getElementById('progressCount').textContent = completed + ' / ' + TOTAL;
+  document.getElementById('progressFill').style.width = (completed / TOTAL * 100) + '%';
+
+  // Nav items
+  document.querySelectorAll('.nav-item[data-ch]').forEach(item => {
+    const ch = item.dataset.ch;
+    item.classList.toggle('completed', !!progress[ch]);
+  });
+
+  // Home chapter items
+  document.querySelectorAll('.home-chapter-item[data-ch]').forEach(item => {
+    const ch = item.dataset.ch;
+    item.classList.toggle('completed', !!progress[ch]);
+  });
+
+  // Complete buttons
+  document.querySelectorAll('.complete-btn').forEach(btn => {
+    const section = btn.closest('.chapter');
+    if (!section) return;
+    const ch = section.id.replace('ch', '');
+    if (progress[ch]) {
+      btn.classList.add('done');
+      btn.querySelector('span').textContent = 'Completed';
+    } else {
+      btn.classList.remove('done');
+      btn.querySelector('span').textContent = 'Mark Complete';
+    }
+  });
+}
+
+function toggleComplete(ch) {
+  const progress = getProgress();
+  progress[ch] = !progress[ch];
+  saveProgress(progress);
+  updateUI();
+}
+
+function goTo(ch) {
+  // Hide all
+  document.querySelectorAll('.chapter, .course-home').forEach(el => el.classList.remove('active'));
+
+  // Show target
+  const target = document.getElementById('ch' + ch);
+  if (target) {
+    target.classList.remove('active');
+    // Force reflow for animation
+    void target.offsetWidth;
+    target.classList.add('active');
+  }
+
+  // Update nav
+  document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+  const navItem = document.querySelector('.nav-item[data-ch="' + ch + '"]');
+  if (navItem) {
+    navItem.classList.add('active');
+    navItem.scrollIntoView({ block: 'nearest' });
+  }
+
+  // Update hash
+  history.pushState(null, '', '#ch' + ch);
+
+  // Scroll to top
+  window.scrollTo({ top: 0 });
+
+  closeSidebar();
+}
+
+function goHome() {
+  document.querySelectorAll('.chapter, .course-home').forEach(el => el.classList.remove('active'));
+  document.getElementById('home').classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+  history.pushState(null, '', '#home');
+  window.scrollTo({ top: 0 });
+  closeSidebar();
+}
+
+function toggleSidebar() {
+  document.getElementById('sidebar').classList.toggle('open');
+  document.getElementById('sidebarOverlay').classList.toggle('visible');
+  document.body.style.overflow = document.getElementById('sidebar').classList.contains('open') ? 'hidden' : '';
+}
+
+function closeSidebar() {
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('sidebarOverlay').classList.remove('visible');
+  document.body.style.overflow = '';
+}
+
+// Handle hash on load
+function handleHash() {
+  const hash = location.hash.replace('#', '');
+  if (hash && hash.startsWith('ch')) {
+    const ch = parseInt(hash.replace('ch', ''));
+    if (ch >= 1 && ch <= TOTAL) {
+      goTo(ch);
+      return;
+    }
+  }
+  goHome();
+}
+
+// Handle back/forward
+window.addEventListener('popstate', handleHash);
+
+// Init
+updateUI();
+handleHash();
+
+// Keyboard nav
+document.addEventListener('keydown', (e) => {
+  if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+
+  const current = document.querySelector('.chapter.active');
+  if (!current) return;
+  const ch = parseInt(current.id.replace('ch', ''));
+
+  if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+    e.preventDefault();
+    if (ch < TOTAL) goTo(ch + 1);
+  } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+    e.preventDefault();
+    if (ch > 1) goTo(ch - 1);
+  }
+});
+</script>
+
+</body>
+</html>
