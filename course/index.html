@@ -1346,7 +1346,7 @@ body {
   <div class="sidebar-progress">
     <div class="progress-label">
       <span>Progress</span>
-      <span class="progress-count" id="progressCount">0 / 12</span>
+      <span class="progress-count" id="progressCount">0 / 13</span>
     </div>
     <div class="progress-bar">
       <div class="progress-fill" id="progressFill"></div>
@@ -1384,29 +1384,33 @@ body {
     </a>
     <a class="nav-item" data-ch="7" onclick="goTo(7)">
       <div class="nav-dot"></div>
+      <span class="nav-label">Creator's Playbook</span>
+    </a>
+    <a class="nav-item" data-ch="8" onclick="goTo(8)">
+      <div class="nav-dot"></div>
       <span class="nav-label">Recent Updates</span>
     </a>
 
     <div class="nav-part">Part 2 &mdash; Cowork</div>
-    <a class="nav-item" data-ch="8" onclick="goTo(8)">
+    <a class="nav-item" data-ch="9" onclick="goTo(9)">
       <div class="nav-dot"></div>
       <span class="nav-label">What Is Cowork & Setup</span>
     </a>
-    <a class="nav-item" data-ch="9" onclick="goTo(9)">
+    <a class="nav-item" data-ch="10" onclick="goTo(10)">
       <div class="nav-dot"></div>
       <span class="nav-label">Instructions & Plugins</span>
     </a>
-    <a class="nav-item" data-ch="10" onclick="goTo(10)">
+    <a class="nav-item" data-ch="11" onclick="goTo(11)">
       <div class="nav-dot"></div>
       <span class="nav-label">Connectors & Use Cases</span>
     </a>
-    <a class="nav-item" data-ch="11" onclick="goTo(11)">
+    <a class="nav-item" data-ch="12" onclick="goTo(12)">
       <div class="nav-dot"></div>
       <span class="nav-label">Cowork vs Claude Code</span>
     </a>
 
     <div class="nav-part">Part 3 &mdash; Power Up</div>
-    <a class="nav-item" data-ch="12" onclick="goTo(12)">
+    <a class="nav-item" data-ch="13" onclick="goTo(13)">
       <div class="nav-dot"></div>
       <span class="nav-label">Power Setup & Workflow</span>
     </a>
@@ -1419,7 +1423,7 @@ body {
 <!-- ═══════════ HOME ═══════════ -->
 <div class="course-home active" id="home">
   <div class="home-hero">
-    <div class="chapter-badge">12 Chapters</div>
+    <div class="chapter-badge">13 Chapters</div>
     <h1>Claude Code &amp; Cowork<br>Crash Course</h1>
     <p>Built around what you already know and what you're missing. Work through it chapter by chapter, or jump to whatever's most useful.</p>
   </div>
@@ -1468,6 +1472,11 @@ body {
         </a>
         <a class="home-chapter-item" onclick="goTo(7)" data-ch="7">
           <div class="home-ch-num">7</div>
+          <span class="home-ch-title">The Creator's Playbook</span>
+          <svg class="home-ch-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+        </a>
+        <a class="home-chapter-item" onclick="goTo(8)" data-ch="8">
+          <div class="home-ch-num">8</div>
           <span class="home-ch-title">Recent Updates</span>
           <svg class="home-ch-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
         </a>
@@ -1478,23 +1487,23 @@ body {
       <div class="home-part-label">Part 2</div>
       <h2>Claude Cowork &mdash; From Zero</h2>
       <div class="home-chapter-list">
-        <a class="home-chapter-item" onclick="goTo(8)" data-ch="8">
-          <div class="home-ch-num">8</div>
-          <span class="home-ch-title">What Is Cowork & Setup</span>
-          <svg class="home-ch-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
-        </a>
         <a class="home-chapter-item" onclick="goTo(9)" data-ch="9">
           <div class="home-ch-num">9</div>
-          <span class="home-ch-title">Instructions & Plugins</span>
+          <span class="home-ch-title">What Is Cowork & Setup</span>
           <svg class="home-ch-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
         </a>
         <a class="home-chapter-item" onclick="goTo(10)" data-ch="10">
           <div class="home-ch-num">10</div>
-          <span class="home-ch-title">Connectors & Use Cases</span>
+          <span class="home-ch-title">Instructions & Plugins</span>
           <svg class="home-ch-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
         </a>
         <a class="home-chapter-item" onclick="goTo(11)" data-ch="11">
           <div class="home-ch-num">11</div>
+          <span class="home-ch-title">Connectors & Use Cases</span>
+          <svg class="home-ch-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+        </a>
+        <a class="home-chapter-item" onclick="goTo(12)" data-ch="12">
+          <div class="home-ch-num">12</div>
           <span class="home-ch-title">Cowork vs Claude Code</span>
           <svg class="home-ch-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
         </a>
@@ -1505,8 +1514,8 @@ body {
       <div class="home-part-label">Part 3</div>
       <h2>Putting It Together</h2>
       <div class="home-chapter-list">
-        <a class="home-chapter-item" onclick="goTo(12)" data-ch="12">
-          <div class="home-ch-num">12</div>
+        <a class="home-chapter-item" onclick="goTo(13)" data-ch="13">
+          <div class="home-ch-num">13</div>
           <span class="home-ch-title">Power Setup & Daily Workflow</span>
           <svg class="home-ch-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
         </a>
@@ -1807,6 +1816,107 @@ and runs: echo "$(date): $CLAUDE_FILE_PATH"
     <p>Connect Google Sheets MCP for LeaseJenny lead data. Connect GitHub MCP for your repos. Set up a filesystem MCP so Cowork can access your project files.</p>
   </div>
 
+  <!-- Exercises -->
+  <div class="exercises-section">
+    <div class="exercises-title">Hands-On Exercises</div>
+
+    <div class="exercise" data-ex="3-1" onclick="toggleExercise(this, event)">
+      <div class="exercise-header">
+        <span class="exercise-badge">Ex 3.1</span>
+        <span class="exercise-title">Configure the Fetch MCP</span>
+        <span class="exercise-check"></span>
+      </div>
+      <div class="exercise-body">
+        <p>Add the Anthropic fetch MCP server to your Claude Code config.</p>
+        <div class="code-block">
+          <div class="code-actions">
+            <button class="send-btn" onclick="sendToTerminal('Add the @anthropic/mcp-server-fetch MCP server to my ~/.claude/settings.json\n', this, event)">&#9654; Send</button>
+            <button class="copy-btn" onclick="copyCode(this, event)">Copy</button>
+          </div>
+          <div class="code-label">Ask Claude</div>
+          <pre><code>Add the @anthropic/mcp-server-fetch MCP server
+to my ~/.claude/settings.json</code></pre>
+        </div>
+        <p>Then verify it&rsquo;s working:</p>
+        <div class="code-block">
+          <div class="code-actions">
+            <button class="send-btn" onclick="sendToTerminal('/mcp\n', this, event)">&#9654; Send</button>
+            <button class="copy-btn" onclick="copyCode(this, event)">Copy</button>
+          </div>
+          <div class="code-label">Check MCP status</div>
+          <pre><code>/mcp</code></pre>
+        </div>
+        <div class="exercise-expected" onclick="toggleExpected(this, event)">
+          <div class="exercise-expected-toggle"><span class="arrow">&#9656;</span> Expected Result</div>
+          <div class="expected-content">The /mcp command should list the fetch server as connected. Claude can now fetch and read web pages for you.</div>
+        </div>
+        <button class="exercise-done-btn" onclick="completeExercise('3-1', this, event)">&#10003; Done &mdash; Fetch MCP configured</button>
+      </div>
+    </div>
+
+    <div class="exercise" data-ex="3-2" onclick="toggleExercise(this, event)">
+      <div class="exercise-header">
+        <span class="exercise-badge">Ex 3.2</span>
+        <span class="exercise-title">Configure the GitHub MCP</span>
+        <span class="exercise-check"></span>
+      </div>
+      <div class="exercise-body">
+        <p>Add the GitHub MCP server for repo, issue, and PR access.</p>
+        <div class="code-block">
+          <div class="code-actions">
+            <button class="send-btn" onclick="sendToTerminal('Add the @modelcontextprotocol/server-github MCP server to my settings. I need to create a GitHub personal access token first — walk me through it.\n', this, event)">&#9654; Send</button>
+            <button class="copy-btn" onclick="copyCode(this, event)">Copy</button>
+          </div>
+          <div class="code-label">Ask Claude</div>
+          <pre><code>Add the @modelcontextprotocol/server-github
+MCP server to my settings. I need to create
+a GitHub personal access token first —
+walk me through it.</code></pre>
+        </div>
+        <div class="exercise-expected" onclick="toggleExpected(this, event)">
+          <div class="exercise-expected-toggle"><span class="arrow">&#9656;</span> Expected Result</div>
+          <div class="expected-content">Claude walks you through creating a PAT on GitHub, then adds the GitHub MCP config to your settings.json with the token. Verify with <code>/mcp</code>.</div>
+        </div>
+        <button class="exercise-done-btn" onclick="completeExercise('3-2', this, event)">&#10003; Done &mdash; GitHub MCP configured</button>
+      </div>
+    </div>
+
+    <div class="exercise" data-ex="3-3" onclick="toggleExercise(this, event)">
+      <div class="exercise-header">
+        <span class="exercise-badge">Ex 3.3</span>
+        <span class="exercise-title">Check Available MCP Tools</span>
+        <span class="exercise-check"></span>
+      </div>
+      <div class="exercise-body">
+        <p>See what tools your MCP servers provide.</p>
+        <div class="code-block">
+          <div class="code-actions">
+            <button class="send-btn" onclick="sendToTerminal('/mcp\n', this, event)">&#9654; Send</button>
+            <button class="copy-btn" onclick="copyCode(this, event)">Copy</button>
+          </div>
+          <div class="code-label">List all MCP tools</div>
+          <pre><code>/mcp</code></pre>
+        </div>
+        <p>Then try using one:</p>
+        <div class="code-block">
+          <div class="code-actions">
+            <button class="send-btn" onclick="sendToTerminal('Use the fetch MCP to read https://docs.anthropic.com/en/docs/claude-code and summarize the key features\n', this, event)">&#9654; Send</button>
+            <button class="copy-btn" onclick="copyCode(this, event)">Copy</button>
+          </div>
+          <div class="code-label">Test the fetch tool</div>
+          <pre><code>Use the fetch MCP to read
+https://docs.anthropic.com/en/docs/claude-code
+and summarize the key features</code></pre>
+        </div>
+        <div class="exercise-expected" onclick="toggleExpected(this, event)">
+          <div class="exercise-expected-toggle"><span class="arrow">&#9656;</span> Expected Result</div>
+          <div class="expected-content">Claude uses the MCP fetch tool to read the page and gives you a summary. This confirms the MCP server is working.</div>
+        </div>
+        <button class="exercise-done-btn" onclick="completeExercise('3-3', this, event)">&#10003; Done &mdash; MCP tools verified</button>
+      </div>
+    </div>
+  </div>
+
   <div class="chapter-footer">
     <button class="chapter-nav-btn" onclick="goTo(2)">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
@@ -1903,6 +2013,106 @@ Generate a morning leads report.
     <p>Build skills for your recurring workflows &mdash; deploying projects, checking lead status, generating reports, auditing your Moltbot agents.</p>
   </div>
 
+  <!-- Exercises -->
+  <div class="exercises-section">
+    <div class="exercises-title">Hands-On Exercises</div>
+
+    <div class="exercise" data-ex="4-1" onclick="toggleExercise(this, event)">
+      <div class="exercise-header">
+        <span class="exercise-badge">Ex 4.1</span>
+        <span class="exercise-title">Create a /hello Skill</span>
+        <span class="exercise-check"></span>
+      </div>
+      <div class="exercise-body">
+        <p>Create your first custom slash command.</p>
+        <div class="code-block">
+          <div class="code-actions">
+            <button class="send-btn" onclick="sendToTerminal('Create a file at .claude/commands/hello.md that says: \"Greet me with a personalized morning message. Check what day of the week it is and the current time, and give me a motivating one-liner.\"\n', this, event)">&#9654; Send</button>
+            <button class="copy-btn" onclick="copyCode(this, event)">Copy</button>
+          </div>
+          <div class="code-label">Create the skill</div>
+          <pre><code>Create a file at .claude/commands/hello.md
+that says: "Greet me with a personalized
+morning message. Check what day of the week
+it is and the current time, and give me
+a motivating one-liner."</code></pre>
+        </div>
+        <p>Then test it:</p>
+        <div class="code-block">
+          <div class="code-actions">
+            <button class="send-btn" onclick="sendToTerminal('/hello\n', this, event)">&#9654; Send</button>
+            <button class="copy-btn" onclick="copyCode(this, event)">Copy</button>
+          </div>
+          <div class="code-label">Test</div>
+          <pre><code>/hello</code></pre>
+        </div>
+        <div class="exercise-expected" onclick="toggleExpected(this, event)">
+          <div class="exercise-expected-toggle"><span class="arrow">&#9656;</span> Expected Result</div>
+          <div class="expected-content">Claude checks the current day/time and gives you a personalized greeting. The /hello command now works in any session within this project.</div>
+        </div>
+        <button class="exercise-done-btn" onclick="completeExercise('4-1', this, event)">&#10003; Done &mdash; /hello works</button>
+      </div>
+    </div>
+
+    <div class="exercise" data-ex="4-2" onclick="toggleExercise(this, event)">
+      <div class="exercise-header">
+        <span class="exercise-badge">Ex 4.2</span>
+        <span class="exercise-title">Create a /deploy Skill</span>
+        <span class="exercise-check"></span>
+      </div>
+      <div class="exercise-body">
+        <p>Build a more useful skill for deploying a project.</p>
+        <div class="code-block">
+          <div class="code-actions">
+            <button class="send-btn" onclick="sendToTerminal('Create .claude/commands/deploy.md with: \"Deploy this project: 1) Run any tests, 2) Build for production, 3) Show me a summary of what will be deployed, 4) If I confirm, push to the remote and deploy\"\n', this, event)">&#9654; Send</button>
+            <button class="copy-btn" onclick="copyCode(this, event)">Copy</button>
+          </div>
+          <div class="code-label">Create deploy skill</div>
+          <pre><code>Create .claude/commands/deploy.md with:
+"Deploy this project:
+1) Run any tests
+2) Build for production
+3) Show me a summary of what will be deployed
+4) If I confirm, push to the remote and deploy"</code></pre>
+        </div>
+        <div class="exercise-expected" onclick="toggleExpected(this, event)">
+          <div class="exercise-expected-toggle"><span class="arrow">&#9656;</span> Expected Result</div>
+          <div class="expected-content">A /deploy command now exists. It won&rsquo;t push without your confirmation &mdash; safe to test.</div>
+        </div>
+        <button class="exercise-done-btn" onclick="completeExercise('4-2', this, event)">&#10003; Done &mdash; /deploy created</button>
+      </div>
+    </div>
+
+    <div class="exercise" data-ex="4-3" onclick="toggleExercise(this, event)">
+      <div class="exercise-header">
+        <span class="exercise-badge">Ex 4.3</span>
+        <span class="exercise-title">Try /simplify</span>
+        <span class="exercise-check"></span>
+      </div>
+      <div class="exercise-body">
+        <p>Use the built-in /simplify command to review your recent code changes.</p>
+        <ol>
+          <li>Make some code changes (or use an existing dirty working tree)</li>
+          <li>Run <code>/simplify</code></li>
+          <li>Review Claude&rsquo;s suggestions for reuse, quality, and efficiency</li>
+        </ol>
+        <div class="code-block">
+          <div class="code-actions">
+            <button class="send-btn" onclick="sendToTerminal('/simplify\n', this, event)">&#9654; Send</button>
+            <button class="copy-btn" onclick="copyCode(this, event)">Copy</button>
+          </div>
+          <div class="code-label">Review changed code</div>
+          <pre><code>/simplify</code></pre>
+        </div>
+        <div class="exercise-expected" onclick="toggleExpected(this, event)">
+          <div class="exercise-expected-toggle"><span class="arrow">&#9656;</span> Expected Result</div>
+          <div class="expected-content">Claude scans your recent changes and suggests simplifications. It might find duplicate code, unnecessary complexity, or missed reuse opportunities.</div>
+        </div>
+        <button class="exercise-done-btn" onclick="completeExercise('4-3', this, event)">&#10003; Done &mdash; Ran /simplify</button>
+      </div>
+    </div>
+  </div>
+
   <div class="chapter-footer">
     <button class="chapter-nav-btn" onclick="goTo(3)">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
@@ -1958,6 +2168,64 @@ Generate a morning leads report.
     <p>When working on multi-project tasks (LeaseJenny + stock screener + Humanity), subagents let you research across all of them simultaneously.</p>
   </div>
 
+  <!-- Exercises -->
+  <div class="exercises-section">
+    <div class="exercises-title">Hands-On Exercises</div>
+
+    <div class="exercise" data-ex="5-1" onclick="toggleExercise(this, event)">
+      <div class="exercise-header">
+        <span class="exercise-badge">Ex 5.1</span>
+        <span class="exercise-title">Multi-Part Research Prompt</span>
+        <span class="exercise-check"></span>
+      </div>
+      <div class="exercise-body">
+        <p>Give Claude a prompt that triggers parallel subagent research.</p>
+        <div class="code-block">
+          <div class="code-actions">
+            <button class="send-btn" onclick="sendToTerminal('Research these 3 things in parallel: 1) What MCP servers are available on npm, 2) What Claude Code hooks do people commonly use, 3) What are the most popular Claude Code custom skills on GitHub\n', this, event)">&#9654; Send</button>
+            <button class="copy-btn" onclick="copyCode(this, event)">Copy</button>
+          </div>
+          <div class="code-label">Trigger parallel agents</div>
+          <pre><code>Research these 3 things in parallel:
+1) What MCP servers are available on npm
+2) What Claude Code hooks do people commonly use
+3) What are the most popular Claude Code custom
+   skills on GitHub</code></pre>
+        </div>
+        <div class="exercise-expected" onclick="toggleExpected(this, event)">
+          <div class="exercise-expected-toggle"><span class="arrow">&#9656;</span> Expected Result</div>
+          <div class="expected-content">Claude should spawn multiple Explore or general-purpose agents. You&rsquo;ll see them working in parallel. Results come back consolidated.</div>
+        </div>
+        <button class="exercise-done-btn" onclick="completeExercise('5-1', this, event)">&#10003; Done &mdash; Saw parallel agents</button>
+      </div>
+    </div>
+
+    <div class="exercise" data-ex="5-2" onclick="toggleExercise(this, event)">
+      <div class="exercise-header">
+        <span class="exercise-badge">Ex 5.2</span>
+        <span class="exercise-title">Use the Explore Agent</span>
+        <span class="exercise-check"></span>
+      </div>
+      <div class="exercise-body">
+        <p>Ask Claude to explore a codebase using the specialized Explore agent.</p>
+        <div class="code-block">
+          <div class="code-actions">
+            <button class="send-btn" onclick="sendToTerminal('Use an Explore agent to thoroughly map the file structure and key patterns in this project\n', this, event)">&#9654; Send</button>
+            <button class="copy-btn" onclick="copyCode(this, event)">Copy</button>
+          </div>
+          <div class="code-label">Explore a codebase</div>
+          <pre><code>Use an Explore agent to thoroughly map the
+file structure and key patterns in this project</code></pre>
+        </div>
+        <div class="exercise-expected" onclick="toggleExpected(this, event)">
+          <div class="exercise-expected-toggle"><span class="arrow">&#9656;</span> Expected Result</div>
+          <div class="expected-content">Claude spawns an Explore subagent that reads files, searches patterns, and returns a structured summary of the codebase. Useful for onboarding to unfamiliar projects.</div>
+        </div>
+        <button class="exercise-done-btn" onclick="completeExercise('5-2', this, event)">&#10003; Done &mdash; Explore agent worked</button>
+      </div>
+    </div>
+  </div>
+
   <div class="chapter-footer">
     <button class="chapter-nav-btn" onclick="goTo(4)">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
@@ -2003,6 +2271,67 @@ Generate a morning leads report.
     <p>You have multiple GitHub repos (leasejenny-dashboard, crash-course-intake, etc.). Let Claude handle the git ceremony. Deploy one project while working on another. Run tests in the background while writing new code.</p>
   </div>
 
+  <!-- Exercises -->
+  <div class="exercises-section">
+    <div class="exercises-title">Hands-On Exercises</div>
+
+    <div class="exercise" data-ex="6-1" onclick="toggleExercise(this, event)">
+      <div class="exercise-header">
+        <span class="exercise-badge">Ex 6.1</span>
+        <span class="exercise-title">Use /commit</span>
+        <span class="exercise-check"></span>
+      </div>
+      <div class="exercise-body">
+        <p>Let Claude analyze your changes and write a commit message for you.</p>
+        <ol>
+          <li>Make a small change to any file in a git repo</li>
+          <li>Type <code>/commit</code> in Claude Code</li>
+          <li>Review the commit message Claude generates</li>
+        </ol>
+        <div class="code-block">
+          <div class="code-actions">
+            <button class="send-btn" onclick="sendToTerminal('/commit\n', this, event)">&#9654; Send</button>
+            <button class="copy-btn" onclick="copyCode(this, event)">Copy</button>
+          </div>
+          <div class="code-label">Smart commit</div>
+          <pre><code>/commit</code></pre>
+        </div>
+        <div class="exercise-expected" onclick="toggleExpected(this, event)">
+          <div class="exercise-expected-toggle"><span class="arrow">&#9656;</span> Expected Result</div>
+          <div class="expected-content">Claude reads the diff, writes a descriptive commit message, and creates the commit. Check <code>git log</code> to see it.</div>
+        </div>
+        <button class="exercise-done-btn" onclick="completeExercise('6-1', this, event)">&#10003; Done &mdash; Commit created</button>
+      </div>
+    </div>
+
+    <div class="exercise" data-ex="6-2" onclick="toggleExercise(this, event)">
+      <div class="exercise-header">
+        <span class="exercise-badge">Ex 6.2</span>
+        <span class="exercise-title">Run a Background Task</span>
+        <span class="exercise-check"></span>
+      </div>
+      <div class="exercise-body">
+        <p>Run a command in the background while you keep working.</p>
+        <div class="code-block">
+          <div class="code-actions">
+            <button class="send-btn" onclick="sendToTerminal('Run &quot;find ~ -name CLAUDE.md -type f 2>/dev/null&quot; in the background and tell me the results when it finishes\n', this, event)">&#9654; Send</button>
+            <button class="copy-btn" onclick="copyCode(this, event)">Copy</button>
+          </div>
+          <div class="code-label">Background search</div>
+          <pre><code>Run "find ~ -name CLAUDE.md -type f 2>/dev/null"
+in the background and tell me the results
+when it finishes</code></pre>
+        </div>
+        <p>While it runs, ask Claude something else. You&rsquo;ll get notified when the background task completes.</p>
+        <div class="exercise-expected" onclick="toggleExpected(this, event)">
+          <div class="exercise-expected-toggle"><span class="arrow">&#9656;</span> Expected Result</div>
+          <div class="expected-content">Claude runs the command in the background, you can keep chatting, and Claude notifies you with results when it&rsquo;s done.</div>
+        </div>
+        <button class="exercise-done-btn" onclick="completeExercise('6-2', this, event)">&#10003; Done &mdash; Background task ran</button>
+      </div>
+    </div>
+  </div>
+
   <div class="chapter-footer">
     <button class="chapter-nav-btn" onclick="goTo(5)">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
@@ -2013,15 +2342,274 @@ Generate a morning leads report.
       <span>Mark Complete</span>
     </button>
     <button class="chapter-nav-btn primary" onclick="goTo(7)">
+      Next: Playbook
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </button>
+  </div>
+</section>
+
+<!-- ═══════════ CH 7: THE CREATOR'S PLAYBOOK ═══════════ -->
+<section class="chapter" id="ch7">
+  <div class="chapter-badge">Chapter 7</div>
+  <h1>The Creator&rsquo;s Playbook</h1>
+  <p class="chapter-intro">Boris Cherny (creator of Claude Code) shared his 12-point playbook for getting maximum output from the tool. These aren&rsquo;t theoretical &mdash; they&rsquo;re the patterns he uses daily building Claude Code itself.</p>
+
+  <div class="callout callout-opportunity">
+    <div class="callout-title">Philosophy</div>
+    <p>&ldquo;Claude Code is not an autocomplete tool. It&rsquo;s a junior developer with perfect memory and infinite patience. Treat it like one: give it clear briefs, review its work, and build systems that compound.&rdquo;</p>
+  </div>
+
+  <h2>The 12 Practices</h2>
+
+  <h3>1. Run Parallel Sessions</h3>
+  <p>Open multiple terminal tabs, each running a separate Claude Code instance on a different task. While one refactors a module, another writes tests, and a third researches an API. They share the same CLAUDE.md but don&rsquo;t block each other.</p>
+  <div class="code-block">
+    <div class="code-label">3 terminals, 3 tasks</div>
+    <pre><code><span class="ck"># Tab 1</span>
+claude "Refactor the auth middleware to use JWT"
+
+<span class="ck"># Tab 2</span>
+claude "Write integration tests for the /users endpoint"
+
+<span class="ck"># Tab 3</span>
+claude "Research the Stripe API for subscription billing"</code></pre>
+  </div>
+
+  <h3>2. Use Opus with Extended Thinking</h3>
+  <p>For architecture decisions and complex debugging, switch to Opus with thinking enabled. The thinking budget gives Claude space to reason through trade-offs before committing to an approach.</p>
+  <div class="code-block">
+    <div class="code-label">Switch mid-session</div>
+    <pre><code>/model opus
+<span class="ck"># Now ask your hard question</span>
+"Design the data model for multi-tenant billing
+with usage-based pricing. Think through the trade-offs."</code></pre>
+  </div>
+  <div class="callout callout-tip">
+    <div class="callout-title">Tip</div>
+    <p>Use Sonnet for routine tasks (edits, tests, boilerplate) and Opus for decisions that shape the architecture. Cost-effective and higher quality where it matters.</p>
+  </div>
+
+  <h3>3. Shared CLAUDE.md as Single Source of Truth</h3>
+  <p>Your CLAUDE.md file is the project&rsquo;s constitution. Every session reads it. Put coding conventions, architecture decisions, file structure, and &ldquo;never do this&rdquo; rules there. When Claude does something wrong, don&rsquo;t just fix it &mdash; update CLAUDE.md so it never happens again.</p>
+  <div class="code-block">
+    <div class="code-label">CLAUDE.md (project root)</div>
+    <pre><code><span class="ck"># Architecture</span>
+- All API routes go in src/routes/
+- Use Zod for all request validation
+- Never use any as a TypeScript type
+
+<span class="ck"># Conventions</span>
+- Tests go next to source files (foo.test.ts)
+- Use named exports, not default exports
+- Error handling: throw AppError, never raw strings
+
+<span class="ck"># DO NOT</span>
+- Do not modify the database schema without asking
+- Do not install new dependencies without approval</code></pre>
+  </div>
+
+  <h3>4. @claude on Pull Requests</h3>
+  <p>Tag <code>@claude</code> in GitHub PR comments to get automated code review. Claude reads the diff, checks against your CLAUDE.md conventions, and leaves line-by-line feedback. It catches what linters miss &mdash; logic bugs, missing edge cases, convention violations.</p>
+  <div class="callout callout-tip">
+    <div class="callout-title">Tip</div>
+    <p>Set up the GitHub integration so every PR automatically gets a Claude review pass. It&rsquo;s like having a senior engineer who never gets tired of reviewing.</p>
+  </div>
+
+  <h3>5. Plan Mode Before Complex Work</h3>
+  <p>For any task touching 3+ files, use plan mode first. Claude explores the codebase, designs an approach, and presents it for your approval before writing a single line of code. Catches wrong assumptions early.</p>
+  <div class="code-block">
+    <div class="code-label">Plan, then execute</div>
+    <pre><code>/plan
+"Add rate limiting to all API endpoints.
+Consider Redis vs in-memory, per-user vs per-IP,
+and how it interacts with our existing auth middleware."
+
+<span class="ck"># Review the plan, adjust, then approve</span></code></pre>
+  </div>
+
+  <h3>6. Configure /permissions for Flow State</h3>
+  <p>Use <code>/permissions</code> to auto-allow safe operations so Claude doesn&rsquo;t interrupt you for every file read or test run. Keep approval required for destructive operations (git push, file deletion, package installs).</p>
+  <div class="code-block">
+    <div class="code-label">Example permission setup</div>
+    <pre><code><span class="ck"># Auto-allow:</span>
+Read, Glob, Grep, WebSearch        <span class="ck"># research</span>
+npm test, npm run lint              <span class="ck"># validation</span>
+git status, git diff, git log       <span class="ck"># read-only git</span>
+
+<span class="ck"># Require approval:</span>
+git push, git reset                 <span class="ck"># destructive git</span>
+rm, unlink                          <span class="ck"># deletions</span>
+npm install                         <span class="ck"># dependency changes</span></code></pre>
+  </div>
+
+  <h3>7. PostToolUse Hooks for Auto-Validation</h3>
+  <p>Run validation automatically after Claude edits code. A PostToolUse hook on Write/Edit can run your linter, type checker, or tests immediately &mdash; catching issues before they compound.</p>
+  <div class="code-block">
+    <div class="code-label">.claude/settings.json</div>
+    <pre><code>{
+  <span class="ck">"hooks"</span>: {
+    <span class="ck">"PostToolUse"</span>: [
+      {
+        <span class="ck">"type"</span>: <span class="cs">"command"</span>,
+        <span class="ck">"matcher"</span>: <span class="cs">"Write|Edit"</span>,
+        <span class="ck">"command"</span>: <span class="cs">"npx tsc --noEmit 2>&1 | head -20"</span>
+      }
+    ]
+  }
+}</code></pre>
+  </div>
+  <p>If the type checker fails, Claude sees the errors immediately and self-corrects. No manual feedback loop needed.</p>
+
+  <h3>8. Modular Subagents for Parallel Work</h3>
+  <p>Break complex tasks into subagent calls. Each subagent gets a focused scope, runs in parallel, and returns results. Think of it as delegating to a small team instead of one overwhelmed developer.</p>
+  <div class="code-block">
+    <div class="code-label">Prompt pattern</div>
+    <pre><code>"For this migration:
+1. Spin up an Explore agent to map all usages of the old API
+2. Spin up a second agent to research the new API's interface
+3. Then use the results to build the migration plan"</code></pre>
+  </div>
+
+  <h3>9. Build Custom Slash Commands</h3>
+  <p>Create <code>/commands</code> for workflows you repeat. A <code>/deploy</code> that runs tests, builds, and pushes. A <code>/morning</code> that checks all your projects. A <code>/review</code> that audits the current diff against your standards.</p>
+  <div class="code-block">
+    <div class="code-label">.claude/commands/deploy.md</div>
+    <pre><code>Run the full deploy pipeline:
+1. Run all tests (fail fast)
+2. Build for production
+3. If everything passes, deploy to Vercel
+4. Report the deploy URL when done</code></pre>
+  </div>
+
+  <h3>10. Git Worktrees for Isolation</h3>
+  <p>Use git worktrees to run parallel Claude sessions on the same repo without conflicts. Each worktree is an isolated copy &mdash; one session can refactor <code>main</code> while another builds a feature branch, without file lock collisions.</p>
+  <div class="code-block">
+    <div class="code-label">Set up a worktree</div>
+    <pre><code><span class="ck"># Create a worktree for a feature branch</span>
+git worktree add ../my-repo-feature feature-branch
+
+<span class="ck"># Run Claude in the worktree</span>
+cd ../my-repo-feature && claude
+
+<span class="ck"># Or use Claude's built-in worktree support</span>
+/worktree</code></pre>
+  </div>
+
+  <h3>11. Verification Loops</h3>
+  <p>Always have Claude verify its own work. After any significant change, ask it to review what it did, run tests, and confirm the change matches your intent. Build this into your slash commands and prompts.</p>
+  <div class="code-block">
+    <div class="code-label">End every task with</div>
+    <pre><code>"Before marking this done:
+1. Run the test suite
+2. Check for TypeScript errors
+3. Review the diff and confirm it matches the original request
+4. List any edge cases you're unsure about"</code></pre>
+  </div>
+
+  <h3>12. Stop Hooks as Guardrails</h3>
+  <p>Use Stop hooks to prevent Claude from making unwanted changes. A hook can block commits to protected branches, prevent deletion of critical files, or enforce naming conventions before changes are saved.</p>
+  <div class="code-block">
+    <div class="code-label">Prevent accidental main pushes</div>
+    <pre><code>{
+  <span class="ck">"hooks"</span>: {
+    <span class="ck">"PreToolUse"</span>: [
+      {
+        <span class="ck">"type"</span>: <span class="cs">"command"</span>,
+        <span class="ck">"matcher"</span>: <span class="cs">"Bash"</span>,
+        <span class="ck">"command"</span>: <span class="cs">"if echo \"$CLAUDE_TOOL_INPUT\" | grep -q 'push.*main'; then echo 'BLOCKED: No pushing to main'; exit 2; fi"</span>
+      }
+    ]
+  }
+}</code></pre>
+  </div>
+  <p>Exit code 2 blocks the action entirely. Claude sees the message and adjusts.</p>
+
+  <div class="callout callout-opportunity">
+    <div class="callout-title">Your Opportunity</div>
+    <p>You already run multiple projects (LeaseJenny, Humanity, stock screener) and Moltbot agents. Apply parallel sessions across projects, shared CLAUDE.md for each repo, and custom slash commands to tie them together. The Creator&rsquo;s Playbook turns Claude Code from an assistant into a development platform.</p>
+  </div>
+
+  <!-- Exercises -->
+  <div class="exercises-section">
+    <div class="exercises-title">Hands-On Exercises</div>
+
+    <div class="exercise" data-ex="7-1" onclick="toggleExercise(this, event)">
+      <div class="exercise-header">
+        <span class="exercise-badge">Ex 7.1</span>
+        <span class="exercise-title">Run Parallel Sessions</span>
+        <span class="exercise-check"></span>
+      </div>
+      <div class="exercise-body">
+        <p>Open two terminal tabs and run Claude Code in both simultaneously.</p>
+        <ol>
+          <li>In Tab 1, start Claude and ask it to research something</li>
+          <li>In Tab 2, start a separate Claude session on a different task</li>
+          <li>Watch both work independently at the same time</li>
+        </ol>
+        <div class="code-block">
+          <div class="code-actions">
+            <button class="send-btn" onclick="sendToTerminal('claude \"List all my git repos in ~ and show their last commit dates\"\n', this, event)">&#9654; Send</button>
+            <button class="copy-btn" onclick="copyCode(this, event)">Copy</button>
+          </div>
+          <div class="code-label">Tab 1</div>
+          <pre><code>claude "List all my git repos in ~
+and show their last commit dates"</code></pre>
+        </div>
+        <div class="exercise-expected" onclick="toggleExpected(this, event)">
+          <div class="exercise-expected-toggle"><span class="arrow">&#9656;</span> Expected Result</div>
+          <div class="expected-content">Both sessions run independently. Neither blocks the other. They share the same CLAUDE.md and auto-memory.</div>
+        </div>
+        <button class="exercise-done-btn" onclick="completeExercise('7-1', this, event)">&#10003; Done &mdash; Running parallel sessions</button>
+      </div>
+    </div>
+
+    <div class="exercise" data-ex="7-2" onclick="toggleExercise(this, event)">
+      <div class="exercise-header">
+        <span class="exercise-badge">Ex 7.2</span>
+        <span class="exercise-title">Create a Project CLAUDE.md</span>
+        <span class="exercise-check"></span>
+      </div>
+      <div class="exercise-body">
+        <p>Set up a CLAUDE.md file for one of your projects so every session follows the same rules.</p>
+        <div class="code-block">
+          <div class="code-actions">
+            <button class="send-btn" onclick="sendToTerminal('Create a CLAUDE.md in the current project root with: project description, tech stack, coding conventions, file structure overview, and a DO NOT section with things Claude should never do\n', this, event)">&#9654; Send</button>
+            <button class="copy-btn" onclick="copyCode(this, event)">Copy</button>
+          </div>
+          <div class="code-label">Ask Claude</div>
+          <pre><code>Create a CLAUDE.md in the current project root
+with: project description, tech stack, coding
+conventions, file structure overview, and a
+DO NOT section with things Claude should never do</code></pre>
+        </div>
+        <div class="exercise-expected" onclick="toggleExpected(this, event)">
+          <div class="exercise-expected-toggle"><span class="arrow">&#9656;</span> Expected Result</div>
+          <div class="expected-content">A CLAUDE.md file at your project root. Every new Claude session in this folder will read it automatically. Update it whenever Claude does something you don&rsquo;t want repeated.</div>
+        </div>
+        <button class="exercise-done-btn" onclick="completeExercise('7-2', this, event)">&#10003; Done &mdash; CLAUDE.md created</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="chapter-footer">
+    <button class="chapter-nav-btn" onclick="goTo(6)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+      Previous
+    </button>
+    <button class="complete-btn" onclick="toggleComplete(7)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+      <span>Mark Complete</span>
+    </button>
+    <button class="chapter-nav-btn primary" onclick="goTo(8)">
       Next: Updates
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
     </button>
   </div>
 </section>
 
-<!-- ═══════════ CH 7: RECENT UPDATES ═══════════ -->
-<section class="chapter" id="ch7">
-  <div class="chapter-badge">Chapter 7</div>
+<!-- ═══════════ CH 8: RECENT UPDATES ═══════════ -->
+<section class="chapter" id="ch8">
+  <div class="chapter-badge">Chapter 8</div>
   <h1>Recent Updates</h1>
   <p class="chapter-intro">New features you might have missed.</p>
 
@@ -2039,16 +2627,76 @@ Generate a morning leads report.
     </tbody>
   </table>
 
+  <!-- Exercises -->
+  <div class="exercises-section">
+    <div class="exercises-title">Hands-On Exercises</div>
+
+    <div class="exercise" data-ex="8-1" onclick="toggleExercise(this, event)">
+      <div class="exercise-header">
+        <span class="exercise-badge">Ex 8.1</span>
+        <span class="exercise-title">Try /copy</span>
+        <span class="exercise-check"></span>
+      </div>
+      <div class="exercise-body">
+        <p>Use the interactive code picker to copy a specific block from Claude&rsquo;s response.</p>
+        <ol>
+          <li>Ask Claude to "Show me 3 different ways to read a JSON file in Node.js"</li>
+          <li>After it responds, type <code>/copy</code></li>
+          <li>Use the picker to select just the method you want</li>
+        </ol>
+        <div class="code-block">
+          <div class="code-actions">
+            <button class="send-btn" onclick="sendToTerminal('Show me 3 different ways to read a JSON file in Node.js\n', this, event)">&#9654; Send</button>
+            <button class="copy-btn" onclick="copyCode(this, event)">Copy</button>
+          </div>
+          <div class="code-label">Then use /copy after the response</div>
+          <pre><code>Show me 3 different ways to read a JSON
+file in Node.js</code></pre>
+        </div>
+        <div class="exercise-expected" onclick="toggleExpected(this, event)">
+          <div class="exercise-expected-toggle"><span class="arrow">&#9656;</span> Expected Result</div>
+          <div class="expected-content">The /copy picker shows numbered code blocks. Select one, and it&rsquo;s on your clipboard &mdash; no manual highlighting needed.</div>
+        </div>
+        <button class="exercise-done-btn" onclick="completeExercise('8-1', this, event)">&#10003; Done &mdash; I used /copy</button>
+      </div>
+    </div>
+
+    <div class="exercise" data-ex="8-2" onclick="toggleExercise(this, event)">
+      <div class="exercise-header">
+        <span class="exercise-badge">Ex 8.2</span>
+        <span class="exercise-title">Try /batch</span>
+        <span class="exercise-check"></span>
+      </div>
+      <div class="exercise-body">
+        <p>Run the same operation across multiple files at once.</p>
+        <div class="code-block">
+          <div class="code-actions">
+            <button class="send-btn" onclick="sendToTerminal('/batch Add a comment at the top of each file with the filename and last-modified date\n', this, event)">&#9654; Send</button>
+            <button class="copy-btn" onclick="copyCode(this, event)">Copy</button>
+          </div>
+          <div class="code-label">Batch operation</div>
+          <pre><code>/batch Add a comment at the top of each file
+with the filename and last-modified date</code></pre>
+        </div>
+        <div class="exercise-expected" onclick="toggleExpected(this, event)">
+          <div class="exercise-expected-toggle"><span class="arrow">&#9656;</span> Expected Result</div>
+          <div class="expected-content">Claude should let you select files, then apply the same operation to each one. Check the modified files to verify.</div>
+        </div>
+        <button class="exercise-done-btn" onclick="completeExercise('8-2', this, event)">&#10003; Done &mdash; Batch worked</button>
+      </div>
+    </div>
+  </div>
+
   <div class="chapter-footer">
-    <button class="chapter-nav-btn" onclick="goTo(6)">
+    <button class="chapter-nav-btn" onclick="goTo(7)">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
       Previous
     </button>
-    <button class="complete-btn" onclick="toggleComplete(7)">
+    <button class="complete-btn" onclick="toggleComplete(8)">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
       <span>Mark Complete</span>
     </button>
-    <button class="chapter-nav-btn primary" onclick="goTo(8)">
+    <button class="chapter-nav-btn primary" onclick="goTo(9)">
       Next: Cowork
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
     </button>
@@ -2056,8 +2704,8 @@ Generate a morning leads report.
 </section>
 
 <!-- ═══════════ CH 8: COWORK — WHAT & SETUP ═══════════ -->
-<section class="chapter" id="ch8">
-  <div class="chapter-badge">Chapter 8</div>
+<section class="chapter" id="ch9">
+  <div class="chapter-badge">Chapter 9</div>
   <h1>Cowork &mdash; What It Is &amp; Setup</h1>
   <p class="chapter-intro">Claude Code's power applied to knowledge work &mdash; not just coding. It runs in the Claude Desktop app.</p>
 
@@ -2089,16 +2737,63 @@ Generate a morning leads report.
     <li>Claude can only see what you explicitly allow</li>
   </ul>
 
+  <!-- Exercises -->
+  <div class="exercises-section">
+    <div class="exercises-title">Hands-On Exercises</div>
+
+    <div class="exercise" data-ex="9-1" onclick="toggleExercise(this, event)">
+      <div class="exercise-header">
+        <span class="exercise-badge">Ex 9.1</span>
+        <span class="exercise-title">Open Cowork</span>
+        <span class="exercise-check"></span>
+      </div>
+      <div class="exercise-body">
+        <p>Get into Cowork for the first time.</p>
+        <ol>
+          <li>Open <strong>Claude Desktop</strong> (make sure it&rsquo;s the latest version)</li>
+          <li>Click the <strong>Cowork</strong> tab in the mode selector</li>
+          <li>Type: "What can you do in Cowork mode that you can&rsquo;t in regular Chat?"</li>
+        </ol>
+        <div class="exercise-expected" onclick="toggleExpected(this, event)">
+          <div class="exercise-expected-toggle"><span class="arrow">&#9656;</span> Expected Result</div>
+          <div class="expected-content">Claude should explain file access, tool use, connectors, scheduling, and other Cowork-specific capabilities. You&rsquo;re in Cowork mode.</div>
+        </div>
+        <button class="exercise-done-btn" onclick="completeExercise('9-1', this, event)">&#10003; Done &mdash; Cowork is open</button>
+      </div>
+    </div>
+
+    <div class="exercise" data-ex="9-2" onclick="toggleExercise(this, event)">
+      <div class="exercise-header">
+        <span class="exercise-badge">Ex 9.2</span>
+        <span class="exercise-title">Grant Folder Access</span>
+        <span class="exercise-check"></span>
+      </div>
+      <div class="exercise-body">
+        <p>Give Cowork access to one of your project folders.</p>
+        <ol>
+          <li>In Cowork, say: "List the files in my ~/crash-course-intake folder"</li>
+          <li>When prompted, grant access to that folder</li>
+          <li>Verify Cowork can see and describe the contents</li>
+        </ol>
+        <div class="exercise-expected" onclick="toggleExpected(this, event)">
+          <div class="exercise-expected-toggle"><span class="arrow">&#9656;</span> Expected Result</div>
+          <div class="expected-content">Cowork should list your course files (index.html, course/index.html, etc.) and describe what it sees. Folder access persists for the session.</div>
+        </div>
+        <button class="exercise-done-btn" onclick="completeExercise('9-2', this, event)">&#10003; Done &mdash; Folder access granted</button>
+      </div>
+    </div>
+  </div>
+
   <div class="chapter-footer">
-    <button class="chapter-nav-btn" onclick="goTo(7)">
+    <button class="chapter-nav-btn" onclick="goTo(8)">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
       Previous
     </button>
-    <button class="complete-btn" onclick="toggleComplete(8)">
+    <button class="complete-btn" onclick="toggleComplete(9)">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
       <span>Mark Complete</span>
     </button>
-    <button class="chapter-nav-btn primary" onclick="goTo(9)">
+    <button class="chapter-nav-btn primary" onclick="goTo(10)">
       Next: Instructions
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
     </button>
@@ -2106,8 +2801,8 @@ Generate a morning leads report.
 </section>
 
 <!-- ═══════════ CH 9: INSTRUCTIONS & PLUGINS ═══════════ -->
-<section class="chapter" id="ch9">
-  <div class="chapter-badge">Chapter 9</div>
+<section class="chapter" id="ch10">
+  <div class="chapter-badge">Chapter 10</div>
   <h1>Instructions &amp; Plugins</h1>
   <p class="chapter-intro">Your Cowork CLAUDE.md equivalent, plus plugins that bundle skills and connectors.</p>
 
@@ -2173,16 +2868,66 @@ details.</code></pre>
     <p>Click "Customize" on any installed plugin to swap connectors, add your business context, and adjust workflows to match how you actually work.</p>
   </div>
 
+  <!-- Exercises -->
+  <div class="exercises-section">
+    <div class="exercises-title">Hands-On Exercises</div>
+
+    <div class="exercise" data-ex="10-1" onclick="toggleExercise(this, event)">
+      <div class="exercise-header">
+        <span class="exercise-badge">Ex 10.1</span>
+        <span class="exercise-title">Set Global Instructions</span>
+        <span class="exercise-check"></span>
+      </div>
+      <div class="exercise-body">
+        <p>Add global instructions in Cowork so it always knows your business context.</p>
+        <ol>
+          <li>Open Cowork &gt; Settings &gt; Cowork &gt; Global Instructions</li>
+          <li>Add context about your businesses: "I run Reside Rentals (property management), Humanity AI (AI agents for businesses), and a swing trading platform."</li>
+          <li>Include your communication preferences</li>
+          <li>Test by asking Cowork something business-related without repeating context</li>
+        </ol>
+        <div class="exercise-expected" onclick="toggleExpected(this, event)">
+          <div class="exercise-expected-toggle"><span class="arrow">&#9656;</span> Expected Result</div>
+          <div class="expected-content">Cowork should respond with awareness of your businesses without you having to explain them each time.</div>
+        </div>
+        <button class="exercise-done-btn" onclick="completeExercise('10-1', this, event)">&#10003; Done &mdash; Instructions set</button>
+      </div>
+    </div>
+
+    <div class="exercise" data-ex="10-2" onclick="toggleExercise(this, event)">
+      <div class="exercise-header">
+        <span class="exercise-badge">Ex 10.2</span>
+        <span class="exercise-title">Install a Plugin</span>
+        <span class="exercise-check"></span>
+      </div>
+      <div class="exercise-body">
+        <p>Browse the Cowork plugin library and install one that fits your workflow.</p>
+        <ol>
+          <li>Open Cowork &gt; Settings &gt; Plugins</li>
+          <li>Browse available plugins (Marketing, Sales, Operations, etc.)</li>
+          <li>Install one that matches your needs</li>
+          <li>Click "Customize" and add your business context</li>
+          <li>Test the plugin with a real task</li>
+        </ol>
+        <div class="exercise-expected" onclick="toggleExpected(this, event)">
+          <div class="exercise-expected-toggle"><span class="arrow">&#9656;</span> Expected Result</div>
+          <div class="expected-content">The plugin should appear in your Cowork sidebar. When you use it, it should have your business context pre-loaded.</div>
+        </div>
+        <button class="exercise-done-btn" onclick="completeExercise('10-2', this, event)">&#10003; Done &mdash; Plugin installed</button>
+      </div>
+    </div>
+  </div>
+
   <div class="chapter-footer">
-    <button class="chapter-nav-btn" onclick="goTo(8)">
+    <button class="chapter-nav-btn" onclick="goTo(9)">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
       Previous
     </button>
-    <button class="complete-btn" onclick="toggleComplete(9)">
+    <button class="complete-btn" onclick="toggleComplete(10)">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
       <span>Mark Complete</span>
     </button>
-    <button class="chapter-nav-btn primary" onclick="goTo(10)">
+    <button class="chapter-nav-btn primary" onclick="goTo(11)">
       Next: Connectors
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
     </button>
@@ -2190,8 +2935,8 @@ details.</code></pre>
 </section>
 
 <!-- ═══════════ CH 10: CONNECTORS & USE CASES ═══════════ -->
-<section class="chapter" id="ch10">
-  <div class="chapter-badge">Chapter 10</div>
+<section class="chapter" id="ch11">
+  <div class="chapter-badge">Chapter 11</div>
   <h1>Connectors &amp; Use Cases</h1>
   <p class="chapter-intro">Connectors link Cowork to external services. These are MCP servers under the hood.</p>
 
@@ -2234,16 +2979,64 @@ details.</code></pre>
     <li>"Schedule a daily 8am task: check LeaseJenny leads sheet and send me a summary via email"</li>
   </ul>
 
+  <!-- Exercises -->
+  <div class="exercises-section">
+    <div class="exercises-title">Hands-On Exercises</div>
+
+    <div class="exercise" data-ex="11-1" onclick="toggleExercise(this, event)">
+      <div class="exercise-header">
+        <span class="exercise-badge">Ex 11.1</span>
+        <span class="exercise-title">Connect Google Drive</span>
+        <span class="exercise-check"></span>
+      </div>
+      <div class="exercise-body">
+        <p>Set up the Google Drive connector in Cowork.</p>
+        <ol>
+          <li>Open Cowork in Claude Desktop</li>
+          <li>Go to Settings &gt; Cowork &gt; Connectors</li>
+          <li>Toggle on <strong>Google Drive</strong> and authenticate with your Google account</li>
+          <li>Test it: ask Cowork "List the files in my Google Drive root folder"</li>
+        </ol>
+        <div class="exercise-expected" onclick="toggleExpected(this, event)">
+          <div class="exercise-expected-toggle"><span class="arrow">&#9656;</span> Expected Result</div>
+          <div class="expected-content">Cowork should list your Google Drive files. You can now read and write Google Docs, Sheets, and Slides directly from Cowork.</div>
+        </div>
+        <button class="exercise-done-btn" onclick="completeExercise('11-1', this, event)">&#10003; Done &mdash; Drive connected</button>
+      </div>
+    </div>
+
+    <div class="exercise" data-ex="11-2" onclick="toggleExercise(this, event)">
+      <div class="exercise-header">
+        <span class="exercise-badge">Ex 11.2</span>
+        <span class="exercise-title">Run a Real Business Task</span>
+        <span class="exercise-check"></span>
+      </div>
+      <div class="exercise-body">
+        <p>Pick one of the use cases from this chapter and actually run it in Cowork. For example:</p>
+        <ul>
+          <li>"Read all my CLAUDE.md files across projects and create a master inventory of what I&rsquo;m working on"</li>
+          <li>"Organize my Downloads folder &mdash; sort by type, rename with dates, delete duplicates"</li>
+        </ul>
+        <p>Give Cowork folder access when prompted and let it work.</p>
+        <div class="exercise-expected" onclick="toggleExpected(this, event)">
+          <div class="exercise-expected-toggle"><span class="arrow">&#9656;</span> Expected Result</div>
+          <div class="expected-content">Cowork should complete the task end-to-end. Check the output to make sure it did what you expected.</div>
+        </div>
+        <button class="exercise-done-btn" onclick="completeExercise('11-2', this, event)">&#10003; Done &mdash; Task completed</button>
+      </div>
+    </div>
+  </div>
+
   <div class="chapter-footer">
-    <button class="chapter-nav-btn" onclick="goTo(9)">
+    <button class="chapter-nav-btn" onclick="goTo(10)">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
       Previous
     </button>
-    <button class="complete-btn" onclick="toggleComplete(10)">
+    <button class="complete-btn" onclick="toggleComplete(11)">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
       <span>Mark Complete</span>
     </button>
-    <button class="chapter-nav-btn primary" onclick="goTo(11)">
+    <button class="chapter-nav-btn primary" onclick="goTo(12)">
       Next: Cowork vs Code
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
     </button>
@@ -2251,8 +3044,8 @@ details.</code></pre>
 </section>
 
 <!-- ═══════════ CH 11: COWORK VS CLAUDE CODE ═══════════ -->
-<section class="chapter" id="ch11">
-  <div class="chapter-badge">Chapter 11</div>
+<section class="chapter" id="ch12">
+  <div class="chapter-badge">Chapter 12</div>
   <h1>Cowork vs Claude Code</h1>
   <p class="chapter-intro">They share the same foundation. Think of Claude Code as the dev tool and Cowork as the business tool.</p>
 
@@ -2272,16 +3065,44 @@ details.</code></pre>
     </tbody>
   </table>
 
+  <!-- Exercises -->
+  <div class="exercises-section">
+    <div class="exercises-title">Hands-On Exercises</div>
+
+    <div class="exercise" data-ex="12-1" onclick="toggleExercise(this, event)">
+      <div class="exercise-header">
+        <span class="exercise-badge">Ex 12.1</span>
+        <span class="exercise-title">Classify 5 Tasks</span>
+        <span class="exercise-check"></span>
+      </div>
+      <div class="exercise-body">
+        <p>For each task below, decide whether you&rsquo;d use <strong>Claude Code</strong> or <strong>Cowork</strong>. Then check the answers.</p>
+        <ol>
+          <li>Debug a failing API endpoint in your stock screener</li>
+          <li>Create a weekly lead report spreadsheet from Google Sheets data</li>
+          <li>Set up a new MCP server for Slack integration</li>
+          <li>Draft 5 LinkedIn posts about AI for dental practices</li>
+          <li>Refactor the authentication middleware in LeaseJenny</li>
+        </ol>
+        <div class="exercise-expected" onclick="toggleExpected(this, event)">
+          <div class="exercise-expected-toggle"><span class="arrow">&#9656;</span> Expected Result</div>
+          <div class="expected-content">1. <strong>Claude Code</strong> (debugging, terminal access). 2. <strong>Cowork</strong> (Google Drive, spreadsheet). 3. <strong>Claude Code</strong> (config files, terminal). 4. <strong>Cowork</strong> (content creation, no code). 5. <strong>Claude Code</strong> (code refactoring, git).</div>
+        </div>
+        <button class="exercise-done-btn" onclick="completeExercise('12-1', this, event)">&#10003; Done &mdash; I classified all 5</button>
+      </div>
+    </div>
+  </div>
+
   <div class="chapter-footer">
-    <button class="chapter-nav-btn" onclick="goTo(10)">
+    <button class="chapter-nav-btn" onclick="goTo(11)">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
       Previous
     </button>
-    <button class="complete-btn" onclick="toggleComplete(11)">
+    <button class="complete-btn" onclick="toggleComplete(12)">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
       <span>Mark Complete</span>
     </button>
-    <button class="chapter-nav-btn primary" onclick="goTo(12)">
+    <button class="chapter-nav-btn primary" onclick="goTo(13)">
       Next: Power Setup
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
     </button>
@@ -2289,8 +3110,8 @@ details.</code></pre>
 </section>
 
 <!-- ═══════════ CH 12: POWER SETUP & WORKFLOW ═══════════ -->
-<section class="chapter" id="ch12">
-  <div class="chapter-badge">Chapter 12</div>
+<section class="chapter" id="ch13">
+  <div class="chapter-badge">Chapter 13</div>
   <h1>Power Setup &amp; Daily Workflow</h1>
   <p class="chapter-intro">Your recommended configuration and daily routine bringing it all together.</p>
 
@@ -2375,12 +3196,86 @@ details.</code></pre>
     <p>This course is tailored to your stack and workflow. Come back to any chapter as a reference. The features you're not using yet &mdash; subagents, hooks, background tasks, Cowork &mdash; are where the biggest wins are hiding.</p>
   </div>
 
+  <!-- Exercises -->
+  <div class="exercises-section">
+    <div class="exercises-title">Hands-On Exercises</div>
+
+    <div class="exercise" data-ex="13-1" onclick="toggleExercise(this, event)">
+      <div class="exercise-header">
+        <span class="exercise-badge">Ex 13.1</span>
+        <span class="exercise-title">Build Your settings.json</span>
+        <span class="exercise-check"></span>
+      </div>
+      <div class="exercise-body">
+        <p>Create a complete Claude Code settings file with MCP servers, hooks, and permissions.</p>
+        <ol>
+          <li>Open Claude Code and ask it to show your current settings</li>
+          <li>Then ask Claude to build the recommended config from this chapter:</li>
+        </ol>
+        <div class="code-block">
+          <div class="code-actions">
+            <button class="send-btn" onclick="sendToTerminal('Set up my ~/.claude/settings.json with: GitHub MCP server, fetch MCP server, a Notification hook, and auto-allow for Read/Glob/Grep tools\n', this, event)">&#9654; Send</button>
+            <button class="copy-btn" onclick="copyCode(this, event)">Copy</button>
+          </div>
+          <div class="code-label">Ask Claude</div>
+          <pre><code>Set up my ~/.claude/settings.json with:
+GitHub MCP server, fetch MCP server,
+a Notification hook, and auto-allow
+for Read/Glob/Grep tools</code></pre>
+        </div>
+        <div class="exercise-expected" onclick="toggleExpected(this, event)">
+          <div class="exercise-expected-toggle"><span class="arrow">&#9656;</span> Expected Result</div>
+          <div class="expected-content">Your settings.json should contain MCP server configs for GitHub and fetch, a Notification hook, and permission allowlists. Run <code>cat ~/.claude/settings.json</code> to verify.</div>
+        </div>
+        <button class="exercise-done-btn" onclick="completeExercise('13-1', this, event)">&#10003; Done &mdash; Settings configured</button>
+      </div>
+    </div>
+
+    <div class="exercise" data-ex="13-2" onclick="toggleExercise(this, event)">
+      <div class="exercise-header">
+        <span class="exercise-badge">Ex 13.2</span>
+        <span class="exercise-title">Create a /morning Skill</span>
+        <span class="exercise-check"></span>
+      </div>
+      <div class="exercise-body">
+        <p>Build a custom slash command that gives you a morning briefing across all your projects.</p>
+        <div class="code-block">
+          <div class="code-actions">
+            <button class="send-btn" onclick="sendToTerminal('Create a file at .claude/commands/morning.md with instructions to: 1) Check git status across my projects, 2) List any uncommitted changes, 3) Summarize recent commits from the last 24 hours, 4) Give me a quick status report\n', this, event)">&#9654; Send</button>
+            <button class="copy-btn" onclick="copyCode(this, event)">Copy</button>
+          </div>
+          <div class="code-label">Ask Claude</div>
+          <pre><code>Create a file at .claude/commands/morning.md
+with instructions to:
+1) Check git status across my projects
+2) List any uncommitted changes
+3) Summarize recent commits from the last 24 hours
+4) Give me a quick status report</code></pre>
+        </div>
+        <p>Then test it:</p>
+        <div class="code-block">
+          <div class="code-actions">
+            <button class="send-btn" onclick="sendToTerminal('/morning\n', this, event)">&#9654; Send</button>
+            <button class="copy-btn" onclick="copyCode(this, event)">Copy</button>
+          </div>
+          <div class="code-label">Test it</div>
+          <pre><code>/morning</code></pre>
+        </div>
+        <div class="exercise-expected" onclick="toggleExpected(this, event)">
+          <div class="exercise-expected-toggle"><span class="arrow">&#9656;</span> Expected Result</div>
+          <div class="expected-content">Claude should scan your projects and give you a summary of what&rsquo;s changed, what needs attention, and what&rsquo;s ready to ship.</div>
+        </div>
+        <button class="exercise-done-btn" onclick="completeExercise('13-2', this, event)">&#10003; Done &mdash; /morning works</button>
+      </div>
+    </div>
+  </div>
+
   <div class="chapter-footer">
-    <button class="chapter-nav-btn" onclick="goTo(11)">
+    <button class="chapter-nav-btn" onclick="goTo(12)">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
       Previous
     </button>
-    <button class="complete-btn" onclick="toggleComplete(12)">
+    <button class="complete-btn" onclick="toggleComplete(13)">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
       <span>Mark Complete</span>
     </button>
@@ -2419,7 +3314,7 @@ details.</code></pre>
 </div>
 
 <script>
-const TOTAL = 12;
+const TOTAL = 13;
 const STORAGE_KEY = 'humanity-crash-course';
 
 function getProgress() {
