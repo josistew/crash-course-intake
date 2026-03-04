@@ -1364,27 +1364,27 @@ body {
     <div class="nav-part">Part 1 &mdash; Claude Code</div>
     <a class="nav-item" data-ch="2" onclick="goTo(2)">
       <div class="nav-dot"></div>
-      <span class="nav-label">Hooks Deep Dive</span>
+      <span class="nav-label">Creator's Playbook</span>
     </a>
     <a class="nav-item" data-ch="3" onclick="goTo(3)">
       <div class="nav-dot"></div>
-      <span class="nav-label">MCP Servers</span>
+      <span class="nav-label">Hooks Deep Dive</span>
     </a>
     <a class="nav-item" data-ch="4" onclick="goTo(4)">
       <div class="nav-dot"></div>
-      <span class="nav-label">Skills & Slash Commands</span>
+      <span class="nav-label">MCP Servers</span>
     </a>
     <a class="nav-item" data-ch="5" onclick="goTo(5)">
       <div class="nav-dot"></div>
-      <span class="nav-label">Subagents</span>
+      <span class="nav-label">Skills & Slash Commands</span>
     </a>
     <a class="nav-item" data-ch="6" onclick="goTo(6)">
       <div class="nav-dot"></div>
-      <span class="nav-label">Git & Background Tasks</span>
+      <span class="nav-label">Subagents</span>
     </a>
     <a class="nav-item" data-ch="7" onclick="goTo(7)">
       <div class="nav-dot"></div>
-      <span class="nav-label">Creator's Playbook</span>
+      <span class="nav-label">Git & Background Tasks</span>
     </a>
     <a class="nav-item" data-ch="8" onclick="goTo(8)">
       <div class="nav-dot"></div>
@@ -1447,32 +1447,32 @@ body {
       <div class="home-chapter-list">
         <a class="home-chapter-item" onclick="goTo(2)" data-ch="2">
           <div class="home-ch-num">2</div>
-          <span class="home-ch-title">Hooks Deep Dive</span>
+          <span class="home-ch-title">The Creator's Playbook</span>
           <svg class="home-ch-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
         </a>
         <a class="home-chapter-item" onclick="goTo(3)" data-ch="3">
           <div class="home-ch-num">3</div>
-          <span class="home-ch-title">MCP Servers Deep Dive</span>
+          <span class="home-ch-title">Hooks Deep Dive</span>
           <svg class="home-ch-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
         </a>
         <a class="home-chapter-item" onclick="goTo(4)" data-ch="4">
           <div class="home-ch-num">4</div>
-          <span class="home-ch-title">Skills & Slash Commands</span>
+          <span class="home-ch-title">MCP Servers Deep Dive</span>
           <svg class="home-ch-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
         </a>
         <a class="home-chapter-item" onclick="goTo(5)" data-ch="5">
           <div class="home-ch-num">5</div>
-          <span class="home-ch-title">Subagents</span>
+          <span class="home-ch-title">Skills & Slash Commands</span>
           <svg class="home-ch-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
         </a>
         <a class="home-chapter-item" onclick="goTo(6)" data-ch="6">
           <div class="home-ch-num">6</div>
-          <span class="home-ch-title">Git Workflows & Background Tasks</span>
+          <span class="home-ch-title">Subagents</span>
           <svg class="home-ch-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
         </a>
         <a class="home-chapter-item" onclick="goTo(7)" data-ch="7">
           <div class="home-ch-num">7</div>
-          <span class="home-ch-title">The Creator's Playbook</span>
+          <span class="home-ch-title">Git Workflows & Background Tasks</span>
           <svg class="home-ch-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
         </a>
         <a class="home-chapter-item" onclick="goTo(8)" data-ch="8">
@@ -1564,793 +1564,15 @@ body {
       <span>Mark Complete</span>
     </button>
     <button class="chapter-nav-btn primary" onclick="goTo(2)">
-      Next: Hooks
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-    </button>
-  </div>
-</section>
-
-<!-- ═══════════ CH 2: HOOKS ═══════════ -->
-<section class="chapter" id="ch2">
-  <div class="chapter-badge">Chapter 2</div>
-  <h1>Hooks Deep Dive</h1>
-  <p class="chapter-intro">Hooks are commands that run automatically at specific points in Claude's workflow. Think of them as "if Claude does X, also do Y."</p>
-
-  <p>You configure them in <code>.claude/settings.json</code>.</p>
-
-  <h2>Four Hook Types</h2>
-  <ul>
-    <li><strong>Command hooks</strong> &mdash; Run a shell command (formatting, linting, logging)</li>
-    <li><strong>HTTP hooks</strong> &mdash; POST JSON to a URL (send notifications, trigger webhooks)</li>
-    <li><strong>Prompt hooks</strong> &mdash; Ask an LLM a yes/no question (smart gatekeeping)</li>
-    <li><strong>Agent hooks</strong> &mdash; Spawn a subagent to verify complex conditions</li>
-  </ul>
-
-  <h2>Five Hook Events</h2>
-  <table>
-    <thead><tr><th>Event</th><th>When It Fires</th></tr></thead>
-    <tbody>
-      <tr><td><code>PreToolUse</code></td><td>Before Claude runs any tool (block dangerous commands)</td></tr>
-      <tr><td><code>PostToolUse</code></td><td>After a tool completes (auto-format files, log actions)</td></tr>
-      <tr><td><code>PostToolUseFailure</code></td><td>When a tool fails (custom error handling)</td></tr>
-      <tr><td><code>PermissionRequest</code></td><td>When Claude asks for permission (auto-approve safe patterns)</td></tr>
-      <tr><td><code>Notification</code></td><td>When Claude sends a notification (forward to Slack, Telegram)</td></tr>
-    </tbody>
-  </table>
-
-  <h3>Auto-format on every file write</h3>
-  <div class="code-block">
-    <div class="code-label">settings.json</div>
-    <pre><code>{
-  <span class="ck">"hooks"</span>: {
-    <span class="ck">"PostToolUse"</span>: [
-      {
-        <span class="ck">"matcher"</span>: <span class="cs">"Write|Edit"</span>,
-        <span class="ck">"type"</span>: <span class="cs">"command"</span>,
-        <span class="ck">"command"</span>: <span class="cs">"prettier --write $CLAUDE_FILE_PATH"</span>
-      }
-    ]
-  }
-}</code></pre>
-  </div>
-
-  <h3>Send Telegram notification when Claude finishes</h3>
-  <div class="code-block">
-    <div class="code-label">settings.json</div>
-    <pre><code>{
-  <span class="ck">"hooks"</span>: {
-    <span class="ck">"Notification"</span>: [
-      {
-        <span class="ck">"type"</span>: <span class="cs">"http"</span>,
-        <span class="ck">"url"</span>: <span class="cs">"https://api.telegram.org/bot&lt;TOKEN&gt;/sendMessage"</span>,
-        <span class="ck">"method"</span>: <span class="cs">"POST"</span>,
-        <span class="ck">"body"</span>: {
-          <span class="ck">"chat_id"</span>: <span class="cs">"&lt;YOUR_CHAT_ID&gt;"</span>,
-          <span class="ck">"text"</span>: <span class="cs">"Claude finished: $CLAUDE_NOTIFICATION"</span>
-        }
-      }
-    ]
-  }
-}</code></pre>
-  </div>
-
-  <h3>Block destructive git commands</h3>
-  <div class="code-block">
-    <div class="code-label">settings.json</div>
-    <pre><code>{
-  <span class="ck">"hooks"</span>: {
-    <span class="ck">"PreToolUse"</span>: [
-      {
-        <span class="ck">"matcher"</span>: <span class="cs">"Bash"</span>,
-        <span class="ck">"type"</span>: <span class="cs">"prompt"</span>,
-        <span class="ck">"prompt"</span>: <span class="cs">"Is this command destructive (force push, reset --hard, rm -rf)? Answer YES to block, NO to allow."</span>
-      }
-    ]
-  }
-}</code></pre>
-  </div>
-
-  <div class="callout callout-opportunity">
-    <div class="callout-title">Your Opportunity</div>
-    <p>You run Moltbot agents on your Mac Mini. Hooks could auto-notify you via Telegram (Bean/Egg) when Claude Code finishes long tasks, auto-lint code, or auto-commit after successful builds.</p>
-  </div>
-
-  <!-- Exercises -->
-  <div class="exercises-section">
-    <div class="exercises-title">Hands-On Exercises</div>
-
-    <div class="exercise" data-ex="2-1" onclick="toggleExercise(this, event)">
-      <div class="exercise-header">
-        <span class="exercise-badge">Ex 2.1</span>
-        <span class="exercise-title">Set Up a Notification Hook</span>
-        <span class="exercise-check"></span>
-      </div>
-      <div class="exercise-body">
-        <p>Create a hook that sends a macOS notification whenever Claude finishes a task.</p>
-        <ol>
-          <li>Open Claude Code in the terminal panel (type <code>claude</code>)</li>
-          <li>Ask Claude: "Show me my current ~/.claude/settings.json"</li>
-          <li>Add this Notification hook to your settings:</li>
-        </ol>
-        <div class="code-block">
-          <div class="code-actions">
-            <button class="send-btn" onclick="sendToTerminal('cat ~/.claude/settings.json\n', this, event)">&#9654; Send</button>
-            <button class="copy-btn" onclick="copyCode(this, event)">Copy</button>
-          </div>
-          <div class="code-label">Check current settings</div>
-          <pre><code>cat ~/.claude/settings.json</code></pre>
-        </div>
-        <p>Then ask Claude to add this hook for you:</p>
-        <div class="code-block">
-          <div class="code-actions">
-            <button class="send-btn" onclick="sendToTerminal('Add a Notification hook to my ~/.claude/settings.json that runs: osascript -e \'display notification \"$CLAUDE_NOTIFICATION\" with title \"Claude Code\"\'\n', this, event)">&#9654; Send</button>
-            <button class="copy-btn" onclick="copyCode(this, event)">Copy</button>
-          </div>
-          <div class="code-label">Ask Claude to add the hook</div>
-          <pre><code>Add a Notification hook to my ~/.claude/settings.json
-that runs: osascript -e 'display notification
-"$CLAUDE_NOTIFICATION" with title "Claude Code"'</code></pre>
-        </div>
-        <div class="exercise-expected" onclick="toggleExpected(this, event)">
-          <div class="exercise-expected-toggle"><span class="arrow">&#9656;</span> Expected Result</div>
-          <div class="expected-content">Your settings.json should now have a <code>hooks.Notification</code> array with a command hook. Next time Claude finishes a background task, you'll get a native macOS notification.</div>
-        </div>
-        <button class="exercise-done-btn" onclick="completeExercise('2-1', this, event)">&#10003; Done &mdash; I see the hook in my settings</button>
-      </div>
-    </div>
-
-    <div class="exercise" data-ex="2-2" onclick="toggleExercise(this, event)">
-      <div class="exercise-header">
-        <span class="exercise-badge">Ex 2.2</span>
-        <span class="exercise-title">Create a File Edit Logger</span>
-        <span class="exercise-check"></span>
-      </div>
-      <div class="exercise-body">
-        <p>Create a PostToolUse hook that logs every file Claude writes or edits.</p>
-        <ol>
-          <li>In Claude Code, ask:</li>
-        </ol>
-        <div class="code-block">
-          <div class="code-actions">
-            <button class="send-btn" onclick="sendToTerminal('Add a PostToolUse hook that matches Write|Edit and runs: echo \"$(date): $CLAUDE_FILE_PATH\" >> ~/claude-edits.log\n', this, event)">&#9654; Send</button>
-            <button class="copy-btn" onclick="copyCode(this, event)">Copy</button>
-          </div>
-          <div class="code-label">Ask Claude</div>
-          <pre><code>Add a PostToolUse hook that matches Write|Edit
-and runs: echo "$(date): $CLAUDE_FILE_PATH"
->> ~/claude-edits.log</code></pre>
-        </div>
-        <p>Then make any edit to test it, and check the log:</p>
-        <div class="code-block">
-          <div class="code-actions">
-            <button class="send-btn" onclick="sendToTerminal('cat ~/claude-edits.log\n', this, event)">&#9654; Send</button>
-            <button class="copy-btn" onclick="copyCode(this, event)">Copy</button>
-          </div>
-          <div class="code-label">Check the log</div>
-          <pre><code>cat ~/claude-edits.log</code></pre>
-        </div>
-        <div class="exercise-expected" onclick="toggleExpected(this, event)">
-          <div class="exercise-expected-toggle"><span class="arrow">&#9656;</span> Expected Result</div>
-          <div class="expected-content">You should see a log entry with a timestamp and the file path that was edited. Every future file write/edit by Claude will be logged here.</div>
-        </div>
-        <button class="exercise-done-btn" onclick="completeExercise('2-2', this, event)">&#10003; Done &mdash; I see entries in the log</button>
-      </div>
-    </div>
-  </div>
-
-  <div class="chapter-footer">
-    <button class="chapter-nav-btn" onclick="goTo(1)">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
-      Previous
-    </button>
-    <button class="complete-btn" onclick="toggleComplete(2)">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
-      <span>Mark Complete</span>
-    </button>
-    <button class="chapter-nav-btn primary" onclick="goTo(3)">
-      Next: MCP Servers
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-    </button>
-  </div>
-</section>
-
-<!-- ═══════════ CH 3: MCP SERVERS ═══════════ -->
-<section class="chapter" id="ch3">
-  <div class="chapter-badge">Chapter 3</div>
-  <h1>MCP Servers Deep Dive</h1>
-  <p class="chapter-intro">MCP (Model Context Protocol) lets Claude connect to external tools and data sources. Each MCP server exposes "tools" that Claude can call like native capabilities.</p>
-
-  <h2>Where MCP Configs Live</h2>
-  <ul>
-    <li><strong>Global:</strong> <code>~/.claude/settings.json</code> &mdash; available in all projects</li>
-    <li><strong>Project:</strong> <code>.claude/settings.json</code> &mdash; project-specific, committed to git</li>
-    <li><strong>Local:</strong> <code>.claude/settings.local.json</code> &mdash; project-specific, NOT committed (good for secrets)</li>
-  </ul>
-
-  <h3>Config structure</h3>
-  <div class="code-block">
-    <div class="code-label">settings.json</div>
-    <pre><code>{
-  <span class="ck">"mcpServers"</span>: {
-    <span class="ck">"server-name"</span>: {
-      <span class="ck">"command"</span>: <span class="cs">"npx"</span>,
-      <span class="ck">"args"</span>: [<span class="cs">"-y"</span>, <span class="cs">"@modelcontextprotocol/server-filesystem"</span>, <span class="cs">"/path/to/folder"</span>],
-      <span class="ck">"env"</span>: {}
-    }
-  }
-}</code></pre>
-  </div>
-
-  <h2>MCP Servers You Should Know</h2>
-  <table>
-    <thead><tr><th>Server</th><th>What It Does</th><th>Why You'd Use It</th></tr></thead>
-    <tbody>
-      <tr><td><code>@anthropic/claude-code-mcp</code></td><td>Exposes Claude Code itself as an MCP tool</td><td>Let Cowork or other Claude instances call Claude Code</td></tr>
-      <tr><td><code>server-filesystem</code></td><td>Read/write files in specified directories</td><td>Give Claude access to specific folders</td></tr>
-      <tr><td><code>server-github</code></td><td>GitHub API (issues, PRs, repos)</td><td>Manage repos without leaving Claude</td></tr>
-      <tr><td><code>mcp-server-fetch</code></td><td>Fetch web pages</td><td>Let Claude read URLs</td></tr>
-      <tr><td>Google Sheets MCP</td><td>Read/write Google Sheets</td><td>Your LeaseJenny dashboard, lead tracking</td></tr>
-      <tr><td>Slack MCP</td><td>Send/read Slack messages</td><td>Notifications, team updates</td></tr>
-    </tbody>
-  </table>
-
-  <h3>MCP tools in hooks</h3>
-  <p>MCP tools follow the pattern <code>mcp__&lt;server&gt;__&lt;tool&gt;</code>. You can write hooks that trigger on specific MCP tools:</p>
-  <div class="code-block">
-    <div class="code-label">settings.json</div>
-    <pre><code>{
-  <span class="ck">"hooks"</span>: {
-    <span class="ck">"PostToolUse"</span>: [
-      {
-        <span class="ck">"matcher"</span>: <span class="cs">"mcp__github__.*"</span>,
-        <span class="ck">"type"</span>: <span class="cs">"command"</span>,
-        <span class="ck">"command"</span>: <span class="cs">"echo 'GitHub action taken' >> ~/claude-audit.log"</span>
-      }
-    ]
-  }
-}</code></pre>
-  </div>
-
-  <div class="callout callout-opportunity">
-    <div class="callout-title">Your Opportunity</div>
-    <p>Connect Google Sheets MCP for LeaseJenny lead data. Connect GitHub MCP for your repos. Set up a filesystem MCP so Cowork can access your project files.</p>
-  </div>
-
-  <!-- Exercises -->
-  <div class="exercises-section">
-    <div class="exercises-title">Hands-On Exercises</div>
-
-    <div class="exercise" data-ex="3-1" onclick="toggleExercise(this, event)">
-      <div class="exercise-header">
-        <span class="exercise-badge">Ex 3.1</span>
-        <span class="exercise-title">Configure the Fetch MCP</span>
-        <span class="exercise-check"></span>
-      </div>
-      <div class="exercise-body">
-        <p>Add the Anthropic fetch MCP server to your Claude Code config.</p>
-        <div class="code-block">
-          <div class="code-actions">
-            <button class="send-btn" onclick="sendToTerminal('Add the @anthropic/mcp-server-fetch MCP server to my ~/.claude/settings.json\n', this, event)">&#9654; Send</button>
-            <button class="copy-btn" onclick="copyCode(this, event)">Copy</button>
-          </div>
-          <div class="code-label">Ask Claude</div>
-          <pre><code>Add the @anthropic/mcp-server-fetch MCP server
-to my ~/.claude/settings.json</code></pre>
-        </div>
-        <p>Then verify it&rsquo;s working:</p>
-        <div class="code-block">
-          <div class="code-actions">
-            <button class="send-btn" onclick="sendToTerminal('/mcp\n', this, event)">&#9654; Send</button>
-            <button class="copy-btn" onclick="copyCode(this, event)">Copy</button>
-          </div>
-          <div class="code-label">Check MCP status</div>
-          <pre><code>/mcp</code></pre>
-        </div>
-        <div class="exercise-expected" onclick="toggleExpected(this, event)">
-          <div class="exercise-expected-toggle"><span class="arrow">&#9656;</span> Expected Result</div>
-          <div class="expected-content">The /mcp command should list the fetch server as connected. Claude can now fetch and read web pages for you.</div>
-        </div>
-        <button class="exercise-done-btn" onclick="completeExercise('3-1', this, event)">&#10003; Done &mdash; Fetch MCP configured</button>
-      </div>
-    </div>
-
-    <div class="exercise" data-ex="3-2" onclick="toggleExercise(this, event)">
-      <div class="exercise-header">
-        <span class="exercise-badge">Ex 3.2</span>
-        <span class="exercise-title">Configure the GitHub MCP</span>
-        <span class="exercise-check"></span>
-      </div>
-      <div class="exercise-body">
-        <p>Add the GitHub MCP server for repo, issue, and PR access.</p>
-        <div class="code-block">
-          <div class="code-actions">
-            <button class="send-btn" onclick="sendToTerminal('Add the @modelcontextprotocol/server-github MCP server to my settings. I need to create a GitHub personal access token first — walk me through it.\n', this, event)">&#9654; Send</button>
-            <button class="copy-btn" onclick="copyCode(this, event)">Copy</button>
-          </div>
-          <div class="code-label">Ask Claude</div>
-          <pre><code>Add the @modelcontextprotocol/server-github
-MCP server to my settings. I need to create
-a GitHub personal access token first —
-walk me through it.</code></pre>
-        </div>
-        <div class="exercise-expected" onclick="toggleExpected(this, event)">
-          <div class="exercise-expected-toggle"><span class="arrow">&#9656;</span> Expected Result</div>
-          <div class="expected-content">Claude walks you through creating a PAT on GitHub, then adds the GitHub MCP config to your settings.json with the token. Verify with <code>/mcp</code>.</div>
-        </div>
-        <button class="exercise-done-btn" onclick="completeExercise('3-2', this, event)">&#10003; Done &mdash; GitHub MCP configured</button>
-      </div>
-    </div>
-
-    <div class="exercise" data-ex="3-3" onclick="toggleExercise(this, event)">
-      <div class="exercise-header">
-        <span class="exercise-badge">Ex 3.3</span>
-        <span class="exercise-title">Check Available MCP Tools</span>
-        <span class="exercise-check"></span>
-      </div>
-      <div class="exercise-body">
-        <p>See what tools your MCP servers provide.</p>
-        <div class="code-block">
-          <div class="code-actions">
-            <button class="send-btn" onclick="sendToTerminal('/mcp\n', this, event)">&#9654; Send</button>
-            <button class="copy-btn" onclick="copyCode(this, event)">Copy</button>
-          </div>
-          <div class="code-label">List all MCP tools</div>
-          <pre><code>/mcp</code></pre>
-        </div>
-        <p>Then try using one:</p>
-        <div class="code-block">
-          <div class="code-actions">
-            <button class="send-btn" onclick="sendToTerminal('Use the fetch MCP to read https://docs.anthropic.com/en/docs/claude-code and summarize the key features\n', this, event)">&#9654; Send</button>
-            <button class="copy-btn" onclick="copyCode(this, event)">Copy</button>
-          </div>
-          <div class="code-label">Test the fetch tool</div>
-          <pre><code>Use the fetch MCP to read
-https://docs.anthropic.com/en/docs/claude-code
-and summarize the key features</code></pre>
-        </div>
-        <div class="exercise-expected" onclick="toggleExpected(this, event)">
-          <div class="exercise-expected-toggle"><span class="arrow">&#9656;</span> Expected Result</div>
-          <div class="expected-content">Claude uses the MCP fetch tool to read the page and gives you a summary. This confirms the MCP server is working.</div>
-        </div>
-        <button class="exercise-done-btn" onclick="completeExercise('3-3', this, event)">&#10003; Done &mdash; MCP tools verified</button>
-      </div>
-    </div>
-  </div>
-
-  <div class="chapter-footer">
-    <button class="chapter-nav-btn" onclick="goTo(2)">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
-      Previous
-    </button>
-    <button class="complete-btn" onclick="toggleComplete(3)">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
-      <span>Mark Complete</span>
-    </button>
-    <button class="chapter-nav-btn primary" onclick="goTo(4)">
-      Next: Skills
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-    </button>
-  </div>
-</section>
-
-<!-- ═══════════ CH 4: SKILLS & SLASH COMMANDS ═══════════ -->
-<section class="chapter" id="ch4">
-  <div class="chapter-badge">Chapter 4</div>
-  <h1>Skills &amp; Slash Commands</h1>
-  <p class="chapter-intro">You use some skills already but want more. Here's the full picture.</p>
-
-  <h2>Built-in Skills You Might Not Know</h2>
-  <ul>
-    <li><strong><code>/simplify</code></strong> &mdash; Reviews changed code for reuse, quality, efficiency, then fixes issues</li>
-    <li><strong><code>/batch</code></strong> &mdash; Run the same operation across multiple files</li>
-    <li><strong><code>/copy</code></strong> &mdash; Interactive picker to copy specific code blocks (NEW)</li>
-    <li><strong><code>/memory</code></strong> &mdash; View and manage auto-memory files</li>
-    <li><strong><code>/model</code></strong> &mdash; Switch models mid-conversation (now shows current model)</li>
-    <li><strong><code>/voice</code></strong> &mdash; Voice input mode (NEW, rolling out gradually)</li>
-  </ul>
-
-  <h2>Custom Skills</h2>
-  <p>Custom skills live in <code>.claude/skills/</code> as markdown files. Each file becomes a slash command.</p>
-
-  <h3>Skill file structure</h3>
-  <div class="code-block">
-    <div class="code-label">.claude/skills/my-skill.md</div>
-    <pre><code><span class="cc"># /my-skill-name</span>
-
-Description of what this skill does.
-
-<span class="cc">## Instructions</span>
-
-Step-by-step instructions Claude follows
-when this skill is invoked.
-
-<span class="cc">## Context</span>
-
-Any context Claude needs (file paths,
-conventions, etc.)</code></pre>
-  </div>
-
-  <h3>Example: /deploy skill</h3>
-  <div class="code-block">
-    <div class="code-label">.claude/skills/deploy.md</div>
-    <pre><code><span class="cc"># /deploy</span>
-
-Deploy the current project to Vercel.
-
-<span class="cc">## Instructions</span>
-
-1. Run the build command to verify no errors
-2. Check git status &mdash; commit any uncommitted
-   changes first
-3. Run `vercel --prod` to deploy
-4. Report the deployment URL when done
-
-<span class="cc">## Context</span>
-
-- Always use `--prod` flag for production deploys
-- If build fails, fix the issue before deploying</code></pre>
-  </div>
-
-  <h3>Example: /morning-report for LeaseJenny</h3>
-  <div class="code-block">
-    <div class="code-label">.claude/skills/morning-report.md</div>
-    <pre><code><span class="cc"># /morning-report</span>
-
-Generate a morning leads report.
-
-<span class="cc">## Instructions</span>
-
-1. Read the Google Sheet for LeaseJenny leads
-2. Count new leads from the last 24 hours
-3. Summarize qualification status
-4. List any leads that need follow-up
-5. Format as a clean summary I can skim
-   in 30 seconds</code></pre>
-  </div>
-
-  <div class="callout callout-opportunity">
-    <div class="callout-title">Your Opportunity</div>
-    <p>Build skills for your recurring workflows &mdash; deploying projects, checking lead status, generating reports, auditing your Moltbot agents.</p>
-  </div>
-
-  <!-- Exercises -->
-  <div class="exercises-section">
-    <div class="exercises-title">Hands-On Exercises</div>
-
-    <div class="exercise" data-ex="4-1" onclick="toggleExercise(this, event)">
-      <div class="exercise-header">
-        <span class="exercise-badge">Ex 4.1</span>
-        <span class="exercise-title">Create a /hello Skill</span>
-        <span class="exercise-check"></span>
-      </div>
-      <div class="exercise-body">
-        <p>Create your first custom slash command.</p>
-        <div class="code-block">
-          <div class="code-actions">
-            <button class="send-btn" onclick="sendToTerminal('Create a file at .claude/commands/hello.md that says: \"Greet me with a personalized morning message. Check what day of the week it is and the current time, and give me a motivating one-liner.\"\n', this, event)">&#9654; Send</button>
-            <button class="copy-btn" onclick="copyCode(this, event)">Copy</button>
-          </div>
-          <div class="code-label">Create the skill</div>
-          <pre><code>Create a file at .claude/commands/hello.md
-that says: "Greet me with a personalized
-morning message. Check what day of the week
-it is and the current time, and give me
-a motivating one-liner."</code></pre>
-        </div>
-        <p>Then test it:</p>
-        <div class="code-block">
-          <div class="code-actions">
-            <button class="send-btn" onclick="sendToTerminal('/hello\n', this, event)">&#9654; Send</button>
-            <button class="copy-btn" onclick="copyCode(this, event)">Copy</button>
-          </div>
-          <div class="code-label">Test</div>
-          <pre><code>/hello</code></pre>
-        </div>
-        <div class="exercise-expected" onclick="toggleExpected(this, event)">
-          <div class="exercise-expected-toggle"><span class="arrow">&#9656;</span> Expected Result</div>
-          <div class="expected-content">Claude checks the current day/time and gives you a personalized greeting. The /hello command now works in any session within this project.</div>
-        </div>
-        <button class="exercise-done-btn" onclick="completeExercise('4-1', this, event)">&#10003; Done &mdash; /hello works</button>
-      </div>
-    </div>
-
-    <div class="exercise" data-ex="4-2" onclick="toggleExercise(this, event)">
-      <div class="exercise-header">
-        <span class="exercise-badge">Ex 4.2</span>
-        <span class="exercise-title">Create a /deploy Skill</span>
-        <span class="exercise-check"></span>
-      </div>
-      <div class="exercise-body">
-        <p>Build a more useful skill for deploying a project.</p>
-        <div class="code-block">
-          <div class="code-actions">
-            <button class="send-btn" onclick="sendToTerminal('Create .claude/commands/deploy.md with: \"Deploy this project: 1) Run any tests, 2) Build for production, 3) Show me a summary of what will be deployed, 4) If I confirm, push to the remote and deploy\"\n', this, event)">&#9654; Send</button>
-            <button class="copy-btn" onclick="copyCode(this, event)">Copy</button>
-          </div>
-          <div class="code-label">Create deploy skill</div>
-          <pre><code>Create .claude/commands/deploy.md with:
-"Deploy this project:
-1) Run any tests
-2) Build for production
-3) Show me a summary of what will be deployed
-4) If I confirm, push to the remote and deploy"</code></pre>
-        </div>
-        <div class="exercise-expected" onclick="toggleExpected(this, event)">
-          <div class="exercise-expected-toggle"><span class="arrow">&#9656;</span> Expected Result</div>
-          <div class="expected-content">A /deploy command now exists. It won&rsquo;t push without your confirmation &mdash; safe to test.</div>
-        </div>
-        <button class="exercise-done-btn" onclick="completeExercise('4-2', this, event)">&#10003; Done &mdash; /deploy created</button>
-      </div>
-    </div>
-
-    <div class="exercise" data-ex="4-3" onclick="toggleExercise(this, event)">
-      <div class="exercise-header">
-        <span class="exercise-badge">Ex 4.3</span>
-        <span class="exercise-title">Try /simplify</span>
-        <span class="exercise-check"></span>
-      </div>
-      <div class="exercise-body">
-        <p>Use the built-in /simplify command to review your recent code changes.</p>
-        <ol>
-          <li>Make some code changes (or use an existing dirty working tree)</li>
-          <li>Run <code>/simplify</code></li>
-          <li>Review Claude&rsquo;s suggestions for reuse, quality, and efficiency</li>
-        </ol>
-        <div class="code-block">
-          <div class="code-actions">
-            <button class="send-btn" onclick="sendToTerminal('/simplify\n', this, event)">&#9654; Send</button>
-            <button class="copy-btn" onclick="copyCode(this, event)">Copy</button>
-          </div>
-          <div class="code-label">Review changed code</div>
-          <pre><code>/simplify</code></pre>
-        </div>
-        <div class="exercise-expected" onclick="toggleExpected(this, event)">
-          <div class="exercise-expected-toggle"><span class="arrow">&#9656;</span> Expected Result</div>
-          <div class="expected-content">Claude scans your recent changes and suggests simplifications. It might find duplicate code, unnecessary complexity, or missed reuse opportunities.</div>
-        </div>
-        <button class="exercise-done-btn" onclick="completeExercise('4-3', this, event)">&#10003; Done &mdash; Ran /simplify</button>
-      </div>
-    </div>
-  </div>
-
-  <div class="chapter-footer">
-    <button class="chapter-nav-btn" onclick="goTo(3)">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
-      Previous
-    </button>
-    <button class="complete-btn" onclick="toggleComplete(4)">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
-      <span>Mark Complete</span>
-    </button>
-    <button class="chapter-nav-btn primary" onclick="goTo(5)">
-      Next: Subagents
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-    </button>
-  </div>
-</section>
-
-<!-- ═══════════ CH 5: SUBAGENTS ═══════════ -->
-<section class="chapter" id="ch5">
-  <div class="chapter-badge">Chapter 5</div>
-  <h1>Subagents</h1>
-  <p class="chapter-intro">Subagents let Claude spawn independent workers that run in parallel. This is one of the most powerful features you're not touching.</p>
-
-  <h2>When to Use Subagents</h2>
-  <ul>
-    <li>Researching multiple things at once (search 3 codebases simultaneously)</li>
-    <li>Running independent tasks that don't depend on each other</li>
-    <li>Protecting your main context window from getting bloated with search results</li>
-    <li>Exploring a codebase deeply without losing your place</li>
-  </ul>
-
-  <h2>How They Work</h2>
-  <p>Claude automatically uses the <code>Agent</code> tool to spawn subagents. You can also configure agent types in your CLAUDE.md or skills.</p>
-
-  <h2>Built-in Agent Types</h2>
-  <table>
-    <thead><tr><th>Type</th><th>Purpose</th></tr></thead>
-    <tbody>
-      <tr><td><code>Explore</code></td><td>Fast codebase exploration &mdash; find files, search code, answer questions</td></tr>
-      <tr><td><code>Plan</code></td><td>Architecture planning &mdash; design implementation strategies</td></tr>
-      <tr><td><code>general-purpose</code></td><td>Research, search, multi-step tasks</td></tr>
-    </tbody>
-  </table>
-
-  <h3>Example prompt that triggers subagents</h3>
-  <div class="callout callout-tip">
-    <div class="callout-title">Try This</div>
-    <p>"Research how Square's API handles webhook notifications, AND check my LeaseJenny codebase for any existing webhook handlers, AND find examples of Square webhook implementations on GitHub"</p>
-  </div>
-  <p>Claude will spawn 3 parallel agents instead of doing these sequentially.</p>
-
-  <div class="callout callout-opportunity">
-    <div class="callout-title">Your Opportunity</div>
-    <p>When working on multi-project tasks (LeaseJenny + stock screener + Humanity), subagents let you research across all of them simultaneously.</p>
-  </div>
-
-  <!-- Exercises -->
-  <div class="exercises-section">
-    <div class="exercises-title">Hands-On Exercises</div>
-
-    <div class="exercise" data-ex="5-1" onclick="toggleExercise(this, event)">
-      <div class="exercise-header">
-        <span class="exercise-badge">Ex 5.1</span>
-        <span class="exercise-title">Multi-Part Research Prompt</span>
-        <span class="exercise-check"></span>
-      </div>
-      <div class="exercise-body">
-        <p>Give Claude a prompt that triggers parallel subagent research.</p>
-        <div class="code-block">
-          <div class="code-actions">
-            <button class="send-btn" onclick="sendToTerminal('Research these 3 things in parallel: 1) What MCP servers are available on npm, 2) What Claude Code hooks do people commonly use, 3) What are the most popular Claude Code custom skills on GitHub\n', this, event)">&#9654; Send</button>
-            <button class="copy-btn" onclick="copyCode(this, event)">Copy</button>
-          </div>
-          <div class="code-label">Trigger parallel agents</div>
-          <pre><code>Research these 3 things in parallel:
-1) What MCP servers are available on npm
-2) What Claude Code hooks do people commonly use
-3) What are the most popular Claude Code custom
-   skills on GitHub</code></pre>
-        </div>
-        <div class="exercise-expected" onclick="toggleExpected(this, event)">
-          <div class="exercise-expected-toggle"><span class="arrow">&#9656;</span> Expected Result</div>
-          <div class="expected-content">Claude should spawn multiple Explore or general-purpose agents. You&rsquo;ll see them working in parallel. Results come back consolidated.</div>
-        </div>
-        <button class="exercise-done-btn" onclick="completeExercise('5-1', this, event)">&#10003; Done &mdash; Saw parallel agents</button>
-      </div>
-    </div>
-
-    <div class="exercise" data-ex="5-2" onclick="toggleExercise(this, event)">
-      <div class="exercise-header">
-        <span class="exercise-badge">Ex 5.2</span>
-        <span class="exercise-title">Use the Explore Agent</span>
-        <span class="exercise-check"></span>
-      </div>
-      <div class="exercise-body">
-        <p>Ask Claude to explore a codebase using the specialized Explore agent.</p>
-        <div class="code-block">
-          <div class="code-actions">
-            <button class="send-btn" onclick="sendToTerminal('Use an Explore agent to thoroughly map the file structure and key patterns in this project\n', this, event)">&#9654; Send</button>
-            <button class="copy-btn" onclick="copyCode(this, event)">Copy</button>
-          </div>
-          <div class="code-label">Explore a codebase</div>
-          <pre><code>Use an Explore agent to thoroughly map the
-file structure and key patterns in this project</code></pre>
-        </div>
-        <div class="exercise-expected" onclick="toggleExpected(this, event)">
-          <div class="exercise-expected-toggle"><span class="arrow">&#9656;</span> Expected Result</div>
-          <div class="expected-content">Claude spawns an Explore subagent that reads files, searches patterns, and returns a structured summary of the codebase. Useful for onboarding to unfamiliar projects.</div>
-        </div>
-        <button class="exercise-done-btn" onclick="completeExercise('5-2', this, event)">&#10003; Done &mdash; Explore agent worked</button>
-      </div>
-    </div>
-  </div>
-
-  <div class="chapter-footer">
-    <button class="chapter-nav-btn" onclick="goTo(4)">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
-      Previous
-    </button>
-    <button class="complete-btn" onclick="toggleComplete(5)">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
-      <span>Mark Complete</span>
-    </button>
-    <button class="chapter-nav-btn primary" onclick="goTo(6)">
-      Next: Git & Tasks
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-    </button>
-  </div>
-</section>
-
-<!-- ═══════════ CH 6: GIT & BACKGROUND TASKS ═══════════ -->
-<section class="chapter" id="ch6">
-  <div class="chapter-badge">Chapter 6</div>
-  <h1>Git Workflows &amp; Background Tasks</h1>
-  <p class="chapter-intro">Claude Code is excellent at git operations you're probably doing manually. Plus: run long commands without blocking your conversation.</p>
-
-  <h2>Git Workflows</h2>
-  <ul>
-    <li><strong>Commits:</strong> <code>/commit</code> &mdash; Analyzes changes, writes message, commits</li>
-    <li><strong>PRs:</strong> "Create a PR for this branch" &mdash; Pushes, writes title/description, creates PR via <code>gh</code></li>
-    <li><strong>Branch management:</strong> "Create a feature branch for the new dashboard"</li>
-    <li><strong>Diff review:</strong> "What changed since yesterday?"</li>
-    <li><strong>Conflict resolution:</strong> "Resolve the merge conflicts in this file"</li>
-  </ul>
-
-  <h2>Background Tasks</h2>
-  <p>Run long commands without blocking your conversation:</p>
-  <div class="callout callout-tip">
-    <div class="callout-title">Try These</div>
-    <p>"Run the build in the background and let me know when it finishes"<br>
-    "Deploy to Vercel in the background while I keep working"</p>
-  </div>
-  <p>Claude uses <code>run_in_background</code> on Bash commands and notifies you when they complete. You can keep working on other things in the same session.</p>
-
-  <div class="callout callout-opportunity">
-    <div class="callout-title">Your Opportunity</div>
-    <p>You have multiple GitHub repos (leasejenny-dashboard, crash-course-intake, etc.). Let Claude handle the git ceremony. Deploy one project while working on another. Run tests in the background while writing new code.</p>
-  </div>
-
-  <!-- Exercises -->
-  <div class="exercises-section">
-    <div class="exercises-title">Hands-On Exercises</div>
-
-    <div class="exercise" data-ex="6-1" onclick="toggleExercise(this, event)">
-      <div class="exercise-header">
-        <span class="exercise-badge">Ex 6.1</span>
-        <span class="exercise-title">Use /commit</span>
-        <span class="exercise-check"></span>
-      </div>
-      <div class="exercise-body">
-        <p>Let Claude analyze your changes and write a commit message for you.</p>
-        <ol>
-          <li>Make a small change to any file in a git repo</li>
-          <li>Type <code>/commit</code> in Claude Code</li>
-          <li>Review the commit message Claude generates</li>
-        </ol>
-        <div class="code-block">
-          <div class="code-actions">
-            <button class="send-btn" onclick="sendToTerminal('/commit\n', this, event)">&#9654; Send</button>
-            <button class="copy-btn" onclick="copyCode(this, event)">Copy</button>
-          </div>
-          <div class="code-label">Smart commit</div>
-          <pre><code>/commit</code></pre>
-        </div>
-        <div class="exercise-expected" onclick="toggleExpected(this, event)">
-          <div class="exercise-expected-toggle"><span class="arrow">&#9656;</span> Expected Result</div>
-          <div class="expected-content">Claude reads the diff, writes a descriptive commit message, and creates the commit. Check <code>git log</code> to see it.</div>
-        </div>
-        <button class="exercise-done-btn" onclick="completeExercise('6-1', this, event)">&#10003; Done &mdash; Commit created</button>
-      </div>
-    </div>
-
-    <div class="exercise" data-ex="6-2" onclick="toggleExercise(this, event)">
-      <div class="exercise-header">
-        <span class="exercise-badge">Ex 6.2</span>
-        <span class="exercise-title">Run a Background Task</span>
-        <span class="exercise-check"></span>
-      </div>
-      <div class="exercise-body">
-        <p>Run a command in the background while you keep working.</p>
-        <div class="code-block">
-          <div class="code-actions">
-            <button class="send-btn" onclick="sendToTerminal('Run &quot;find ~ -name CLAUDE.md -type f 2>/dev/null&quot; in the background and tell me the results when it finishes\n', this, event)">&#9654; Send</button>
-            <button class="copy-btn" onclick="copyCode(this, event)">Copy</button>
-          </div>
-          <div class="code-label">Background search</div>
-          <pre><code>Run "find ~ -name CLAUDE.md -type f 2>/dev/null"
-in the background and tell me the results
-when it finishes</code></pre>
-        </div>
-        <p>While it runs, ask Claude something else. You&rsquo;ll get notified when the background task completes.</p>
-        <div class="exercise-expected" onclick="toggleExpected(this, event)">
-          <div class="exercise-expected-toggle"><span class="arrow">&#9656;</span> Expected Result</div>
-          <div class="expected-content">Claude runs the command in the background, you can keep chatting, and Claude notifies you with results when it&rsquo;s done.</div>
-        </div>
-        <button class="exercise-done-btn" onclick="completeExercise('6-2', this, event)">&#10003; Done &mdash; Background task ran</button>
-      </div>
-    </div>
-  </div>
-
-  <div class="chapter-footer">
-    <button class="chapter-nav-btn" onclick="goTo(5)">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
-      Previous
-    </button>
-    <button class="complete-btn" onclick="toggleComplete(6)">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
-      <span>Mark Complete</span>
-    </button>
-    <button class="chapter-nav-btn primary" onclick="goTo(7)">
       Next: Playbook
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
     </button>
   </div>
 </section>
 
-<!-- ═══════════ CH 7: THE CREATOR'S PLAYBOOK ═══════════ -->
-<section class="chapter" id="ch7">
-  <div class="chapter-badge">Chapter 7</div>
+<!-- ═══════════ CH 2: THE CREATOR'S PLAYBOOK ═══════════ -->
+<section class="chapter" id="ch2">
+  <div class="chapter-badge">Chapter 2</div>
   <h1>The Creator&rsquo;s Playbook</h1>
   <p class="chapter-intro">Boris Cherny (creator of Claude Code) shared his 12-point playbook for getting maximum output from the tool. These aren&rsquo;t theoretical &mdash; they&rsquo;re the patterns he uses daily building Claude Code itself.</p>
 
@@ -2533,9 +1755,9 @@ cd ../my-repo-feature && claude
   <div class="exercises-section">
     <div class="exercises-title">Hands-On Exercises</div>
 
-    <div class="exercise" data-ex="7-1" onclick="toggleExercise(this, event)">
+    <div class="exercise" data-ex="2-1" onclick="toggleExercise(this, event)">
       <div class="exercise-header">
-        <span class="exercise-badge">Ex 7.1</span>
+        <span class="exercise-badge">Ex 2.1</span>
         <span class="exercise-title">Run Parallel Sessions</span>
         <span class="exercise-check"></span>
       </div>
@@ -2559,13 +1781,13 @@ and show their last commit dates"</code></pre>
           <div class="exercise-expected-toggle"><span class="arrow">&#9656;</span> Expected Result</div>
           <div class="expected-content">Both sessions run independently. Neither blocks the other. They share the same CLAUDE.md and auto-memory.</div>
         </div>
-        <button class="exercise-done-btn" onclick="completeExercise('7-1', this, event)">&#10003; Done &mdash; Running parallel sessions</button>
+        <button class="exercise-done-btn" onclick="completeExercise('2-1', this, event)">&#10003; Done &mdash; Running parallel sessions</button>
       </div>
     </div>
 
-    <div class="exercise" data-ex="7-2" onclick="toggleExercise(this, event)">
+    <div class="exercise" data-ex="2-2" onclick="toggleExercise(this, event)">
       <div class="exercise-header">
-        <span class="exercise-badge">Ex 7.2</span>
+        <span class="exercise-badge">Ex 2.2</span>
         <span class="exercise-title">Create a Project CLAUDE.md</span>
         <span class="exercise-check"></span>
       </div>
@@ -2586,7 +1808,786 @@ DO NOT section with things Claude should never do</code></pre>
           <div class="exercise-expected-toggle"><span class="arrow">&#9656;</span> Expected Result</div>
           <div class="expected-content">A CLAUDE.md file at your project root. Every new Claude session in this folder will read it automatically. Update it whenever Claude does something you don&rsquo;t want repeated.</div>
         </div>
-        <button class="exercise-done-btn" onclick="completeExercise('7-2', this, event)">&#10003; Done &mdash; CLAUDE.md created</button>
+        <button class="exercise-done-btn" onclick="completeExercise('2-2', this, event)">&#10003; Done &mdash; CLAUDE.md created</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="chapter-footer">
+    <button class="chapter-nav-btn" onclick="goTo(1)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+      Previous
+    </button>
+    <button class="complete-btn" onclick="toggleComplete(2)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+      <span>Mark Complete</span>
+    </button>
+    <button class="chapter-nav-btn primary" onclick="goTo(3)">
+      Next: Hooks
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </button>
+  </div>
+</section>
+
+
+<!-- ═══════════ CH 3: HOOKS ═══════════ -->
+<section class="chapter" id="ch3">
+  <div class="chapter-badge">Chapter 3</div>
+  <h1>Hooks Deep Dive</h1>
+  <p class="chapter-intro">Hooks are commands that run automatically at specific points in Claude's workflow. Think of them as "if Claude does X, also do Y."</p>
+
+  <p>You configure them in <code>.claude/settings.json</code>.</p>
+
+  <h2>Four Hook Types</h2>
+  <ul>
+    <li><strong>Command hooks</strong> &mdash; Run a shell command (formatting, linting, logging)</li>
+    <li><strong>HTTP hooks</strong> &mdash; POST JSON to a URL (send notifications, trigger webhooks)</li>
+    <li><strong>Prompt hooks</strong> &mdash; Ask an LLM a yes/no question (smart gatekeeping)</li>
+    <li><strong>Agent hooks</strong> &mdash; Spawn a subagent to verify complex conditions</li>
+  </ul>
+
+  <h2>Five Hook Events</h2>
+  <table>
+    <thead><tr><th>Event</th><th>When It Fires</th></tr></thead>
+    <tbody>
+      <tr><td><code>PreToolUse</code></td><td>Before Claude runs any tool (block dangerous commands)</td></tr>
+      <tr><td><code>PostToolUse</code></td><td>After a tool completes (auto-format files, log actions)</td></tr>
+      <tr><td><code>PostToolUseFailure</code></td><td>When a tool fails (custom error handling)</td></tr>
+      <tr><td><code>PermissionRequest</code></td><td>When Claude asks for permission (auto-approve safe patterns)</td></tr>
+      <tr><td><code>Notification</code></td><td>When Claude sends a notification (forward to Slack, Telegram)</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Auto-format on every file write</h3>
+  <div class="code-block">
+    <div class="code-label">settings.json</div>
+    <pre><code>{
+  <span class="ck">"hooks"</span>: {
+    <span class="ck">"PostToolUse"</span>: [
+      {
+        <span class="ck">"matcher"</span>: <span class="cs">"Write|Edit"</span>,
+        <span class="ck">"type"</span>: <span class="cs">"command"</span>,
+        <span class="ck">"command"</span>: <span class="cs">"prettier --write $CLAUDE_FILE_PATH"</span>
+      }
+    ]
+  }
+}</code></pre>
+  </div>
+
+  <h3>Send Telegram notification when Claude finishes</h3>
+  <div class="code-block">
+    <div class="code-label">settings.json</div>
+    <pre><code>{
+  <span class="ck">"hooks"</span>: {
+    <span class="ck">"Notification"</span>: [
+      {
+        <span class="ck">"type"</span>: <span class="cs">"http"</span>,
+        <span class="ck">"url"</span>: <span class="cs">"https://api.telegram.org/bot&lt;TOKEN&gt;/sendMessage"</span>,
+        <span class="ck">"method"</span>: <span class="cs">"POST"</span>,
+        <span class="ck">"body"</span>: {
+          <span class="ck">"chat_id"</span>: <span class="cs">"&lt;YOUR_CHAT_ID&gt;"</span>,
+          <span class="ck">"text"</span>: <span class="cs">"Claude finished: $CLAUDE_NOTIFICATION"</span>
+        }
+      }
+    ]
+  }
+}</code></pre>
+  </div>
+
+  <h3>Block destructive git commands</h3>
+  <div class="code-block">
+    <div class="code-label">settings.json</div>
+    <pre><code>{
+  <span class="ck">"hooks"</span>: {
+    <span class="ck">"PreToolUse"</span>: [
+      {
+        <span class="ck">"matcher"</span>: <span class="cs">"Bash"</span>,
+        <span class="ck">"type"</span>: <span class="cs">"prompt"</span>,
+        <span class="ck">"prompt"</span>: <span class="cs">"Is this command destructive (force push, reset --hard, rm -rf)? Answer YES to block, NO to allow."</span>
+      }
+    ]
+  }
+}</code></pre>
+  </div>
+
+  <div class="callout callout-opportunity">
+    <div class="callout-title">Your Opportunity</div>
+    <p>You run Moltbot agents on your Mac Mini. Hooks could auto-notify you via Telegram (Bean/Egg) when Claude Code finishes long tasks, auto-lint code, or auto-commit after successful builds.</p>
+  </div>
+
+  <!-- Exercises -->
+  <div class="exercises-section">
+    <div class="exercises-title">Hands-On Exercises</div>
+
+    <div class="exercise" data-ex="3-1" onclick="toggleExercise(this, event)">
+      <div class="exercise-header">
+        <span class="exercise-badge">Ex 3.1</span>
+        <span class="exercise-title">Set Up a Notification Hook</span>
+        <span class="exercise-check"></span>
+      </div>
+      <div class="exercise-body">
+        <p>Create a hook that sends a macOS notification whenever Claude finishes a task.</p>
+        <ol>
+          <li>Open Claude Code in the terminal panel (type <code>claude</code>)</li>
+          <li>Ask Claude: "Show me my current ~/.claude/settings.json"</li>
+          <li>Add this Notification hook to your settings:</li>
+        </ol>
+        <div class="code-block">
+          <div class="code-actions">
+            <button class="send-btn" onclick="sendToTerminal('cat ~/.claude/settings.json\n', this, event)">&#9654; Send</button>
+            <button class="copy-btn" onclick="copyCode(this, event)">Copy</button>
+          </div>
+          <div class="code-label">Check current settings</div>
+          <pre><code>cat ~/.claude/settings.json</code></pre>
+        </div>
+        <p>Then ask Claude to add this hook for you:</p>
+        <div class="code-block">
+          <div class="code-actions">
+            <button class="send-btn" onclick="sendToTerminal('Add a Notification hook to my ~/.claude/settings.json that runs: osascript -e \'display notification \"$CLAUDE_NOTIFICATION\" with title \"Claude Code\"\'\n', this, event)">&#9654; Send</button>
+            <button class="copy-btn" onclick="copyCode(this, event)">Copy</button>
+          </div>
+          <div class="code-label">Ask Claude to add the hook</div>
+          <pre><code>Add a Notification hook to my ~/.claude/settings.json
+that runs: osascript -e 'display notification
+"$CLAUDE_NOTIFICATION" with title "Claude Code"'</code></pre>
+        </div>
+        <div class="exercise-expected" onclick="toggleExpected(this, event)">
+          <div class="exercise-expected-toggle"><span class="arrow">&#9656;</span> Expected Result</div>
+          <div class="expected-content">Your settings.json should now have a <code>hooks.Notification</code> array with a command hook. Next time Claude finishes a background task, you'll get a native macOS notification.</div>
+        </div>
+        <button class="exercise-done-btn" onclick="completeExercise('3-1', this, event)">&#10003; Done &mdash; I see the hook in my settings</button>
+      </div>
+    </div>
+
+    <div class="exercise" data-ex="3-2" onclick="toggleExercise(this, event)">
+      <div class="exercise-header">
+        <span class="exercise-badge">Ex 3.2</span>
+        <span class="exercise-title">Create a File Edit Logger</span>
+        <span class="exercise-check"></span>
+      </div>
+      <div class="exercise-body">
+        <p>Create a PostToolUse hook that logs every file Claude writes or edits.</p>
+        <ol>
+          <li>In Claude Code, ask:</li>
+        </ol>
+        <div class="code-block">
+          <div class="code-actions">
+            <button class="send-btn" onclick="sendToTerminal('Add a PostToolUse hook that matches Write|Edit and runs: echo \"$(date): $CLAUDE_FILE_PATH\" >> ~/claude-edits.log\n', this, event)">&#9654; Send</button>
+            <button class="copy-btn" onclick="copyCode(this, event)">Copy</button>
+          </div>
+          <div class="code-label">Ask Claude</div>
+          <pre><code>Add a PostToolUse hook that matches Write|Edit
+and runs: echo "$(date): $CLAUDE_FILE_PATH"
+>> ~/claude-edits.log</code></pre>
+        </div>
+        <p>Then make any edit to test it, and check the log:</p>
+        <div class="code-block">
+          <div class="code-actions">
+            <button class="send-btn" onclick="sendToTerminal('cat ~/claude-edits.log\n', this, event)">&#9654; Send</button>
+            <button class="copy-btn" onclick="copyCode(this, event)">Copy</button>
+          </div>
+          <div class="code-label">Check the log</div>
+          <pre><code>cat ~/claude-edits.log</code></pre>
+        </div>
+        <div class="exercise-expected" onclick="toggleExpected(this, event)">
+          <div class="exercise-expected-toggle"><span class="arrow">&#9656;</span> Expected Result</div>
+          <div class="expected-content">You should see a log entry with a timestamp and the file path that was edited. Every future file write/edit by Claude will be logged here.</div>
+        </div>
+        <button class="exercise-done-btn" onclick="completeExercise('3-2', this, event)">&#10003; Done &mdash; I see entries in the log</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="chapter-footer">
+    <button class="chapter-nav-btn" onclick="goTo(2)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+      Previous
+    </button>
+    <button class="complete-btn" onclick="toggleComplete(3)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+      <span>Mark Complete</span>
+    </button>
+    <button class="chapter-nav-btn primary" onclick="goTo(4)">
+      Next: MCP Servers
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </button>
+  </div>
+</section>
+
+<!-- ═══════════ CH 4: MCP SERVERS ═══════════ -->
+<section class="chapter" id="ch4">
+  <div class="chapter-badge">Chapter 4</div>
+  <h1>MCP Servers Deep Dive</h1>
+  <p class="chapter-intro">MCP (Model Context Protocol) lets Claude connect to external tools and data sources. Each MCP server exposes "tools" that Claude can call like native capabilities.</p>
+
+  <h2>Where MCP Configs Live</h2>
+  <ul>
+    <li><strong>Global:</strong> <code>~/.claude/settings.json</code> &mdash; available in all projects</li>
+    <li><strong>Project:</strong> <code>.claude/settings.json</code> &mdash; project-specific, committed to git</li>
+    <li><strong>Local:</strong> <code>.claude/settings.local.json</code> &mdash; project-specific, NOT committed (good for secrets)</li>
+  </ul>
+
+  <h3>Config structure</h3>
+  <div class="code-block">
+    <div class="code-label">settings.json</div>
+    <pre><code>{
+  <span class="ck">"mcpServers"</span>: {
+    <span class="ck">"server-name"</span>: {
+      <span class="ck">"command"</span>: <span class="cs">"npx"</span>,
+      <span class="ck">"args"</span>: [<span class="cs">"-y"</span>, <span class="cs">"@modelcontextprotocol/server-filesystem"</span>, <span class="cs">"/path/to/folder"</span>],
+      <span class="ck">"env"</span>: {}
+    }
+  }
+}</code></pre>
+  </div>
+
+  <h2>MCP Servers You Should Know</h2>
+  <table>
+    <thead><tr><th>Server</th><th>What It Does</th><th>Why You'd Use It</th></tr></thead>
+    <tbody>
+      <tr><td><code>@anthropic/claude-code-mcp</code></td><td>Exposes Claude Code itself as an MCP tool</td><td>Let Cowork or other Claude instances call Claude Code</td></tr>
+      <tr><td><code>server-filesystem</code></td><td>Read/write files in specified directories</td><td>Give Claude access to specific folders</td></tr>
+      <tr><td><code>server-github</code></td><td>GitHub API (issues, PRs, repos)</td><td>Manage repos without leaving Claude</td></tr>
+      <tr><td><code>mcp-server-fetch</code></td><td>Fetch web pages</td><td>Let Claude read URLs</td></tr>
+      <tr><td>Google Sheets MCP</td><td>Read/write Google Sheets</td><td>Your LeaseJenny dashboard, lead tracking</td></tr>
+      <tr><td>Slack MCP</td><td>Send/read Slack messages</td><td>Notifications, team updates</td></tr>
+    </tbody>
+  </table>
+
+  <h3>MCP tools in hooks</h3>
+  <p>MCP tools follow the pattern <code>mcp__&lt;server&gt;__&lt;tool&gt;</code>. You can write hooks that trigger on specific MCP tools:</p>
+  <div class="code-block">
+    <div class="code-label">settings.json</div>
+    <pre><code>{
+  <span class="ck">"hooks"</span>: {
+    <span class="ck">"PostToolUse"</span>: [
+      {
+        <span class="ck">"matcher"</span>: <span class="cs">"mcp__github__.*"</span>,
+        <span class="ck">"type"</span>: <span class="cs">"command"</span>,
+        <span class="ck">"command"</span>: <span class="cs">"echo 'GitHub action taken' >> ~/claude-audit.log"</span>
+      }
+    ]
+  }
+}</code></pre>
+  </div>
+
+  <div class="callout callout-opportunity">
+    <div class="callout-title">Your Opportunity</div>
+    <p>Connect Google Sheets MCP for LeaseJenny lead data. Connect GitHub MCP for your repos. Set up a filesystem MCP so Cowork can access your project files.</p>
+  </div>
+
+  <!-- Exercises -->
+  <div class="exercises-section">
+    <div class="exercises-title">Hands-On Exercises</div>
+
+    <div class="exercise" data-ex="4-1" onclick="toggleExercise(this, event)">
+      <div class="exercise-header">
+        <span class="exercise-badge">Ex 4.1</span>
+        <span class="exercise-title">Configure the Fetch MCP</span>
+        <span class="exercise-check"></span>
+      </div>
+      <div class="exercise-body">
+        <p>Add the Anthropic fetch MCP server to your Claude Code config.</p>
+        <div class="code-block">
+          <div class="code-actions">
+            <button class="send-btn" onclick="sendToTerminal('Add the @anthropic/mcp-server-fetch MCP server to my ~/.claude/settings.json\n', this, event)">&#9654; Send</button>
+            <button class="copy-btn" onclick="copyCode(this, event)">Copy</button>
+          </div>
+          <div class="code-label">Ask Claude</div>
+          <pre><code>Add the @anthropic/mcp-server-fetch MCP server
+to my ~/.claude/settings.json</code></pre>
+        </div>
+        <p>Then verify it&rsquo;s working:</p>
+        <div class="code-block">
+          <div class="code-actions">
+            <button class="send-btn" onclick="sendToTerminal('/mcp\n', this, event)">&#9654; Send</button>
+            <button class="copy-btn" onclick="copyCode(this, event)">Copy</button>
+          </div>
+          <div class="code-label">Check MCP status</div>
+          <pre><code>/mcp</code></pre>
+        </div>
+        <div class="exercise-expected" onclick="toggleExpected(this, event)">
+          <div class="exercise-expected-toggle"><span class="arrow">&#9656;</span> Expected Result</div>
+          <div class="expected-content">The /mcp command should list the fetch server as connected. Claude can now fetch and read web pages for you.</div>
+        </div>
+        <button class="exercise-done-btn" onclick="completeExercise('4-1', this, event)">&#10003; Done &mdash; Fetch MCP configured</button>
+      </div>
+    </div>
+
+    <div class="exercise" data-ex="4-2" onclick="toggleExercise(this, event)">
+      <div class="exercise-header">
+        <span class="exercise-badge">Ex 4.2</span>
+        <span class="exercise-title">Configure the GitHub MCP</span>
+        <span class="exercise-check"></span>
+      </div>
+      <div class="exercise-body">
+        <p>Add the GitHub MCP server for repo, issue, and PR access.</p>
+        <div class="code-block">
+          <div class="code-actions">
+            <button class="send-btn" onclick="sendToTerminal('Add the @modelcontextprotocol/server-github MCP server to my settings. I need to create a GitHub personal access token first — walk me through it.\n', this, event)">&#9654; Send</button>
+            <button class="copy-btn" onclick="copyCode(this, event)">Copy</button>
+          </div>
+          <div class="code-label">Ask Claude</div>
+          <pre><code>Add the @modelcontextprotocol/server-github
+MCP server to my settings. I need to create
+a GitHub personal access token first —
+walk me through it.</code></pre>
+        </div>
+        <div class="exercise-expected" onclick="toggleExpected(this, event)">
+          <div class="exercise-expected-toggle"><span class="arrow">&#9656;</span> Expected Result</div>
+          <div class="expected-content">Claude walks you through creating a PAT on GitHub, then adds the GitHub MCP config to your settings.json with the token. Verify with <code>/mcp</code>.</div>
+        </div>
+        <button class="exercise-done-btn" onclick="completeExercise('4-2', this, event)">&#10003; Done &mdash; GitHub MCP configured</button>
+      </div>
+    </div>
+
+    <div class="exercise" data-ex="4-3" onclick="toggleExercise(this, event)">
+      <div class="exercise-header">
+        <span class="exercise-badge">Ex 4.3</span>
+        <span class="exercise-title">Check Available MCP Tools</span>
+        <span class="exercise-check"></span>
+      </div>
+      <div class="exercise-body">
+        <p>See what tools your MCP servers provide.</p>
+        <div class="code-block">
+          <div class="code-actions">
+            <button class="send-btn" onclick="sendToTerminal('/mcp\n', this, event)">&#9654; Send</button>
+            <button class="copy-btn" onclick="copyCode(this, event)">Copy</button>
+          </div>
+          <div class="code-label">List all MCP tools</div>
+          <pre><code>/mcp</code></pre>
+        </div>
+        <p>Then try using one:</p>
+        <div class="code-block">
+          <div class="code-actions">
+            <button class="send-btn" onclick="sendToTerminal('Use the fetch MCP to read https://docs.anthropic.com/en/docs/claude-code and summarize the key features\n', this, event)">&#9654; Send</button>
+            <button class="copy-btn" onclick="copyCode(this, event)">Copy</button>
+          </div>
+          <div class="code-label">Test the fetch tool</div>
+          <pre><code>Use the fetch MCP to read
+https://docs.anthropic.com/en/docs/claude-code
+and summarize the key features</code></pre>
+        </div>
+        <div class="exercise-expected" onclick="toggleExpected(this, event)">
+          <div class="exercise-expected-toggle"><span class="arrow">&#9656;</span> Expected Result</div>
+          <div class="expected-content">Claude uses the MCP fetch tool to read the page and gives you a summary. This confirms the MCP server is working.</div>
+        </div>
+        <button class="exercise-done-btn" onclick="completeExercise('4-3', this, event)">&#10003; Done &mdash; MCP tools verified</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="chapter-footer">
+    <button class="chapter-nav-btn" onclick="goTo(3)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+      Previous
+    </button>
+    <button class="complete-btn" onclick="toggleComplete(4)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+      <span>Mark Complete</span>
+    </button>
+    <button class="chapter-nav-btn primary" onclick="goTo(5)">
+      Next: Skills
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </button>
+  </div>
+</section>
+
+<!-- ═══════════ CH 5: SKILLS & SLASH COMMANDS ═══════════ -->
+<section class="chapter" id="ch5">
+  <div class="chapter-badge">Chapter 5</div>
+  <h1>Skills &amp; Slash Commands</h1>
+  <p class="chapter-intro">You use some skills already but want more. Here's the full picture.</p>
+
+  <h2>Built-in Skills You Might Not Know</h2>
+  <ul>
+    <li><strong><code>/simplify</code></strong> &mdash; Reviews changed code for reuse, quality, efficiency, then fixes issues</li>
+    <li><strong><code>/batch</code></strong> &mdash; Run the same operation across multiple files</li>
+    <li><strong><code>/copy</code></strong> &mdash; Interactive picker to copy specific code blocks (NEW)</li>
+    <li><strong><code>/memory</code></strong> &mdash; View and manage auto-memory files</li>
+    <li><strong><code>/model</code></strong> &mdash; Switch models mid-conversation (now shows current model)</li>
+    <li><strong><code>/voice</code></strong> &mdash; Voice input mode (NEW, rolling out gradually)</li>
+  </ul>
+
+  <h2>Custom Skills</h2>
+  <p>Custom skills live in <code>.claude/skills/</code> as markdown files. Each file becomes a slash command.</p>
+
+  <h3>Skill file structure</h3>
+  <div class="code-block">
+    <div class="code-label">.claude/skills/my-skill.md</div>
+    <pre><code><span class="cc"># /my-skill-name</span>
+
+Description of what this skill does.
+
+<span class="cc">## Instructions</span>
+
+Step-by-step instructions Claude follows
+when this skill is invoked.
+
+<span class="cc">## Context</span>
+
+Any context Claude needs (file paths,
+conventions, etc.)</code></pre>
+  </div>
+
+  <h3>Example: /deploy skill</h3>
+  <div class="code-block">
+    <div class="code-label">.claude/skills/deploy.md</div>
+    <pre><code><span class="cc"># /deploy</span>
+
+Deploy the current project to Vercel.
+
+<span class="cc">## Instructions</span>
+
+1. Run the build command to verify no errors
+2. Check git status &mdash; commit any uncommitted
+   changes first
+3. Run `vercel --prod` to deploy
+4. Report the deployment URL when done
+
+<span class="cc">## Context</span>
+
+- Always use `--prod` flag for production deploys
+- If build fails, fix the issue before deploying</code></pre>
+  </div>
+
+  <h3>Example: /morning-report for LeaseJenny</h3>
+  <div class="code-block">
+    <div class="code-label">.claude/skills/morning-report.md</div>
+    <pre><code><span class="cc"># /morning-report</span>
+
+Generate a morning leads report.
+
+<span class="cc">## Instructions</span>
+
+1. Read the Google Sheet for LeaseJenny leads
+2. Count new leads from the last 24 hours
+3. Summarize qualification status
+4. List any leads that need follow-up
+5. Format as a clean summary I can skim
+   in 30 seconds</code></pre>
+  </div>
+
+  <div class="callout callout-opportunity">
+    <div class="callout-title">Your Opportunity</div>
+    <p>Build skills for your recurring workflows &mdash; deploying projects, checking lead status, generating reports, auditing your Moltbot agents.</p>
+  </div>
+
+  <!-- Exercises -->
+  <div class="exercises-section">
+    <div class="exercises-title">Hands-On Exercises</div>
+
+    <div class="exercise" data-ex="5-1" onclick="toggleExercise(this, event)">
+      <div class="exercise-header">
+        <span class="exercise-badge">Ex 5.1</span>
+        <span class="exercise-title">Create a /hello Skill</span>
+        <span class="exercise-check"></span>
+      </div>
+      <div class="exercise-body">
+        <p>Create your first custom slash command.</p>
+        <div class="code-block">
+          <div class="code-actions">
+            <button class="send-btn" onclick="sendToTerminal('Create a file at .claude/commands/hello.md that says: \"Greet me with a personalized morning message. Check what day of the week it is and the current time, and give me a motivating one-liner.\"\n', this, event)">&#9654; Send</button>
+            <button class="copy-btn" onclick="copyCode(this, event)">Copy</button>
+          </div>
+          <div class="code-label">Create the skill</div>
+          <pre><code>Create a file at .claude/commands/hello.md
+that says: "Greet me with a personalized
+morning message. Check what day of the week
+it is and the current time, and give me
+a motivating one-liner."</code></pre>
+        </div>
+        <p>Then test it:</p>
+        <div class="code-block">
+          <div class="code-actions">
+            <button class="send-btn" onclick="sendToTerminal('/hello\n', this, event)">&#9654; Send</button>
+            <button class="copy-btn" onclick="copyCode(this, event)">Copy</button>
+          </div>
+          <div class="code-label">Test</div>
+          <pre><code>/hello</code></pre>
+        </div>
+        <div class="exercise-expected" onclick="toggleExpected(this, event)">
+          <div class="exercise-expected-toggle"><span class="arrow">&#9656;</span> Expected Result</div>
+          <div class="expected-content">Claude checks the current day/time and gives you a personalized greeting. The /hello command now works in any session within this project.</div>
+        </div>
+        <button class="exercise-done-btn" onclick="completeExercise('5-1', this, event)">&#10003; Done &mdash; /hello works</button>
+      </div>
+    </div>
+
+    <div class="exercise" data-ex="5-2" onclick="toggleExercise(this, event)">
+      <div class="exercise-header">
+        <span class="exercise-badge">Ex 5.2</span>
+        <span class="exercise-title">Create a /deploy Skill</span>
+        <span class="exercise-check"></span>
+      </div>
+      <div class="exercise-body">
+        <p>Build a more useful skill for deploying a project.</p>
+        <div class="code-block">
+          <div class="code-actions">
+            <button class="send-btn" onclick="sendToTerminal('Create .claude/commands/deploy.md with: \"Deploy this project: 1) Run any tests, 2) Build for production, 3) Show me a summary of what will be deployed, 4) If I confirm, push to the remote and deploy\"\n', this, event)">&#9654; Send</button>
+            <button class="copy-btn" onclick="copyCode(this, event)">Copy</button>
+          </div>
+          <div class="code-label">Create deploy skill</div>
+          <pre><code>Create .claude/commands/deploy.md with:
+"Deploy this project:
+1) Run any tests
+2) Build for production
+3) Show me a summary of what will be deployed
+4) If I confirm, push to the remote and deploy"</code></pre>
+        </div>
+        <div class="exercise-expected" onclick="toggleExpected(this, event)">
+          <div class="exercise-expected-toggle"><span class="arrow">&#9656;</span> Expected Result</div>
+          <div class="expected-content">A /deploy command now exists. It won&rsquo;t push without your confirmation &mdash; safe to test.</div>
+        </div>
+        <button class="exercise-done-btn" onclick="completeExercise('5-2', this, event)">&#10003; Done &mdash; /deploy created</button>
+      </div>
+    </div>
+
+    <div class="exercise" data-ex="5-3" onclick="toggleExercise(this, event)">
+      <div class="exercise-header">
+        <span class="exercise-badge">Ex 5.3</span>
+        <span class="exercise-title">Try /simplify</span>
+        <span class="exercise-check"></span>
+      </div>
+      <div class="exercise-body">
+        <p>Use the built-in /simplify command to review your recent code changes.</p>
+        <ol>
+          <li>Make some code changes (or use an existing dirty working tree)</li>
+          <li>Run <code>/simplify</code></li>
+          <li>Review Claude&rsquo;s suggestions for reuse, quality, and efficiency</li>
+        </ol>
+        <div class="code-block">
+          <div class="code-actions">
+            <button class="send-btn" onclick="sendToTerminal('/simplify\n', this, event)">&#9654; Send</button>
+            <button class="copy-btn" onclick="copyCode(this, event)">Copy</button>
+          </div>
+          <div class="code-label">Review changed code</div>
+          <pre><code>/simplify</code></pre>
+        </div>
+        <div class="exercise-expected" onclick="toggleExpected(this, event)">
+          <div class="exercise-expected-toggle"><span class="arrow">&#9656;</span> Expected Result</div>
+          <div class="expected-content">Claude scans your recent changes and suggests simplifications. It might find duplicate code, unnecessary complexity, or missed reuse opportunities.</div>
+        </div>
+        <button class="exercise-done-btn" onclick="completeExercise('5-3', this, event)">&#10003; Done &mdash; Ran /simplify</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="chapter-footer">
+    <button class="chapter-nav-btn" onclick="goTo(4)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+      Previous
+    </button>
+    <button class="complete-btn" onclick="toggleComplete(5)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+      <span>Mark Complete</span>
+    </button>
+    <button class="chapter-nav-btn primary" onclick="goTo(6)">
+      Next: Subagents
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </button>
+  </div>
+</section>
+
+<!-- ═══════════ CH 6: SUBAGENTS ═══════════ -->
+<section class="chapter" id="ch6">
+  <div class="chapter-badge">Chapter 6</div>
+  <h1>Subagents</h1>
+  <p class="chapter-intro">Subagents let Claude spawn independent workers that run in parallel. This is one of the most powerful features you're not touching.</p>
+
+  <h2>When to Use Subagents</h2>
+  <ul>
+    <li>Researching multiple things at once (search 3 codebases simultaneously)</li>
+    <li>Running independent tasks that don't depend on each other</li>
+    <li>Protecting your main context window from getting bloated with search results</li>
+    <li>Exploring a codebase deeply without losing your place</li>
+  </ul>
+
+  <h2>How They Work</h2>
+  <p>Claude automatically uses the <code>Agent</code> tool to spawn subagents. You can also configure agent types in your CLAUDE.md or skills.</p>
+
+  <h2>Built-in Agent Types</h2>
+  <table>
+    <thead><tr><th>Type</th><th>Purpose</th></tr></thead>
+    <tbody>
+      <tr><td><code>Explore</code></td><td>Fast codebase exploration &mdash; find files, search code, answer questions</td></tr>
+      <tr><td><code>Plan</code></td><td>Architecture planning &mdash; design implementation strategies</td></tr>
+      <tr><td><code>general-purpose</code></td><td>Research, search, multi-step tasks</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Example prompt that triggers subagents</h3>
+  <div class="callout callout-tip">
+    <div class="callout-title">Try This</div>
+    <p>"Research how Square's API handles webhook notifications, AND check my LeaseJenny codebase for any existing webhook handlers, AND find examples of Square webhook implementations on GitHub"</p>
+  </div>
+  <p>Claude will spawn 3 parallel agents instead of doing these sequentially.</p>
+
+  <div class="callout callout-opportunity">
+    <div class="callout-title">Your Opportunity</div>
+    <p>When working on multi-project tasks (LeaseJenny + stock screener + Humanity), subagents let you research across all of them simultaneously.</p>
+  </div>
+
+  <!-- Exercises -->
+  <div class="exercises-section">
+    <div class="exercises-title">Hands-On Exercises</div>
+
+    <div class="exercise" data-ex="6-1" onclick="toggleExercise(this, event)">
+      <div class="exercise-header">
+        <span class="exercise-badge">Ex 6.1</span>
+        <span class="exercise-title">Multi-Part Research Prompt</span>
+        <span class="exercise-check"></span>
+      </div>
+      <div class="exercise-body">
+        <p>Give Claude a prompt that triggers parallel subagent research.</p>
+        <div class="code-block">
+          <div class="code-actions">
+            <button class="send-btn" onclick="sendToTerminal('Research these 3 things in parallel: 1) What MCP servers are available on npm, 2) What Claude Code hooks do people commonly use, 3) What are the most popular Claude Code custom skills on GitHub\n', this, event)">&#9654; Send</button>
+            <button class="copy-btn" onclick="copyCode(this, event)">Copy</button>
+          </div>
+          <div class="code-label">Trigger parallel agents</div>
+          <pre><code>Research these 3 things in parallel:
+1) What MCP servers are available on npm
+2) What Claude Code hooks do people commonly use
+3) What are the most popular Claude Code custom
+   skills on GitHub</code></pre>
+        </div>
+        <div class="exercise-expected" onclick="toggleExpected(this, event)">
+          <div class="exercise-expected-toggle"><span class="arrow">&#9656;</span> Expected Result</div>
+          <div class="expected-content">Claude should spawn multiple Explore or general-purpose agents. You&rsquo;ll see them working in parallel. Results come back consolidated.</div>
+        </div>
+        <button class="exercise-done-btn" onclick="completeExercise('6-1', this, event)">&#10003; Done &mdash; Saw parallel agents</button>
+      </div>
+    </div>
+
+    <div class="exercise" data-ex="6-2" onclick="toggleExercise(this, event)">
+      <div class="exercise-header">
+        <span class="exercise-badge">Ex 6.2</span>
+        <span class="exercise-title">Use the Explore Agent</span>
+        <span class="exercise-check"></span>
+      </div>
+      <div class="exercise-body">
+        <p>Ask Claude to explore a codebase using the specialized Explore agent.</p>
+        <div class="code-block">
+          <div class="code-actions">
+            <button class="send-btn" onclick="sendToTerminal('Use an Explore agent to thoroughly map the file structure and key patterns in this project\n', this, event)">&#9654; Send</button>
+            <button class="copy-btn" onclick="copyCode(this, event)">Copy</button>
+          </div>
+          <div class="code-label">Explore a codebase</div>
+          <pre><code>Use an Explore agent to thoroughly map the
+file structure and key patterns in this project</code></pre>
+        </div>
+        <div class="exercise-expected" onclick="toggleExpected(this, event)">
+          <div class="exercise-expected-toggle"><span class="arrow">&#9656;</span> Expected Result</div>
+          <div class="expected-content">Claude spawns an Explore subagent that reads files, searches patterns, and returns a structured summary of the codebase. Useful for onboarding to unfamiliar projects.</div>
+        </div>
+        <button class="exercise-done-btn" onclick="completeExercise('6-2', this, event)">&#10003; Done &mdash; Explore agent worked</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="chapter-footer">
+    <button class="chapter-nav-btn" onclick="goTo(5)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+      Previous
+    </button>
+    <button class="complete-btn" onclick="toggleComplete(6)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+      <span>Mark Complete</span>
+    </button>
+    <button class="chapter-nav-btn primary" onclick="goTo(7)">
+      Next: Git & Tasks
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </button>
+  </div>
+</section>
+
+<!-- ═══════════ CH 7: GIT & BACKGROUND TASKS ═══════════ -->
+<section class="chapter" id="ch7">
+  <div class="chapter-badge">Chapter 7</div>
+  <h1>Git Workflows &amp; Background Tasks</h1>
+  <p class="chapter-intro">Claude Code is excellent at git operations you're probably doing manually. Plus: run long commands without blocking your conversation.</p>
+
+  <h2>Git Workflows</h2>
+  <ul>
+    <li><strong>Commits:</strong> <code>/commit</code> &mdash; Analyzes changes, writes message, commits</li>
+    <li><strong>PRs:</strong> "Create a PR for this branch" &mdash; Pushes, writes title/description, creates PR via <code>gh</code></li>
+    <li><strong>Branch management:</strong> "Create a feature branch for the new dashboard"</li>
+    <li><strong>Diff review:</strong> "What changed since yesterday?"</li>
+    <li><strong>Conflict resolution:</strong> "Resolve the merge conflicts in this file"</li>
+  </ul>
+
+  <h2>Background Tasks</h2>
+  <p>Run long commands without blocking your conversation:</p>
+  <div class="callout callout-tip">
+    <div class="callout-title">Try These</div>
+    <p>"Run the build in the background and let me know when it finishes"<br>
+    "Deploy to Vercel in the background while I keep working"</p>
+  </div>
+  <p>Claude uses <code>run_in_background</code> on Bash commands and notifies you when they complete. You can keep working on other things in the same session.</p>
+
+  <div class="callout callout-opportunity">
+    <div class="callout-title">Your Opportunity</div>
+    <p>You have multiple GitHub repos (leasejenny-dashboard, crash-course-intake, etc.). Let Claude handle the git ceremony. Deploy one project while working on another. Run tests in the background while writing new code.</p>
+  </div>
+
+  <!-- Exercises -->
+  <div class="exercises-section">
+    <div class="exercises-title">Hands-On Exercises</div>
+
+    <div class="exercise" data-ex="7-1" onclick="toggleExercise(this, event)">
+      <div class="exercise-header">
+        <span class="exercise-badge">Ex 7.1</span>
+        <span class="exercise-title">Use /commit</span>
+        <span class="exercise-check"></span>
+      </div>
+      <div class="exercise-body">
+        <p>Let Claude analyze your changes and write a commit message for you.</p>
+        <ol>
+          <li>Make a small change to any file in a git repo</li>
+          <li>Type <code>/commit</code> in Claude Code</li>
+          <li>Review the commit message Claude generates</li>
+        </ol>
+        <div class="code-block">
+          <div class="code-actions">
+            <button class="send-btn" onclick="sendToTerminal('/commit\n', this, event)">&#9654; Send</button>
+            <button class="copy-btn" onclick="copyCode(this, event)">Copy</button>
+          </div>
+          <div class="code-label">Smart commit</div>
+          <pre><code>/commit</code></pre>
+        </div>
+        <div class="exercise-expected" onclick="toggleExpected(this, event)">
+          <div class="exercise-expected-toggle"><span class="arrow">&#9656;</span> Expected Result</div>
+          <div class="expected-content">Claude reads the diff, writes a descriptive commit message, and creates the commit. Check <code>git log</code> to see it.</div>
+        </div>
+        <button class="exercise-done-btn" onclick="completeExercise('7-1', this, event)">&#10003; Done &mdash; Commit created</button>
+      </div>
+    </div>
+
+    <div class="exercise" data-ex="7-2" onclick="toggleExercise(this, event)">
+      <div class="exercise-header">
+        <span class="exercise-badge">Ex 7.2</span>
+        <span class="exercise-title">Run a Background Task</span>
+        <span class="exercise-check"></span>
+      </div>
+      <div class="exercise-body">
+        <p>Run a command in the background while you keep working.</p>
+        <div class="code-block">
+          <div class="code-actions">
+            <button class="send-btn" onclick="sendToTerminal('Run &quot;find ~ -name CLAUDE.md -type f 2>/dev/null&quot; in the background and tell me the results when it finishes\n', this, event)">&#9654; Send</button>
+            <button class="copy-btn" onclick="copyCode(this, event)">Copy</button>
+          </div>
+          <div class="code-label">Background search</div>
+          <pre><code>Run "find ~ -name CLAUDE.md -type f 2>/dev/null"
+in the background and tell me the results
+when it finishes</code></pre>
+        </div>
+        <p>While it runs, ask Claude something else. You&rsquo;ll get notified when the background task completes.</p>
+        <div class="exercise-expected" onclick="toggleExpected(this, event)">
+          <div class="exercise-expected-toggle"><span class="arrow">&#9656;</span> Expected Result</div>
+          <div class="expected-content">Claude runs the command in the background, you can keep chatting, and Claude notifies you with results when it&rsquo;s done.</div>
+        </div>
+        <button class="exercise-done-btn" onclick="completeExercise('7-2', this, event)">&#10003; Done &mdash; Background task ran</button>
       </div>
     </div>
   </div>
