@@ -1,0 +1,1175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quick Follow-Up — Rez | Humanity AI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://api.fontshare.com/v2/css?f[]=cabinet-grotesk@700,800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #2D2A26;
+    --paper: #F5F0E8;
+    --warm: #E8DFD0;
+    --accent: #C4573A;
+    --accent-dark: #9a3d24;
+    --accent-light: rgba(196,87,58,0.08);
+    --sandstone: #C4A882;
+    --field-bg: #FDFAF6;
+    --field-border: #d4cbbf;
+    --field-focus: #C4573A;
+    --subtle: #8A8279;
+    --success: #6B8F71;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Outfit', sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23000000' fill-opacity='0.02'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .wrapper {
+    position: relative;
+    z-index: 1;
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 40px 24px 80px;
+  }
+
+  .header {
+    text-align: center;
+    margin-bottom: 48px;
+    padding-bottom: 40px;
+    border-bottom: 1px solid var(--warm);
+  }
+
+  .header-brand {
+    font-family: 'Cabinet Grotesk', sans-serif;
+    font-size: clamp(44px, 8vw, 64px);
+    font-weight: 800;
+    color: var(--ink);
+    letter-spacing: -2px;
+    line-height: 1;
+    margin-bottom: 24px;
+  }
+
+  .header-brand span { color: var(--accent); }
+
+  .header-badge {
+    display: inline-block;
+    background: var(--accent);
+    color: white;
+    font-family: 'Outfit', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 8px 20px;
+    border-radius: 100px;
+    margin-bottom: 16px;
+  }
+
+  .header p {
+    font-size: 17px;
+    color: var(--ink);
+    max-width: 540px;
+    margin: 0 auto;
+    line-height: 1.7;
+  }
+
+  .header p strong { font-weight: 700; }
+
+  .time-estimate {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 16px;
+    padding: 6px 16px;
+    background: var(--warm);
+    border-radius: 100px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--subtle);
+  }
+
+  .section {
+    background: var(--field-bg);
+    border: 1px solid var(--field-border);
+    border-radius: 16px;
+    padding: 32px;
+    margin-bottom: 24px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    transition: box-shadow 0.3s ease;
+  }
+
+  .section:hover {
+    box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+  }
+
+  .section-number {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    background: var(--accent);
+    color: white;
+    font-size: 13px;
+    font-weight: 700;
+    border-radius: 50%;
+    margin-bottom: 12px;
+  }
+
+  .section h2 {
+    font-family: 'Fraunces', serif;
+    font-size: 22px;
+    font-weight: 400;
+    margin-bottom: 4px;
+  }
+
+  .section-desc {
+    font-size: 14px;
+    color: var(--subtle);
+    margin-bottom: 24px;
+  }
+
+  .field {
+    margin-bottom: 24px;
+  }
+
+  .field:last-child {
+    margin-bottom: 0;
+  }
+
+  .field label {
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: var(--ink);
+  }
+
+  .field label .hint {
+    font-weight: 400;
+    color: var(--subtle);
+    font-size: 13px;
+  }
+
+  .field input[type="text"],
+  .field textarea {
+    width: 100%;
+    padding: 12px 16px;
+    font-family: 'Outfit', sans-serif;
+    font-size: 15px;
+    border: 1.5px solid var(--field-border);
+    border-radius: 10px;
+    background: var(--field-bg);
+    color: var(--ink);
+    transition: border-color 0.2s, box-shadow 0.2s;
+    outline: none;
+  }
+
+  .field input:focus,
+  .field textarea:focus {
+    border-color: var(--field-focus);
+    box-shadow: 0 0 0 3px var(--accent-light);
+  }
+
+  .field textarea {
+    min-height: 80px;
+    resize: vertical;
+  }
+
+  .checkbox-group {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  .checkbox-group.single-col {
+    grid-template-columns: 1fr;
+  }
+
+  @media (max-width: 520px) {
+    .checkbox-group { grid-template-columns: 1fr; }
+  }
+
+  .checkbox-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 12px 14px;
+    border: 1.5px solid var(--field-border);
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s;
+    user-select: none;
+  }
+
+  .checkbox-item:hover {
+    border-color: var(--accent);
+    background: #F8F3EB;
+  }
+
+  .checkbox-item.checked {
+    border-color: var(--accent);
+    background: var(--accent-light);
+  }
+
+  .checkbox-item input[type="checkbox"] {
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    min-width: 20px;
+    border: 2px solid var(--field-border);
+    border-radius: 5px;
+    margin-top: 1px;
+    cursor: pointer;
+    position: relative;
+    transition: all 0.15s;
+  }
+
+  .checkbox-item input[type="checkbox"]:checked {
+    background: var(--accent);
+    border-color: var(--accent);
+  }
+
+  .checkbox-item input[type="checkbox"]:checked::after {
+    content: '';
+    position: absolute;
+    left: 5px;
+    top: 2px;
+    width: 6px;
+    height: 10px;
+    border: solid white;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+  }
+
+  .checkbox-label {
+    font-size: 14px;
+    line-height: 1.4;
+  }
+
+  .checkbox-sublabel {
+    display: block;
+    font-size: 12px;
+    color: var(--subtle);
+    margin-top: 2px;
+  }
+
+  .radio-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .radio-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 14px;
+    border: 1.5px solid var(--field-border);
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s;
+    user-select: none;
+  }
+
+  .radio-item:hover {
+    border-color: var(--accent);
+    background: #F8F3EB;
+  }
+
+  .radio-item.checked {
+    border-color: var(--accent);
+    background: var(--accent-light);
+  }
+
+  .radio-item input[type="radio"] {
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    min-width: 20px;
+    border: 2px solid var(--field-border);
+    border-radius: 50%;
+    cursor: pointer;
+    position: relative;
+    transition: all 0.15s;
+  }
+
+  .radio-item input[type="radio"]:checked {
+    border-color: var(--accent);
+  }
+
+  .radio-item input[type="radio"]:checked::after {
+    content: '';
+    position: absolute;
+    inset: 3px;
+    background: var(--accent);
+    border-radius: 50%;
+  }
+
+  .radio-label {
+    font-size: 14px;
+  }
+
+  .explain-box {
+    display: none;
+    margin-top: 10px;
+  }
+
+  .explain-box.visible {
+    display: block;
+  }
+
+  .explain-box textarea {
+    width: 100%;
+    padding: 12px 16px;
+    font-family: 'Outfit', sans-serif;
+    font-size: 14px;
+    border: 1.5px solid var(--accent);
+    border-radius: 10px;
+    background: white;
+    color: var(--ink);
+    min-height: 64px;
+    resize: vertical;
+    outline: none;
+    transition: box-shadow 0.2s;
+  }
+
+  .explain-box textarea:focus {
+    box-shadow: 0 0 0 3px var(--accent-light);
+  }
+
+  .explain-box textarea::placeholder {
+    color: var(--subtle);
+  }
+
+  .divider {
+    height: 1px;
+    background: var(--field-border);
+    margin: 24px 0;
+  }
+
+  .submit-section {
+    text-align: center;
+    margin-top: 40px;
+  }
+
+  .submit-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 16px 48px;
+    background: var(--accent);
+    color: white;
+    font-family: 'Outfit', sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 0 2px 8px rgba(196, 93, 44, 0.3);
+  }
+
+  .submit-btn:hover {
+    background: var(--accent-dark);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 16px rgba(196, 93, 44, 0.4);
+  }
+
+  .submit-btn:active { transform: translateY(0); }
+
+  .submit-note {
+    font-size: 13px;
+    color: var(--subtle);
+    margin-top: 16px;
+  }
+
+  .success-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(246, 241, 235, 0.96);
+    z-index: 100;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    text-align: center;
+    padding: 24px;
+    animation: fadeIn 0.4s ease;
+  }
+
+  .success-overlay.visible { display: flex; }
+
+  .success-icon {
+    width: 72px;
+    height: 72px;
+    background: var(--success);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 24px;
+    animation: popIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  .success-icon svg { width: 36px; height: 36px; }
+
+  .success-overlay h2 {
+    font-family: 'Fraunces', serif;
+    font-size: 28px;
+    font-weight: 400;
+    margin-bottom: 12px;
+  }
+
+  .success-overlay p {
+    color: var(--subtle);
+    font-size: 16px;
+    max-width: 400px;
+  }
+
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes popIn { from { transform: scale(0); } to { transform: scale(1); } }
+
+  .footer {
+    text-align: center;
+    margin-top: 48px;
+    padding-top: 24px;
+    border-top: 1px solid var(--warm);
+    font-size: 13px;
+    color: var(--subtle);
+  }
+</style>
+</head>
+<body>
+
+<div class="wrapper">
+  <div class="header">
+    <div class="header-brand">Humanity<span>.</span></div>
+    <div class="header-badge">Quick Follow-Up</div>
+    <p><strong>Hey Rez,</strong> Just need a few quick clarifications so I can come to Monday with a real gameplan.</p>
+    <div class="time-estimate">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      2-3 minutes &mdash; mostly clicking
+    </div>
+  </div>
+
+  <form id="followupForm" action="https://api.web3forms.com/submit" method="POST">
+    <input type="hidden" name="access_key" value="76ac3471-94c5-4559-bf0f-954190728ce1">
+    <input type="hidden" name="subject" value="Rez Follow-Up — Automation Scoping">
+    <input type="hidden" name="from_name" value="Rez Follow-Up Quiz">
+
+    <!-- Section 1: Weekly Reporting -->
+    <div class="section">
+      <div class="section-number">1</div>
+      <h2>Weekly Reporting / Pro Forma</h2>
+      <p class="section-desc">You mentioned pulling from Square, DoorDash, UberEats, Grubhub, BEK, and Google Sheets. Quick questions on how that works today.</p>
+
+      <div class="field">
+        <label>Do you have a pro forma template you use now, or are you building the weekly report from scratch each time?</label>
+        <div class="radio-group">
+          <label class="radio-item">
+            <input type="radio" name="proforma" value="have_template">
+            <span class="radio-label">I have a template I fill in each week</span>
+          </label>
+          <label class="radio-item">
+            <input type="radio" name="proforma" value="from_scratch">
+            <span class="radio-label">Building it from scratch / piecing it together each time</span>
+          </label>
+          <label class="radio-item">
+            <input type="radio" name="proforma" value="mixed">
+            <span class="radio-label">Somewhere in between &mdash; loose template but a lot of manual work</span>
+          </label>
+          <label class="radio-item">
+            <input type="radio" name="proforma" value="other" data-explain="proforma_explain">
+            <span class="radio-label">Other &mdash; let me explain</span>
+          </label>
+        </div>
+        <div class="explain-box" id="proforma_explain">
+          <textarea name="proforma_explain" placeholder="Tell me how it works..."></textarea>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>How do you pull data from the delivery platforms today? <span class="hint">(DoorDash, UberEats, Grubhub)</span></label>
+        <div class="radio-group">
+          <label class="radio-item">
+            <input type="radio" name="delivery_pull" value="manual_dashboard">
+            <span class="radio-label">Log into each dashboard and copy numbers manually</span>
+          </label>
+          <label class="radio-item">
+            <input type="radio" name="delivery_pull" value="csv_export">
+            <span class="radio-label">Export CSV/reports from each platform</span>
+          </label>
+          <label class="radio-item">
+            <input type="radio" name="delivery_pull" value="flows_into_square">
+            <span class="radio-label">Some of it flows into Square already</span>
+          </label>
+          <label class="radio-item">
+            <input type="radio" name="delivery_pull" value="not_sure">
+            <span class="radio-label">Not sure &mdash; someone else handles this</span>
+          </label>
+          <label class="radio-item">
+            <input type="radio" name="delivery_pull" value="other" data-explain="delivery_explain">
+            <span class="radio-label">Other &mdash; let me explain</span>
+          </label>
+        </div>
+        <div class="explain-box" id="delivery_explain">
+          <textarea name="delivery_explain" placeholder="How does it work for you?"></textarea>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>What numbers matter most from the weekly report? <span class="hint">(Check all that apply)</span></label>
+        <div class="checkbox-group">
+          <label class="checkbox-item">
+            <input type="checkbox" name="weekly_metrics" value="gross_revenue">
+            <span class="checkbox-label">Gross revenue by location</span>
+          </label>
+          <label class="checkbox-item">
+            <input type="checkbox" name="weekly_metrics" value="net_after_fees">
+            <span class="checkbox-label">Net revenue (after delivery fees, commissions)</span>
+          </label>
+          <label class="checkbox-item">
+            <input type="checkbox" name="weekly_metrics" value="food_cost_pct">
+            <span class="checkbox-label">Food cost %</span>
+          </label>
+          <label class="checkbox-item">
+            <input type="checkbox" name="weekly_metrics" value="labor_cost_pct">
+            <span class="checkbox-label">Labor cost %</span>
+          </label>
+          <label class="checkbox-item">
+            <input type="checkbox" name="weekly_metrics" value="order_volume">
+            <span class="checkbox-label">Order volume (dine-in vs delivery breakdown)</span>
+          </label>
+          <label class="checkbox-item">
+            <input type="checkbox" name="weekly_metrics" value="avg_ticket">
+            <span class="checkbox-label">Average ticket size</span>
+          </label>
+          <label class="checkbox-item">
+            <input type="checkbox" name="weekly_metrics" value="cogs_by_category">
+            <span class="checkbox-label">COGS by category</span>
+          </label>
+          <label class="checkbox-item">
+            <input type="checkbox" name="weekly_metrics" value="profit_margin">
+            <span class="checkbox-label">Profit margin by location</span>
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section 2: BEK Entree -->
+    <div class="section">
+      <div class="section-number">2</div>
+      <h2>BEK Entree</h2>
+      <p class="section-desc">Just need to understand how you interact with it.</p>
+
+      <div class="field">
+        <label>What do you use BEK Entree for?</label>
+        <div class="checkbox-group">
+          <label class="checkbox-item">
+            <input type="checkbox" name="bek_use" value="ordering">
+            <span class="checkbox-label">Ordering supplies / inventory</span>
+          </label>
+          <label class="checkbox-item">
+            <input type="checkbox" name="bek_use" value="invoices">
+            <span class="checkbox-label">Pulling invoices / pricing</span>
+          </label>
+          <label class="checkbox-item">
+            <input type="checkbox" name="bek_use" value="price_tracking">
+            <span class="checkbox-label">Tracking ingredient prices over time</span>
+          </label>
+          <label class="checkbox-item">
+            <input type="checkbox" name="bek_use" value="cost_analysis">
+            <span class="checkbox-label">Cost analysis / comparing to budget</span>
+          </label>
+          <label class="checkbox-item">
+            <input type="checkbox" name="bek_use" value="other" data-explain="bek_use_explain">
+            <span class="checkbox-label">Other &mdash; let me explain</span>
+          </label>
+        </div>
+        <div class="explain-box" id="bek_use_explain">
+          <textarea name="bek_use_explain" placeholder="What else do you use it for?"></textarea>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Can you export data from BEK Entree? <span class="hint">(CSV, PDF, etc.)</span></label>
+        <div class="radio-group">
+          <label class="radio-item">
+            <input type="radio" name="bek_export" value="yes_csv">
+            <span class="radio-label">Yes &mdash; CSV or spreadsheet export</span>
+          </label>
+          <label class="radio-item">
+            <input type="radio" name="bek_export" value="yes_pdf">
+            <span class="radio-label">Yes &mdash; PDF invoices only</span>
+          </label>
+          <label class="radio-item">
+            <input type="radio" name="bek_export" value="manual">
+            <span class="radio-label">No &mdash; I copy numbers by hand</span>
+          </label>
+          <label class="radio-item">
+            <input type="radio" name="bek_export" value="not_sure">
+            <span class="radio-label">Not sure</span>
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section 3: Quarterly KPIs -->
+    <div class="section">
+      <div class="section-number">3</div>
+      <h2>Quarterly KPI Bonuses</h2>
+      <p class="section-desc">Need to know what drives the bonuses so we can automate the tracking.</p>
+
+      <div class="field">
+        <label>What KPIs are manager bonuses tied to? <span class="hint">(Check all that apply)</span></label>
+        <div class="checkbox-group">
+          <label class="checkbox-item">
+            <input type="checkbox" name="kpi_metrics" value="revenue_target">
+            <span class="checkbox-label">Revenue targets</span>
+          </label>
+          <label class="checkbox-item">
+            <input type="checkbox" name="kpi_metrics" value="food_cost">
+            <span class="checkbox-label">Food cost % under threshold</span>
+          </label>
+          <label class="checkbox-item">
+            <input type="checkbox" name="kpi_metrics" value="labor_cost">
+            <span class="checkbox-label">Labor cost % under threshold</span>
+          </label>
+          <label class="checkbox-item">
+            <input type="checkbox" name="kpi_metrics" value="reviews">
+            <span class="checkbox-label">Customer reviews / ratings</span>
+          </label>
+          <label class="checkbox-item">
+            <input type="checkbox" name="kpi_metrics" value="waste">
+            <span class="checkbox-label">Waste / shrinkage targets</span>
+          </label>
+          <label class="checkbox-item">
+            <input type="checkbox" name="kpi_metrics" value="speed">
+            <span class="checkbox-label">Speed of service / ticket times</span>
+          </label>
+          <label class="checkbox-item">
+            <input type="checkbox" name="kpi_metrics" value="compliance">
+            <span class="checkbox-label">Checklist compliance / operations score</span>
+          </label>
+          <label class="checkbox-item">
+            <input type="checkbox" name="kpi_metrics" value="other" data-explain="kpi_explain">
+            <span class="checkbox-label">Other &mdash; let me explain</span>
+          </label>
+        </div>
+        <div class="explain-box" id="kpi_explain">
+          <textarea name="kpi_explain" placeholder="What other KPIs?"></textarea>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Do you have a bonus structure already defined, or does that also need to be built?</label>
+        <div class="radio-group">
+          <label class="radio-item">
+            <input type="radio" name="bonus_structure" value="defined">
+            <span class="radio-label">Yes &mdash; structure exists, just need to automate the reporting</span>
+          </label>
+          <label class="radio-item">
+            <input type="radio" name="bonus_structure" value="loose">
+            <span class="radio-label">Loosely defined &mdash; could use help formalizing it</span>
+          </label>
+          <label class="radio-item">
+            <input type="radio" name="bonus_structure" value="need_help">
+            <span class="radio-label">Not yet &mdash; need help designing the whole thing</span>
+          </label>
+          <label class="radio-item">
+            <input type="radio" name="bonus_structure" value="other" data-explain="bonus_explain">
+            <span class="radio-label">Other &mdash; let me explain</span>
+          </label>
+        </div>
+        <div class="explain-box" id="bonus_explain">
+          <textarea name="bonus_explain" placeholder="Tell me about your bonus setup..."></textarea>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section 4: Payroll -->
+    <div class="section">
+      <div class="section-number">4</div>
+      <h2>Payroll Details</h2>
+      <p class="section-desc">Clarifying "daily clock-ins" and "graduated team members."</p>
+
+      <div class="field">
+        <label>What system do employees clock in/out on?</label>
+        <div class="radio-group">
+          <label class="radio-item">
+            <input type="radio" name="clock_system" value="square">
+            <span class="radio-label">Square POS</span>
+          </label>
+          <label class="radio-item">
+            <input type="radio" name="clock_system" value="scheduling_app">
+            <span class="radio-label">Scheduling app (7shifts, Homebase, etc.)</span>
+          </label>
+          <label class="radio-item">
+            <input type="radio" name="clock_system" value="separate">
+            <span class="radio-label">Separate time clock / payroll system</span>
+          </label>
+          <label class="radio-item">
+            <input type="radio" name="clock_system" value="manual">
+            <span class="radio-label">Manual / paper timesheets</span>
+          </label>
+          <label class="radio-item">
+            <input type="radio" name="clock_system" value="other" data-explain="clock_explain">
+            <span class="radio-label">Other &mdash; let me explain</span>
+          </label>
+        </div>
+        <div class="explain-box" id="clock_explain">
+          <textarea name="clock_explain" placeholder="What system do you use?"></textarea>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>What does "daily clock-ins" mean for you? <span class="hint">(What do you need to see?)</span></label>
+        <div class="checkbox-group single-col">
+          <label class="checkbox-item">
+            <input type="checkbox" name="clockin_need" value="whos_in">
+            <span class="checkbox-label">Who's clocked in right now across locations
+              <span class="checkbox-sublabel">Real-time visibility</span>
+            </span>
+          </label>
+          <label class="checkbox-item">
+            <input type="checkbox" name="clockin_need" value="late_flags">
+            <span class="checkbox-label">Alerts when someone is late or no-shows
+              <span class="checkbox-sublabel">Automated flags</span>
+            </span>
+          </label>
+          <label class="checkbox-item">
+            <input type="checkbox" name="clockin_need" value="daily_summary">
+            <span class="checkbox-label">End-of-day summary of hours worked per location
+              <span class="checkbox-sublabel">Daily recap</span>
+            </span>
+          </label>
+          <label class="checkbox-item">
+            <input type="checkbox" name="clockin_need" value="overtime_tracking">
+            <span class="checkbox-label">Running overtime tracker through the week
+              <span class="checkbox-sublabel">Prevent surprise OT</span>
+            </span>
+          </label>
+          <label class="checkbox-item">
+            <input type="checkbox" name="clockin_need" value="other" data-explain="clockin_explain">
+            <span class="checkbox-label">Other &mdash; let me explain
+              <span class="checkbox-sublabel">Something I didn't list</span>
+            </span>
+          </label>
+        </div>
+        <div class="explain-box" id="clockin_explain">
+          <textarea name="clockin_explain" placeholder="What do you need from daily clock-ins?"></textarea>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>What does "graduated team members" mean?</label>
+        <div class="radio-group">
+          <label class="radio-item">
+            <input type="radio" name="graduated" value="pay_tiers">
+            <span class="radio-label">Pay tiers &mdash; employees move up in pay rate after milestones (90 days, certifications, etc.)</span>
+          </label>
+          <label class="radio-item">
+            <input type="radio" name="graduated" value="training_levels">
+            <span class="radio-label">Training levels &mdash; tracking who has completed training stages</span>
+          </label>
+          <label class="radio-item">
+            <input type="radio" name="graduated" value="role_progression">
+            <span class="radio-label">Role progression &mdash; crew to shift lead to manager</span>
+          </label>
+          <label class="radio-item">
+            <input type="radio" name="graduated" value="other" data-explain="graduated_explain">
+            <span class="radio-label">Other &mdash; let me explain</span>
+          </label>
+        </div>
+        <div class="explain-box" id="graduated_explain">
+          <textarea name="graduated_explain" placeholder="What does 'graduated' mean for your team?"></textarea>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>What payroll system do you use?</label>
+        <div class="radio-group">
+          <label class="radio-item">
+            <input type="radio" name="payroll_system" value="gusto">
+            <span class="radio-label">Gusto</span>
+          </label>
+          <label class="radio-item">
+            <input type="radio" name="payroll_system" value="adp">
+            <span class="radio-label">ADP</span>
+          </label>
+          <label class="radio-item">
+            <input type="radio" name="payroll_system" value="paychex">
+            <span class="radio-label">Paychex</span>
+          </label>
+          <label class="radio-item">
+            <input type="radio" name="payroll_system" value="square_payroll">
+            <span class="radio-label">Square Payroll</span>
+          </label>
+          <label class="radio-item">
+            <input type="radio" name="payroll_system" value="other" data-explain="payroll_explain">
+            <span class="radio-label">Other &mdash; let me explain</span>
+          </label>
+        </div>
+        <div class="explain-box" id="payroll_explain">
+          <textarea name="payroll_explain" placeholder="What payroll system?"></textarea>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section 5: Feedback Automation -->
+    <div class="section">
+      <div class="section-number">5</div>
+      <h2>Feedback Automation</h2>
+      <p class="section-desc">Where does feedback come from, and what should happen with it?</p>
+
+      <div class="field">
+        <label>What feedback sources do you want automated? <span class="hint">(Check all that apply)</span></label>
+        <div class="checkbox-group">
+          <label class="checkbox-item">
+            <input type="checkbox" name="feedback_source" value="google_reviews">
+            <span class="checkbox-label">Google Business reviews</span>
+          </label>
+          <label class="checkbox-item">
+            <input type="checkbox" name="feedback_source" value="delivery_reviews">
+            <span class="checkbox-label">DoorDash / UberEats / Grubhub reviews</span>
+          </label>
+          <label class="checkbox-item">
+            <input type="checkbox" name="feedback_source" value="internal_team">
+            <span class="checkbox-label">Internal team feedback (shift notes, incident reports)</span>
+          </label>
+          <label class="checkbox-item">
+            <input type="checkbox" name="feedback_source" value="customer_direct">
+            <span class="checkbox-label">Direct customer complaints (email, phone, in-store)</span>
+          </label>
+          <label class="checkbox-item">
+            <input type="checkbox" name="feedback_source" value="surveys">
+            <span class="checkbox-label">Customer surveys / comment cards</span>
+          </label>
+          <label class="checkbox-item">
+            <input type="checkbox" name="feedback_source" value="social">
+            <span class="checkbox-label">Social media comments</span>
+          </label>
+          <label class="checkbox-item">
+            <input type="checkbox" name="feedback_source" value="other" data-explain="feedback_source_explain">
+            <span class="checkbox-label">Other &mdash; let me explain</span>
+          </label>
+        </div>
+        <div class="explain-box" id="feedback_source_explain">
+          <textarea name="feedback_source_explain" placeholder="What other feedback sources?"></textarea>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>What should "automated" look like for feedback? <span class="hint">(Check all that apply)</span></label>
+        <div class="checkbox-group single-col">
+          <label class="checkbox-item">
+            <input type="checkbox" name="feedback_action" value="collect">
+            <span class="checkbox-label">Collect everything in one place
+              <span class="checkbox-sublabel">Single dashboard instead of checking 5 apps</span>
+            </span>
+          </label>
+          <label class="checkbox-item">
+            <input type="checkbox" name="feedback_action" value="alert_negative">
+            <span class="checkbox-label">Alert me on negative feedback immediately
+              <span class="checkbox-sublabel">Don't let bad reviews sit unanswered</span>
+            </span>
+          </label>
+          <label class="checkbox-item">
+            <input type="checkbox" name="feedback_action" value="draft_responses">
+            <span class="checkbox-label">Draft responses for me to approve and post
+              <span class="checkbox-sublabel">AI writes it, I click send</span>
+            </span>
+          </label>
+          <label class="checkbox-item">
+            <input type="checkbox" name="feedback_action" value="trends">
+            <span class="checkbox-label">Weekly trends &mdash; what's getting better/worse
+              <span class="checkbox-sublabel">Recurring themes across locations</span>
+            </span>
+          </label>
+          <label class="checkbox-item">
+            <input type="checkbox" name="feedback_action" value="other" data-explain="feedback_action_explain">
+            <span class="checkbox-label">Other &mdash; let me explain
+              <span class="checkbox-sublabel">Something I didn't list</span>
+            </span>
+          </label>
+        </div>
+        <div class="explain-box" id="feedback_action_explain">
+          <textarea name="feedback_action_explain" placeholder="What else should happen with feedback?"></textarea>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section 6: Ingredient Price Tracker + Daily Checklist -->
+    <div class="section">
+      <div class="section-number">6</div>
+      <h2>Last Two</h2>
+      <p class="section-desc">Ingredient prices and daily checklists.</p>
+
+      <div class="field">
+        <label>Ingredient Price Tracker &mdash; what's the goal? <span class="hint">(Check all that apply)</span></label>
+        <div class="checkbox-group single-col">
+          <label class="checkbox-item">
+            <input type="checkbox" name="price_tracker" value="price_changes">
+            <span class="checkbox-label">Track when ingredient prices change from BEK / suppliers
+              <span class="checkbox-sublabel">Know before it hits your P&L</span>
+            </span>
+          </label>
+          <label class="checkbox-item">
+            <input type="checkbox" name="price_tracker" value="compare_vendors">
+            <span class="checkbox-label">Compare prices across multiple vendors
+              <span class="checkbox-sublabel">Am I getting the best deal?</span>
+            </span>
+          </label>
+          <label class="checkbox-item">
+            <input type="checkbox" name="price_tracker" value="menu_impact">
+            <span class="checkbox-label">See how price changes affect menu item margins
+              <span class="checkbox-sublabel">Should I adjust menu prices?</span>
+            </span>
+          </label>
+          <label class="checkbox-item">
+            <input type="checkbox" name="price_tracker" value="historical">
+            <span class="checkbox-label">Historical price trends over time
+              <span class="checkbox-sublabel">Spot patterns and plan ahead</span>
+            </span>
+          </label>
+          <label class="checkbox-item">
+            <input type="checkbox" name="price_tracker" value="other" data-explain="price_explain">
+            <span class="checkbox-label">Other &mdash; let me explain
+              <span class="checkbox-sublabel">Something I didn't list</span>
+            </span>
+          </label>
+        </div>
+        <div class="explain-box" id="price_explain">
+          <textarea name="price_explain" placeholder="What else do you want from price tracking?"></textarea>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="field">
+        <label>Daily Checklist &mdash; what areas does it need to cover? <span class="hint">(Check all that apply)</span></label>
+        <div class="checkbox-group">
+          <label class="checkbox-item">
+            <input type="checkbox" name="checklist_areas" value="opening">
+            <span class="checkbox-label">Opening procedures</span>
+          </label>
+          <label class="checkbox-item">
+            <input type="checkbox" name="checklist_areas" value="closing">
+            <span class="checkbox-label">Closing procedures</span>
+          </label>
+          <label class="checkbox-item">
+            <input type="checkbox" name="checklist_areas" value="food_safety">
+            <span class="checkbox-label">Food safety / temp logs</span>
+          </label>
+          <label class="checkbox-item">
+            <input type="checkbox" name="checklist_areas" value="cleaning">
+            <span class="checkbox-label">Cleaning / sanitation</span>
+          </label>
+          <label class="checkbox-item">
+            <input type="checkbox" name="checklist_areas" value="equipment">
+            <span class="checkbox-label">Equipment checks</span>
+          </label>
+          <label class="checkbox-item">
+            <input type="checkbox" name="checklist_areas" value="inventory_count">
+            <span class="checkbox-label">Inventory / prep counts</span>
+          </label>
+          <label class="checkbox-item">
+            <input type="checkbox" name="checklist_areas" value="cash_handling">
+            <span class="checkbox-label">Cash handling / drawer counts</span>
+          </label>
+          <label class="checkbox-item">
+            <input type="checkbox" name="checklist_areas" value="shift_notes">
+            <span class="checkbox-label">Shift handoff notes</span>
+          </label>
+          <label class="checkbox-item">
+            <input type="checkbox" name="checklist_areas" value="other" data-explain="checklist_explain">
+            <span class="checkbox-label">Other &mdash; let me explain</span>
+          </label>
+        </div>
+        <div class="explain-box" id="checklist_explain">
+          <textarea name="checklist_explain" placeholder="What else should the checklist cover?"></textarea>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>How should checklists be completed? <span class="hint">(What format works for your team?)</span></label>
+        <div class="radio-group">
+          <label class="radio-item">
+            <input type="radio" name="checklist_format" value="phone">
+            <span class="radio-label">On their phone (mobile web form or app)</span>
+          </label>
+          <label class="radio-item">
+            <input type="radio" name="checklist_format" value="tablet">
+            <span class="radio-label">On a shared tablet at the store</span>
+          </label>
+          <label class="radio-item">
+            <input type="radio" name="checklist_format" value="paper">
+            <span class="radio-label">Printed paper (for now) &mdash; digitize later</span>
+          </label>
+          <label class="radio-item">
+            <input type="radio" name="checklist_format" value="whatever_works">
+            <span class="radio-label">Whatever you recommend</span>
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section 7: Priorities -->
+    <div class="section">
+      <div class="section-number">7</div>
+      <h2>Priority Stack</h2>
+      <p class="section-desc">If we can only knock out 2-3 of these on Monday, which ones matter most?</p>
+
+      <div class="field">
+        <label>Pick your top 3 <span class="hint">(Check up to 3)</span></label>
+        <div class="checkbox-group single-col">
+          <label class="checkbox-item">
+            <input type="checkbox" name="top_3" value="weekly_report">
+            <span class="checkbox-label">Weekly Reporting / Pro Forma</span>
+          </label>
+          <label class="checkbox-item">
+            <input type="checkbox" name="top_3" value="quarterly_kpi">
+            <span class="checkbox-label">Quarterly KPI Report for Bonuses</span>
+          </label>
+          <label class="checkbox-item">
+            <input type="checkbox" name="top_3" value="payroll">
+            <span class="checkbox-label">Payroll Automation</span>
+          </label>
+          <label class="checkbox-item">
+            <input type="checkbox" name="top_3" value="feedback">
+            <span class="checkbox-label">Feedback Automation</span>
+          </label>
+          <label class="checkbox-item">
+            <input type="checkbox" name="top_3" value="ingredient_prices">
+            <span class="checkbox-label">Ingredient Price Tracker</span>
+          </label>
+          <label class="checkbox-item">
+            <input type="checkbox" name="top_3" value="daily_checklist">
+            <span class="checkbox-label">Daily Checklist Automator</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Anything else I should know before Monday? <span class="hint">(Optional)</span></label>
+        <textarea name="anything_else" placeholder="Specific tools, logins I'll need access to, things that have been frustrating you, etc." rows="3"></textarea>
+      </div>
+    </div>
+
+    <div class="submit-section">
+      <button type="submit" class="submit-btn">
+        Send It
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </button>
+      <p class="submit-note">This goes straight to Josiah. See you Monday.</p>
+    </div>
+
+  </form>
+</div>
+
+<div class="success-overlay" id="successOverlay">
+  <div class="success-icon">
+    <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+  </div>
+  <h2>Locked in</h2>
+  <p>Got it. I'll have a full gameplan ready for Monday. Appreciate you, Rez.</p>
+</div>
+
+<div class="footer">
+  <p>Built by Josi</p>
+</div>
+
+<script>
+  // Checkbox toggle
+  document.querySelectorAll('.checkbox-item').forEach(item => {
+    const cb = item.querySelector('input[type="checkbox"]');
+    item.addEventListener('click', (e) => {
+      if (e.target.tagName === 'TEXTAREA') return;
+      if (e.target !== cb) cb.checked = !cb.checked;
+      item.classList.toggle('checked', cb.checked);
+
+      // Handle explain box for checkboxes
+      const explainId = cb.dataset.explain;
+      if (explainId) {
+        const box = document.getElementById(explainId);
+        if (box) box.classList.toggle('visible', cb.checked);
+      }
+    });
+  });
+
+  // Radio toggle
+  document.querySelectorAll('.radio-item').forEach(item => {
+    const radio = item.querySelector('input[type="radio"]');
+    item.addEventListener('click', (e) => {
+      if (e.target.tagName === 'TEXTAREA') return;
+      if (e.target !== radio) {
+        radio.checked = true;
+        radio.dispatchEvent(new Event('change'));
+      }
+      const name = radio.name;
+      document.querySelectorAll(`input[name="${name}"]`).forEach(r => {
+        r.closest('.radio-item').classList.toggle('checked', r.checked);
+      });
+
+      // Handle explain boxes for all radios in this group
+      document.querySelectorAll(`input[name="${name}"]`).forEach(r => {
+        const explainId = r.dataset.explain;
+        if (explainId) {
+          const box = document.getElementById(explainId);
+          if (box) box.classList.toggle('visible', r.checked);
+        }
+      });
+    });
+  });
+
+  // Form submit
+  document.getElementById('followupForm').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const form = e.target;
+    const formData = new FormData(form);
+    const btn = form.querySelector('.submit-btn');
+    btn.disabled = true;
+    btn.textContent = 'Sending...';
+
+    fetch('https://api.web3forms.com/submit', {
+      method: 'POST',
+      body: formData
+    })
+    .then(res => res.json())
+    .then(data => {
+      if (data.success) {
+        document.getElementById('successOverlay').classList.add('visible');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      } else {
+        btn.disabled = false;
+        btn.textContent = 'Send It';
+      }
+    })
+    .catch(() => {
+      btn.disabled = false;
+      btn.textContent = 'Send It';
+    });
+  });
+</script>
+
+</body>
+</html>
