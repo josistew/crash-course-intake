@@ -14,10 +14,10 @@ Requirements for initial release. Each maps to roadmap phases.
 - [ ] **RPT-03**: Operator can paste UberEats CSV into an import tab and delivery revenue/orders auto-populate
 - [ ] **RPT-04**: Operator can paste Grubhub CSV into an import tab and delivery revenue/orders auto-populate
 - [ ] **RPT-05**: Operator can paste BEK Entree CSV into an import tab and purchase/COGS data auto-populates
-- [ ] **RPT-06**: Each location has a dedicated tab showing net revenue, food cost %, labor cost %, order volume (by platform), and avg ticket size
-- [ ] **RPT-07**: Consolidated summary tab shows all 5 locations side-by-side with brand grouping (Moto Medi vs Tikka Shack)
-- [ ] **RPT-08**: Week-over-week comparison shows prior week values and percentage change for each metric
-- [ ] **RPT-09**: Variance flags highlight any metric that changed >5% week-over-week (color-coded: red/green)
+- [x] **RPT-06**: Each location has a dedicated tab showing net revenue, food cost %, labor cost %, order volume (by platform), and avg ticket size
+- [x] **RPT-07**: Consolidated summary tab shows all 5 locations side-by-side with brand grouping (Moto Medi vs Tikka Shack)
+- [x] **RPT-08**: Week-over-week comparison shows prior week values and percentage change for each metric
+- [x] **RPT-09**: Variance flags highlight any metric that changed >5% week-over-week (color-coded: red/green)
 - [ ] **RPT-10**: Import tabs use column header matching (MATCH function) so formulas survive CSV column reordering
 
 ### Payroll
@@ -100,10 +100,10 @@ Which phases cover which requirements. Updated during roadmap creation.
 | RPT-03 | Phase 1 | Pending |
 | RPT-04 | Phase 1 | Pending |
 | RPT-05 | Phase 1 | Pending |
-| RPT-06 | Phase 1 | Pending |
-| RPT-07 | Phase 1 | Pending |
-| RPT-08 | Phase 1 | Pending |
-| RPT-09 | Phase 1 | Pending |
+| RPT-06 | Phase 1 | Complete (01-02) |
+| RPT-07 | Phase 1 | Complete (01-02) |
+| RPT-08 | Phase 1 | Complete (01-02) |
+| RPT-09 | Phase 1 | Complete (01-02) |
 | RPT-10 | Phase 1 | Pending |
 | PAY-01 | Phase 2 | Pending |
 | PAY-02 | Phase 2 | Pending |

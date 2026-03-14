@@ -32,7 +32,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 
 Plans:
 - [x] 01-01-PLAN.md — Workbook scaffold: 14 tabs, import tab layouts with placeholder headers and validation rows, Instructions tab, Employee Roster, sample data
-- [ ] 01-02-PLAN.md — Formula engine: MATCH-based SUMIFS on calc tabs, Summary tab with cross-tab KPIs and WoW variance formatting
+- [x] 01-02-PLAN.md — Formula engine: MATCH-based SUMIFS on calc tabs, Summary tab with cross-tab KPIs and WoW variance formatting (awaiting human verification checkpoint)
 
 ### Phase 2: Payroll Prep
 **Goal**: Operators can paste Square labor CSV and immediately see daily/weekly hours per employee, overtime flags, pay tier milestones, and a Gusto-ready output tab — all cross-location before overtime threshold is applied.
@@ -70,6 +70,6 @@ Phases execute in numeric order: 1 → 2 → 3
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Weekly Reporting | 1/2 | In progress | - |
+| 1. Weekly Reporting | 2/2 | Awaiting verification | - |
 | 2. Payroll Prep | 0/TBD | Not started | - |
 | 3. Daily Checklist App | 0/TBD | Not started | - |

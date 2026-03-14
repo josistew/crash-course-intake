@@ -10,28 +10,28 @@ See: .planning/PROJECT.md (updated 2026-03-14)
 ## Current Position
 
 Phase: 1 of 3 (Weekly Reporting)
-Plan: 1 of 2 in current phase
-Status: In progress
-Last activity: 2026-03-14 — Plan 01-01 complete (workbook scaffold)
+Plan: 2 of 2 in current phase
+Status: In progress — awaiting human verification (checkpoint)
+Last activity: 2026-03-14 — Plan 01-02 formula engine complete, checkpoint pending
 
-Progress: [█░░░░░░░░░] 10%
+Progress: [██░░░░░░░░] 20%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 1
+- Total plans completed: 2
 - Average duration: 5 minutes
-- Total execution time: 0.1 hours
+- Total execution time: 0.2 hours
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
-| 1. Weekly Reporting | 1 | 5 min | 5 min |
+| 1. Weekly Reporting | 2 | 10 min | 5 min |
 
 **Recent Trend:**
-- Last 5 plans: 01-01 (5 min)
-- Trend: N/A (first plan)
+- Last 5 plans: 01-01 (5 min), 01-02 (5 min)
+- Trend: Stable
 
 *Updated after each plan completion*
 
@@ -50,6 +50,10 @@ Recent decisions affecting current work:
 - [01-01]: Prior-Week tab uses 26-column date-keyed structure; row-offset WoW explicitly avoided
 - [01-01]: Employee-Roster Square Name column is the VLOOKUP key to handle nickname mismatches
 - [01-01]: Location Calc and Summary tabs structure-only — formulas deferred to Plan 02 pending real CSV exports from Rez
+- [01-02]: Component revenue rows (Square/DoorDash/UberEats/Grubhub) have WoW formulas but Prior Week = 0 — only Total Net Revenue/KPIs tracked in Prior-Week tab
+- [01-02]: BEK allocation = food-category SUMIF / 5 locations; falls back to all-items / 5 if no Category column
+- [01-02]: Est. Labor Cost is manual entry (yellow cell) for v1; Labor Cost % computed automatically; Phase 2 (PAY-01) automates
+- [01-02]: Summary WoW rows use raw +/- percentage with FormulaRule conditional formatting (not arrow-text strings)
 
 ### Pending Todos
 
@@ -66,5 +70,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-03-14
-Stopped at: Completed 01-01-PLAN.md — workbook scaffold complete, ready for Plan 02
+Stopped at: Completed 01-02-PLAN.md tasks 1 & 2 — formula engine complete. At checkpoint:human-verify (Task 3). Rez must open Rez-Weekly-Report.xlsx in Google Sheets to verify formulas, formatting, and conditional formatting display correctly.
 Resume file: None
