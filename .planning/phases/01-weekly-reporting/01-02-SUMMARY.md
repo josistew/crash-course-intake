@@ -24,7 +24,7 @@ decisions:
 metrics:
   duration: 5 minutes
   completed: 2026-03-14
-  tasks_completed: 2
+  tasks_completed: 3
   tasks_total: 3
   files_created: 1
   files_modified: 2
@@ -92,7 +92,7 @@ Additional checks confirmed:
 - B20 formula: multi-platform SUMIFS chain (all 4 delivery platforms)
 - Summary B5: `='MML-Calc'!B9` — cross-tab reference confirmed
 
-**Status:** Tasks 1 and 2 complete. Task 3 (checkpoint:human-verify) pending Rez's review in Google Sheets.
+**Status:** All 3 tasks complete. Task 3 (checkpoint:human-verify) approved — workbook verified in Google Sheets.
 
 ## Deviations from Plan
 
@@ -124,6 +124,10 @@ Verification: BOTH TASK VERIFY SCRIPTS PASSED
 
 ## Self-Check: PASSED
 
+## Human Verification: APPROVED
+
+Task 3 checkpoint approved 2026-03-14. Rez opened Rez-Weekly-Report.xlsx in Google Sheets and confirmed the workbook displays correctly — formulas, conditional formatting, and layout all verified.
+
 ## Key Decisions Made
 
 1. **Component rows get WoW formulas but Prior Week = 0** — Only Total Net Revenue (row 9), Purchase Cost % (row 13), Labor Cost % (row 17), Orders (row 20), and Avg Ticket (row 21) reference Prior-Week tab. Component platform rows (Square, DoorDash, UberEats, Grubhub individually) have C = 0, making WoW = "N/A" at 0% — correct behavior since platform split isn't tracked historically.
@@ -134,10 +138,6 @@ Verification: BOTH TASK VERIFY SCRIPTS PASSED
 
 4. **Summary!B2 as master date driver** — All 5 calc tab B2 cells link to Summary!B2 via formula. Rez enters the week-ending date once and all tabs update. Prior-Week MATCH uses `B2-7` to find prior row automatically.
 
-## Checkpoint: Awaiting Human Verification
+## Plan Complete
 
-Task 3 requires Rez to upload `Rez-Weekly-Report.xlsx` to Google Sheets and verify:
-- Instructions tab has labor cost manual entry guidance
-- Calc tabs show formula-computed KPIs from sample data
-- Summary tab shows all 5 locations with colored WoW percentages
-- WoW cells >5% swing show green/red conditional formatting
+Phase 1 (Weekly Reporting) fully complete. `Rez-Weekly-Report.xlsx` is ready to hand off — Rez can upload to Google Drive, open in Google Sheets, paste real CSVs into import tabs, and see all metrics auto-populate with WoW comparison.
