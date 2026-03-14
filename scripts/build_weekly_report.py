@@ -259,6 +259,22 @@ def build_instructions(ws):
         ("If MATCH column errors (#N/A) appear, the column header in the import tab does not "
          "match the header in your CSV export. Update row 1 of the import tab to match the "
          "exact column name in your CSV file.", False),
+        ("", False),
+        ("PAYROLL PREP (Phase 2)", True),
+        ("1. Paste Square Labor export into the Labor-Import tab (all locations in one paste — "
+         "do NOT separate by location).", False),
+        ("2. Set the Week Starting date on the Overtime-Tracker tab (cell B1) to the Monday of "
+         "the pay week.", False),
+        ("3. Review Overtime-Tracker for OT flags: red = 38+ hours (HIGH), yellow = 32-38 hours "
+         "(WARN), green = under 32 hours. Pay close attention to employees working across multiple "
+         "locations — their hours aggregate automatically.", False),
+        ("4. Review Payroll-Output tab and export/copy to Gusto Smart Import. Column names are "
+         "designed to match Gusto's auto-mapping fields.", False),
+        ("5. Update Employee Roster milestone dates (columns H-I) as employees reach milestones "
+         "— Days Until Milestone (col J) and Status (col K) update automatically.", False),
+        ("NOTE: Square Labor column headers in the Labor-Import tab are PLACEHOLDERS — update "
+         "Labor-Import row 2 headers to match Rez's actual Square Labor export column names "
+         "before using Overtime-Tracker formulas in production.", False),
     ]
 
     for r, (text, is_header) in enumerate(content, start=2):
@@ -645,6 +661,324 @@ def build_employee_roster(ws):
     note_cell.alignment = Alignment(horizontal="left", wrap_text=True)
     ws.merge_cells(start_row=note_row, start_column=1, end_row=note_row, end_column=11)
     ws.row_dimensions[note_row].height = 52
+
+
+def build_overtime_tracker(ws):
+    """
+    Build the Overtime-Tracker tab.
+
+    Layout:
+      Row 1:  "Week Starting:" label (A1, bold), B1 = manual entry cell (WeekStart reference)
+      Row 2:  blank spacer
+      Row 3:  Column headers (A=Employee Name, B-H=Mon-Sun, I=Weekly Total, J=OT Hrs, K=Reg Hrs, L=Status)
+      Row 4+: One row per employee from PAYROLL_SAMPLE_EMPLOYEES
+
+    SUMIFS formulas use MATCH-based column references (NOT hardcoded column letters)
+    so they survive column reordering in real Square Labor exports.
+
+    CRITICAL (PAY-04): Daily SUMIFS does NOT include Location as a criterion —
+    aggregates ALL shifts for each employee across ALL locations.
+    """
+    apply_tab_color(ws, TAB_AMBER)
+
+    # --- Row 1: Week Starting label + manual entry cell ---
+    ws.cell(row=1, column=1, value="Week Starting:").font = FONT_BOLD
+    ws.cell(row=1, column=1).alignment = ALIGN_LEFT
+
+    week_cell = ws.cell(row=1, column=2)
+    week_cell.value         = "2026-03-09"  # Monday of sample week (pre-populated for sample data)
+    week_cell.number_format = "YYYY-MM-DD"
+    week_cell.fill          = FILL_MANUAL_ENTRY
+    week_cell.font          = FONT_DEFAULT
+    week_cell.alignment     = ALIGN_CENTER
+    week_cell.comment       = Comment(
+        "Enter Monday's date for this pay week. "
+        "All daily hour columns reference this cell to determine which date to sum.",
+        "Build Script"
+    )
+
+    # --- Row 2: blank spacer ---
+    ws.row_dimensions[2].height = 8
+
+    # --- Row 3: Column headers ---
+    col_headers = [
+        "Employee Name",
+        "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun",
+        "Weekly Total", "Overtime Hrs", "Regular Hrs", "Status",
+    ]
+    for col_idx, h in enumerate(col_headers, start=1):
+        cell = ws.cell(row=3, column=col_idx)
+        style_header_cell(cell, h, fill=FILL_CALC_HDR)
+    ws.row_dimensions[3].height = 22
+
+    # --- Row 4+: One row per employee ---
+    # MATCH-based SUMIFS so formulas survive real CSV column reordering.
+    # Labor-Import uses row 2 for headers (row 1 is the placeholder notice).
+    # B$1 = WeekStart cell.  +0 through +6 = Mon through Sun offsets.
+    #
+    # Formula template (no Location filter — PAY-04 cross-location aggregation):
+    #   =SUMIFS(
+    #     INDEX('Labor-Import'!A:Z,0,MATCH("Total Hours",'Labor-Import'!2:2,0)),
+    #     INDEX('Labor-Import'!A:Z,0,MATCH("Employee Name",'Labor-Import'!2:2,0)),
+    #     A{row},
+    #     INDEX('Labor-Import'!A:Z,0,MATCH("Date",'Labor-Import'!2:2,0)),
+    #     B$1+{day_offset}
+    #   )
+
+    def sumifs_daily(row, day_offset):
+        return (
+            "=SUMIFS("
+            "INDEX('Labor-Import'!A:Z,0,MATCH(\"Total Hours\",'Labor-Import'!2:2,0)),"
+            "INDEX('Labor-Import'!A:Z,0,MATCH(\"Employee Name\",'Labor-Import'!2:2,0)),"
+            f"A{row},"
+            "INDEX('Labor-Import'!A:Z,0,MATCH(\"Date\",'Labor-Import'!2:2,0)),"
+            f"B$1+{day_offset}"
+            ")"
+        )
+
+    for i, emp_name in enumerate(PAYROLL_SAMPLE_EMPLOYEES):
+        row = i + 4  # rows 4, 5, 6, ...
+
+        # Col A: Employee name (static)
+        cell_a = ws.cell(row=row, column=1, value=emp_name)
+        cell_a.font      = FONT_DEFAULT
+        cell_a.alignment = ALIGN_LEFT
+        cell_a.fill      = FILL_ALT_ROW if row % 2 == 0 else FILL_WHITE
+
+        # Cols B-H: Mon (+0) through Sun (+6) daily hour totals via SUMIFS
+        for day_offset in range(7):
+            col = 2 + day_offset  # B=2 (Mon) through H=8 (Sun)
+            cell = ws.cell(row=row, column=col)
+            cell.value         = sumifs_daily(row, day_offset)
+            cell.number_format = "0.0"
+            cell.alignment     = ALIGN_CENTER
+            cell.font          = FONT_DEFAULT
+            cell.fill          = FILL_ALT_ROW if row % 2 == 0 else FILL_WHITE
+
+        # Col I: Weekly Total =SUM(B{row}:H{row})
+        cell_i = ws.cell(row=row, column=9)
+        cell_i.value         = f"=SUM(B{row}:H{row})"
+        cell_i.number_format = "0.0"
+        cell_i.alignment     = ALIGN_CENTER
+        cell_i.font          = FONT_DEFAULT
+        cell_i.fill          = FILL_ALT_ROW if row % 2 == 0 else FILL_WHITE
+
+        # Col J: Overtime Hrs =MAX(I{row}-40,0)
+        cell_j = ws.cell(row=row, column=10)
+        cell_j.value         = f"=MAX(I{row}-40,0)"
+        cell_j.number_format = "0.0"
+        cell_j.alignment     = ALIGN_CENTER
+        cell_j.font          = FONT_DEFAULT
+        cell_j.fill          = FILL_ALT_ROW if row % 2 == 0 else FILL_WHITE
+
+        # Col K: Regular Hrs =MIN(I{row},40)
+        cell_k = ws.cell(row=row, column=11)
+        cell_k.value         = f"=MIN(I{row},40)"
+        cell_k.number_format = "0.0"
+        cell_k.alignment     = ALIGN_CENTER
+        cell_k.font          = FONT_DEFAULT
+        cell_k.fill          = FILL_ALT_ROW if row % 2 == 0 else FILL_WHITE
+
+        # Col L: Status =IF(I{row}>=38,"HIGH",IF(I{row}>=32,"WARN","OK"))
+        cell_l = ws.cell(row=row, column=12)
+        cell_l.value         = f'=IF(I{row}>=38,"HIGH",IF(I{row}>=32,"WARN","OK"))'
+        cell_l.alignment     = ALIGN_CENTER
+        cell_l.font          = FONT_DEFAULT
+        cell_l.fill          = FILL_ALT_ROW if row % 2 == 0 else FILL_WHITE
+
+    # --- Conditional formatting on I4:I100 (Weekly Total) ---
+    # Priority order: Red first (highest priority), then Amber, then Green.
+    # CF rules are evaluated in order — first match wins in Excel/Sheets.
+    ws.conditional_formatting.add(
+        "I4:I100",
+        CellIsRule(
+            operator="greaterThanOrEqual",
+            formula=["38"],
+            fill=FILL_CF_RED,
+            font=Font(color="9C0006", bold=True, name="Calibri", size=11),
+        )
+    )
+    ws.conditional_formatting.add(
+        "I4:I100",
+        FormulaRule(
+            formula=["AND(I4>=32,I4<38)"],
+            fill=FILL_CF_AMBER,
+            font=Font(color="7F4F00", bold=True, name="Calibri", size=11),
+        )
+    )
+    ws.conditional_formatting.add(
+        "I4:I100",
+        CellIsRule(
+            operator="lessThan",
+            formula=["32"],
+            fill=FILL_CF_GREEN,
+            font=Font(color="006100", name="Calibri", size=11),
+        )
+    )
+
+    # --- Conditional formatting on L4:L100 (Status column) ---
+    ws.conditional_formatting.add(
+        "L4:L100",
+        FormulaRule(
+            formula=['L4="HIGH"'],
+            fill=FILL_CF_RED,
+            font=Font(color="9C0006", bold=True, name="Calibri", size=11),
+        )
+    )
+    ws.conditional_formatting.add(
+        "L4:L100",
+        FormulaRule(
+            formula=['L4="WARN"'],
+            fill=FILL_CF_AMBER,
+            font=Font(color="7F4F00", bold=True, name="Calibri", size=11),
+        )
+    )
+    ws.conditional_formatting.add(
+        "L4:L100",
+        FormulaRule(
+            formula=['L4="OK"'],
+            fill=FILL_CF_GREEN,
+            font=Font(color="006100", name="Calibri", size=11),
+        )
+    )
+
+    # --- Freeze pane at A4 ---
+    freeze(ws, "A4")
+
+    # --- Column widths ---
+    ws.column_dimensions["A"].width = 20
+    for col_letter in ["B", "C", "D", "E", "F", "G", "H"]:
+        ws.column_dimensions[col_letter].width = 8
+    for col_letter in ["I", "J", "K"]:
+        ws.column_dimensions[col_letter].width = 12
+    ws.column_dimensions["L"].width = 10
+
+
+def build_payroll_output(ws):
+    """
+    Build the Payroll-Output tab with Gusto-ready columns.
+
+    Layout:
+      Row 1:  "Pay Period Ending:" label (A1, bold), B1 = manual entry cell
+      Row 2:  blank spacer
+      Row 3:  Column headers
+      Row 4+: One row per employee
+
+    Columns:
+      A: Employee Name  — ='Overtime-Tracker'!A{row}
+      B: Regular Hours  — ='Overtime-Tracker'!K{row}
+      C: Overtime Hours — ='Overtime-Tracker'!J{row}
+      D: Current Pay Rate — VLOOKUP into Employee-Roster col B (Square Name) → col D (Hourly Rate)
+      E: Estimated Gross Pay — IFERROR((B*D)+(C*D*1.5),"")
+      F: Pay Period — =$B$1 (reference to pay period ending cell)
+    """
+    apply_tab_color(ws, TAB_AMBER)
+
+    # --- Row 1: Pay Period Ending label + manual entry cell ---
+    ws.cell(row=1, column=1, value="Pay Period Ending:").font = FONT_BOLD
+    ws.cell(row=1, column=1).alignment = ALIGN_LEFT
+
+    pay_cell = ws.cell(row=1, column=2)
+    pay_cell.value         = "2026-03-15"  # Friday of sample week
+    pay_cell.number_format = "YYYY-MM-DD"
+    pay_cell.fill          = FILL_MANUAL_ENTRY
+    pay_cell.font          = FONT_DEFAULT
+    pay_cell.alignment     = ALIGN_CENTER
+    pay_cell.comment       = Comment(
+        "Enter the last day of the pay period.",
+        "Build Script"
+    )
+
+    # --- Row 2: blank spacer ---
+    ws.row_dimensions[2].height = 8
+
+    # --- Row 3: Column headers ---
+    col_headers = [
+        "Employee Name", "Regular Hours", "Overtime Hours",
+        "Current Pay Rate", "Estimated Gross Pay", "Pay Period",
+    ]
+    for col_idx, h in enumerate(col_headers, start=1):
+        cell = ws.cell(row=3, column=col_idx)
+        style_header_cell(cell, h, fill=FILL_CALC_HDR)
+    ws.row_dimensions[3].height = 22
+
+    # Add disclaimer comment on E3 (Estimated Gross Pay header)
+    e3_comment = Comment(
+        "Estimate only — does not include tips, deductions, or tax withholding. "
+        "Verify against Gusto for actual payroll.",
+        "Build Script"
+    )
+    ws.cell(row=3, column=5).comment = e3_comment
+
+    # --- Row 4+: One row per employee ---
+    for i, _ in enumerate(PAYROLL_SAMPLE_EMPLOYEES):
+        row = i + 4
+
+        # Col A: Employee Name — direct reference to Overtime-Tracker col A
+        cell_a = ws.cell(row=row, column=1)
+        cell_a.value     = f"='Overtime-Tracker'!A{row}"
+        cell_a.font      = FONT_DEFAULT
+        cell_a.alignment = ALIGN_LEFT
+        cell_a.fill      = FILL_ALT_ROW if row % 2 == 0 else FILL_WHITE
+
+        # Col B: Regular Hours — Overtime-Tracker col K (Regular Hrs)
+        cell_b = ws.cell(row=row, column=2)
+        cell_b.value         = f"='Overtime-Tracker'!K{row}"
+        cell_b.number_format = "0.0"
+        cell_b.alignment     = ALIGN_CENTER
+        cell_b.font          = FONT_DEFAULT
+        cell_b.fill          = FILL_ALT_ROW if row % 2 == 0 else FILL_WHITE
+
+        # Col C: Overtime Hours — Overtime-Tracker col J (Overtime Hrs)
+        cell_c = ws.cell(row=row, column=3)
+        cell_c.value         = f"='Overtime-Tracker'!J{row}"
+        cell_c.number_format = "0.0"
+        cell_c.alignment     = ALIGN_CENTER
+        cell_c.font          = FONT_DEFAULT
+        cell_c.fill          = FILL_ALT_ROW if row % 2 == 0 else FILL_WHITE
+
+        # Col D: Current Pay Rate
+        # VLOOKUP uses col B (Square Name) of Employee-Roster as the lookup key.
+        # Employee-Roster col B:D range — col B=Square Name, col C=Location, col D=Hourly Rate
+        # 3rd column in the B:D range = Hourly Rate (col D)
+        cell_d = ws.cell(row=row, column=4)
+        cell_d.value = (
+            f"=IFERROR(VLOOKUP(A{row},'Employee-Roster'!B:D,3,FALSE),\"RATE NOT FOUND\")"
+        )
+        cell_d.number_format = '"$"#,##0.00'
+        cell_d.alignment     = ALIGN_CENTER
+        cell_d.font          = FONT_DEFAULT
+        cell_d.fill          = FILL_ALT_ROW if row % 2 == 0 else FILL_WHITE
+
+        # Col E: Estimated Gross Pay = (RegHrs * Rate) + (OTHrs * Rate * 1.5)
+        # IFERROR handles "RATE NOT FOUND" text in col D
+        cell_e = ws.cell(row=row, column=5)
+        cell_e.value = (
+            f"=IFERROR((B{row}*D{row})+(C{row}*D{row}*1.5),\"\")"
+        )
+        cell_e.number_format = '"$"#,##0.00'
+        cell_e.alignment     = ALIGN_CENTER
+        cell_e.font          = FONT_DEFAULT
+        cell_e.fill          = FILL_ALT_ROW if row % 2 == 0 else FILL_WHITE
+
+        # Col F: Pay Period — reference to pay period ending cell B1
+        cell_f = ws.cell(row=row, column=6)
+        cell_f.value         = "=$B$1"
+        cell_f.number_format = "YYYY-MM-DD"
+        cell_f.alignment     = ALIGN_CENTER
+        cell_f.font          = FONT_DEFAULT
+        cell_f.fill          = FILL_ALT_ROW if row % 2 == 0 else FILL_WHITE
+
+    # --- Freeze pane at A4 ---
+    freeze(ws, "A4")
+
+    # --- Column widths ---
+    ws.column_dimensions["A"].width = 20
+    ws.column_dimensions["B"].width = 14
+    ws.column_dimensions["C"].width = 14
+    ws.column_dimensions["D"].width = 16
+    ws.column_dimensions["E"].width = 20
+    ws.column_dimensions["F"].width = 14
 
 
 def build_prior_week(ws):
@@ -1322,6 +1656,10 @@ def build_workbook(output_path=None):
         ("TS1-Calc",        TAB_CALC,   lambda ws: build_location_calc(ws, "TS1")),
         ("TS2-Calc",        TAB_CALC,   lambda ws: build_location_calc(ws, "TS2")),
         ("Summary",         TAB_AMBER,  lambda ws: build_summary(ws)),
+        # Phase 2 — Payroll Prep tabs
+        ("Labor-Import",      TAB_IMPORT, lambda ws: build_labor_import(ws)),
+        ("Overtime-Tracker",  TAB_AMBER,  lambda ws: build_overtime_tracker(ws)),
+        ("Payroll-Output",    TAB_AMBER,  lambda ws: build_payroll_output(ws)),
     ]
 
     for tab_name, tab_color, builder_fn in tab_defs:
