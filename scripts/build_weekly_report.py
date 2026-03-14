@@ -42,6 +42,7 @@ from sample_data import (
     SQUARE_SAMPLE_ROWS, DOORDASH_SAMPLE_ROWS, UBEREATS_SAMPLE_ROWS,
     GRUBHUB_SAMPLE_ROWS, BEK_SAMPLE_ROWS, SQUARE_LABOR_SAMPLE_ROWS,
     EMPLOYEE_ROSTER, PRIOR_WEEK_HEADERS, PRIOR_WEEK_SAMPLE,
+    PAYROLL_SAMPLE_EMPLOYEES,
 )
 
 # ==============================================================================
@@ -84,6 +85,7 @@ FILL_MANUAL_ENTRY = PatternFill("solid", fgColor="FFF9C4") # light yellow — ma
 # Conditional formatting fills
 FILL_CF_GREEN = PatternFill(start_color="D9EAD3", end_color="D9EAD3", fill_type="solid")
 FILL_CF_RED   = PatternFill(start_color="FBE4E4", end_color="FBE4E4", fill_type="solid")
+FILL_CF_AMBER = PatternFill(start_color="FFE0B2", end_color="FFE0B2", fill_type="solid")  # milestone approaching (<=30 days)
 
 # Fonts
 FONT_DEFAULT = Font(name="Calibri", size=11)
@@ -374,14 +376,175 @@ def build_import_tab(ws, tab_name, headers, sample_rows):
     date_cell.comment = comment
 
 
+def build_labor_import(ws):
+    """
+    Build the Labor-Import tab for Square Labor CSV paste-in.
+
+    Layout:
+      Row 1: PLACEHOLDER notice (merged) with cell comment on A1
+      Row 2: Column headers from SQUARE_LABOR_HEADERS with comment on B2
+      Row 3: Validation row — ISNUMBER() for hours columns, ISTEXT() for name/location,
+             type-label for date/time columns
+      Row 4+: Sample data from SQUARE_LABOR_SAMPLE_ROWS
+      Freeze pane at A4 so headers stay visible while scrolling data.
+
+    NOTE: Headers are PLACEHOLDERS — must be updated to match Rez's actual
+    Square Labor CSV export column names before any SUMIFS formulas are written.
+    The ISNUMBER validation in row 3 uses MATCH-based references (same pattern
+    as build_import_tab) so they survive column reordering in the real CSV.
+    """
+    apply_tab_color(ws, TAB_IMPORT)
+
+    tab_name = "Labor-Import"
+    headers  = SQUARE_LABOR_HEADERS  # ["Date","Employee Name","Location","Clock In","Clock Out",
+                                      #  "Regular Hours","Overtime Hours","Total Hours"]
+
+    # --- Row 1: PLACEHOLDER notice (merged across all columns) ---
+    ws.merge_cells(start_row=1, start_column=1, end_row=1, end_column=len(headers))
+    notice_cell = ws.cell(row=1, column=1,
+        value="PLACEHOLDER HEADERS — Update row 2 to match your actual Square Labor CSV export column names exactly.")
+    notice_cell.font      = Font(name="Calibri", size=10, bold=True, color="7F4F00")
+    notice_cell.fill      = PatternFill("solid", fgColor="FFF2CC")
+    notice_cell.alignment = ALIGN_CENTER
+    ws.row_dimensions[1].height = 20
+
+    # Cell comment on A1 — extra context for Rez
+    a1_comment = Comment(
+        "PLACEHOLDER — update headers to match Rez's actual Square Labor export column names. "
+        "After your first export, paste the real headers into row 2 of this tab so SUMIFS "
+        "formulas in the Overtime-Tracker and Payroll-Output tabs resolve correctly.",
+        "Build Script"
+    )
+    ws.cell(row=1, column=1).comment = a1_comment
+
+    # --- Row 2: Column headers ---
+    for col_idx, header in enumerate(headers, start=1):
+        cell = ws.cell(row=2, column=col_idx)
+        style_header_cell(cell, header, fill=FILL_IMPORT_HDR)
+        ws.column_dimensions[get_column_letter(col_idx)].width = col_width_for(header)
+
+    # Cell comment on B2 — Employee Name column used by Overtime-Tracker SUMIFS
+    b2_comment = Comment(
+        "This is the Employee Name column — used by Overtime-Tracker SUMIFS. "
+        "Values must match the 'Square Name' column in Employee-Roster exactly "
+        "(including capitalization and spacing).",
+        "Build Script"
+    )
+    ws.cell(row=2, column=2).comment = b2_comment
+
+    freeze(ws, "A4")
+
+    # --- Row 3: Validation row ---
+    # Columns by type:
+    #   Date (col 0)      : type label
+    #   Employee Name (1) : ISTEXT validation via MATCH
+    #   Location (2)      : ISTEXT validation via MATCH
+    #   Clock In (3)      : type label (time — text in most CSV exports)
+    #   Clock Out (4)     : type label (time — text in most CSV exports)
+    #   Regular Hours (5) : ISNUMBER validation via MATCH
+    #   Overtime Hours (6): ISNUMBER validation via MATCH
+    #   Total Hours (7)   : ISNUMBER validation via MATCH
+
+    ISTEXT_COLS  = {"Employee Name", "Location"}
+    ISNUMBER_COLS = {"Regular Hours", "Overtime Hours", "Total Hours"}
+
+    for col_idx, header in enumerate(headers, start=1):
+        cell       = ws.cell(row=3, column=col_idx)
+        col_letter = get_column_letter(col_idx)
+
+        if header in ISNUMBER_COLS:
+            # MATCH-based formula — checks first data row (row 4) at this column's position
+            formula = (
+                f'=IF(ISNUMBER(INDEX({tab_name}!A:Z,4,'
+                f'MATCH("{header}",{tab_name}!2:2,0))),"OK",'
+                f'"PASTE ERROR - {header} is not a number")'
+            )
+            cell.value     = formula
+            cell.fill      = FILL_VALID_BAD
+            cell.font      = FONT_VALID_BAD
+            cell.alignment = ALIGN_CENTER
+
+        elif header in ISTEXT_COLS:
+            # ISTEXT check — Employee Name and Location should be text strings
+            formula = (
+                f'=IF(ISTEXT(INDEX({tab_name}!A:Z,4,'
+                f'MATCH("{header}",{tab_name}!2:2,0))),"OK",'
+                f'"CHECK - {header} should be text")'
+            )
+            cell.value     = formula
+            cell.fill      = FILL_VALID_BAD
+            cell.font      = FONT_VALID_BAD
+            cell.alignment = ALIGN_CENTER
+
+        else:
+            # Date / Clock In / Clock Out — text/date label only
+            cell.value     = f'[{header} — text/date]'
+            cell.fill      = PatternFill("solid", fgColor="F3F3F3")
+            cell.font      = Font(name="Calibri", size=9, color="888888", italic=True)
+            cell.alignment = ALIGN_CENTER
+
+        ws.row_dimensions[3].height = 22
+
+    # Conditional formatting on row 3: cells that return "OK" turn green
+    ok_fill = PatternFill(start_color="D9EAD3", end_color="D9EAD3", fill_type="solid")
+    ok_font = Font(color="006100", bold=True, name="Calibri", size=10)
+    for col_idx in range(1, len(headers) + 1):
+        col_letter = get_column_letter(col_idx)
+        ws.conditional_formatting.add(
+            f"{col_letter}3",
+            FormulaRule(
+                formula=[f'={col_letter}3="OK"'],
+                fill=ok_fill,
+                font=ok_font,
+                stopIfTrue=False,
+            )
+        )
+
+    # --- Rows 4+: Sample data from SQUARE_LABOR_SAMPLE_ROWS ---
+    for r_idx, row_data in enumerate(SQUARE_LABOR_SAMPLE_ROWS, start=4):
+        for c_idx, value in enumerate(row_data, start=1):
+            cell           = ws.cell(row=r_idx, column=c_idx, value=value)
+            cell.font      = FONT_DEFAULT
+            cell.alignment = ALIGN_LEFT
+            if r_idx % 2 == 0:
+                cell.fill = FILL_ALT_ROW
+            else:
+                cell.fill = FILL_WHITE
+
+    # --- Last Updated marker ---
+    last_data_row = 3 + len(SQUARE_LABOR_SAMPLE_ROWS)
+    label_row     = last_data_row + 2
+    ws.cell(row=label_row, column=1, value="Last Updated:").font = FONT_BOLD
+    date_cell = ws.cell(row=label_row, column=2, value="")
+    date_cell.number_format = "YYYY-MM-DD"
+    date_cell.fill          = PatternFill("solid", fgColor="FFF9C4")
+    date_cell.comment       = Comment("Enter the date you pasted this data.", "Build Script")
+
+
 def build_employee_roster(ws):
-    """Build the Employee-Roster reference tab."""
+    """
+    Build the Employee-Roster reference tab.
+
+    Columns A-G: core employee data (existing)
+    Columns H-K: milestone tracking (added in Plan 02-01)
+      H: Next Milestone Date  (static date string from EMPLOYEE_ROSTER[7])
+      I: Milestone Type       (static text from EMPLOYEE_ROSTER[8])
+      J: Days Until Milestone (formula: =IFERROR(H{row}-TODAY(),"") — integer)
+      K: Milestone Status     (formula: =IF(J{row}="","",IF(J{row}<=0,"OVERDUE",IF(J{row}<=30,"SOON","OK"))))
+
+    Conditional formatting on J2:J100:
+      Red  (FILL_CF_RED)  + bold red:   =AND(J2<>"",J2<=0)  — overdue
+      Amber (FILL_CF_AMBER) + bold:      =AND(J2>0,J2<=30)  — approaching
+    """
     apply_tab_color(ws, TAB_GREEN)
 
-    headers = ["Employee Name", "Square Name", "Location", "Hourly Rate",
-               "Hire Date", "Pay Tier", "Notes"]
+    headers = [
+        "Employee Name", "Square Name", "Location", "Hourly Rate",
+        "Hire Date", "Pay Tier", "Notes",
+        "Next Milestone Date", "Milestone Type", "Days Until Milestone", "Milestone Status",
+    ]
 
-    # Row 1: headers
+    # Row 1: headers (A-K)
     for col_idx, h in enumerate(headers, start=1):
         cell = ws.cell(row=1, column=col_idx)
         style_header_cell(cell, h, fill=FILL_CALC_HDR)
@@ -389,7 +552,7 @@ def build_employee_roster(ws):
 
     freeze(ws, "A2")
 
-    # Data validation: Location dropdown
+    # Data validation: Location dropdown on column C
     loc_ids = ",".join(LOCATIONS.keys())
     loc_dv = DataValidation(
         type="list",
@@ -401,35 +564,87 @@ def build_employee_roster(ws):
     )
     ws.add_data_validation(loc_dv)
 
-    # Populate sample employees
+    # Populate sample employees (cols A-I static; J and K are formulas)
     for r_idx, emp in enumerate(EMPLOYEE_ROSTER, start=2):
-        name, sq_name, loc, rate, hire, tier, notes = emp
-        row = [name, sq_name, loc, rate, hire, tier, notes]
-        for c_idx, val in enumerate(row, start=1):
-            cell = ws.cell(row=r_idx, column=c_idx, value=val)
-            cell.font = FONT_DEFAULT
+        name, sq_name, loc, rate, hire, tier, notes, milestone_date, milestone_type, _j, _k = emp
+
+        # Columns A-I: static data
+        static_row = [name, sq_name, loc, rate, hire, tier, notes, milestone_date, milestone_type]
+        for c_idx, val in enumerate(static_row, start=1):
+            cell           = ws.cell(row=r_idx, column=c_idx, value=val)
+            cell.font      = FONT_DEFAULT
             cell.alignment = ALIGN_LEFT
             if r_idx % 2 == 0:
                 cell.fill = FILL_ALT_ROW
             else:
                 cell.fill = FILL_WHITE
 
-        # Hourly Rate: currency format
+        # Hourly Rate (col D=4): currency format
         ws.cell(row=r_idx, column=4).number_format = '"$"#,##0.00'
-        # Hire Date: date format
+        # Hire Date (col E=5): date format
         ws.cell(row=r_idx, column=5).number_format = "YYYY-MM-DD"
-        # Location: add to data validation range
+        # Next Milestone Date (col H=8): date format (blank cells show nothing)
+        ws.cell(row=r_idx, column=8).number_format = "YYYY-MM-DD"
+        # Location (col C=3): add to data validation range
         loc_dv.add(ws.cell(row=r_idx, column=3))
 
-    # Note about Square Name column
+        # Column J (10): Days Until Milestone formula
+        # =IFERROR(H{row}-TODAY(),"") — subtracts today's date from milestone date
+        # Returns "" when H is blank (IFERROR catches #VALUE! on empty string)
+        j_cell           = ws.cell(row=r_idx, column=10)
+        j_cell.value     = f'=IFERROR(H{r_idx}-TODAY(),"")'
+        j_cell.font      = FONT_DEFAULT
+        j_cell.alignment = ALIGN_CENTER
+        j_cell.number_format = '0'  # integer days
+        if r_idx % 2 == 0:
+            j_cell.fill = FILL_ALT_ROW
+        else:
+            j_cell.fill = FILL_WHITE
+
+        # Column K (11): Milestone Status formula
+        # =IF(J="","", IF(J<=0,"OVERDUE", IF(J<=30,"SOON","OK")))
+        k_cell           = ws.cell(row=r_idx, column=11)
+        k_cell.value     = f'=IF(J{r_idx}="","",IF(J{r_idx}<=0,"OVERDUE",IF(J{r_idx}<=30,"SOON","OK")))'
+        k_cell.font      = FONT_DEFAULT
+        k_cell.alignment = ALIGN_CENTER
+        if r_idx % 2 == 0:
+            k_cell.fill = FILL_ALT_ROW
+        else:
+            k_cell.fill = FILL_WHITE
+
+    # --- Conditional formatting on J2:J100 ---
+    # Red: overdue (days <= 0, cell not blank)
+    ws.conditional_formatting.add(
+        "J2:J100",
+        FormulaRule(
+            formula=["AND(J2<>\"\",J2<=0)"],
+            fill=FILL_CF_RED,
+            font=Font(color="9C0006", bold=True, name="Calibri", size=11),
+            stopIfTrue=True,
+        )
+    )
+    # Amber: approaching (1–30 days remaining)
+    ws.conditional_formatting.add(
+        "J2:J100",
+        FormulaRule(
+            formula=["AND(J2>0,J2<=30)"],
+            fill=FILL_CF_AMBER,
+            font=Font(color="7F4F00", bold=True, name="Calibri", size=11),
+            stopIfTrue=False,
+        )
+    )
+
+    # --- Note row — spans A through K (all 11 columns) ---
     note_row = len(EMPLOYEE_ROSTER) + 3
     note_cell = ws.cell(row=note_row, column=1,
         value="NOTE: 'Square Name' must match the employee name exactly as it appears in Square's clock-in export. "
-              "This is the VLOOKUP key for labor cost calculations. Nicknames, capitalization, and spacing must match.")
-    note_cell.font  = Font(name="Calibri", size=10, italic=True, color="666666")
+              "This is the VLOOKUP key for labor cost calculations. Nicknames, capitalization, and spacing must match. "
+              "Milestone columns H-K: enter Next Milestone Date (col H) and Milestone Type (col I) manually; "
+              "Days Until Milestone (col J) and Status (col K) update automatically via formula.")
+    note_cell.font      = Font(name="Calibri", size=10, italic=True, color="666666")
     note_cell.alignment = Alignment(horizontal="left", wrap_text=True)
-    ws.merge_cells(start_row=note_row, start_column=1, end_row=note_row, end_column=7)
-    ws.row_dimensions[note_row].height = 40
+    ws.merge_cells(start_row=note_row, start_column=1, end_row=note_row, end_column=11)
+    ws.row_dimensions[note_row].height = 52
 
 
 def build_prior_week(ws):
