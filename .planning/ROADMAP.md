@@ -43,10 +43,11 @@ Plans:
   2. Overtime tracker color-codes every employee: green under 32 hrs, yellow 32-38 hrs, red 38+ hrs — with cross-location aggregation applied before threshold
   3. Employee roster shows hire date, current pay rate, pay tier, next milestone date, and days until milestone — auto-flagging anyone approaching a raise
   4. Gusto-ready output tab contains employee name, total hours, overtime hours, and current pay rate in Gusto's exact import column format
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
-- [ ] 02-01: TBD
+- [ ] 02-01-PLAN.md — Data foundation: extend sample data with multi-location labor rows, extend Employee Roster with milestone columns H-K, build Labor-Import tab
+- [ ] 02-02-PLAN.md — Formula engine: Overtime-Tracker with cross-location SUMIFS aggregation, Payroll-Output with Gusto-ready VLOOKUP formulas, wire 17-tab workbook
 
 ### Phase 3: Daily Checklist App
 **Goal**: Staff at any location can complete a shift checklist on a shared tablet without logging in; managers can see today's completion status across all locations from a single dashboard view.
@@ -71,5 +72,5 @@ Phases execute in numeric order: 1 → 2 → 3
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Weekly Reporting | 2/2 | Complete | 2026-03-14 |
-| 2. Payroll Prep | 0/TBD | Not started | - |
+| 2. Payroll Prep | 0/2 | Not started | - |
 | 3. Daily Checklist App | 0/TBD | Not started | - |
