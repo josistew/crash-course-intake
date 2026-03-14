@@ -31,7 +31,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 **Plans**: 2 plans
 
 Plans:
-- [ ] 01-01-PLAN.md — Workbook scaffold: 14 tabs, import tab layouts with placeholder headers and validation rows, Instructions tab, Employee Roster, sample data
+- [x] 01-01-PLAN.md — Workbook scaffold: 14 tabs, import tab layouts with placeholder headers and validation rows, Instructions tab, Employee Roster, sample data
 - [ ] 01-02-PLAN.md — Formula engine: MATCH-based SUMIFS on calc tabs, Summary tab with cross-tab KPIs and WoW variance formatting
 
 ### Phase 2: Payroll Prep
@@ -70,6 +70,6 @@ Phases execute in numeric order: 1 → 2 → 3
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Weekly Reporting | 0/2 | Planning complete | - |
+| 1. Weekly Reporting | 1/2 | In progress | - |
 | 2. Payroll Prep | 0/TBD | Not started | - |
 | 3. Daily Checklist App | 0/TBD | Not started | - |

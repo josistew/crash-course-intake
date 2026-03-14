@@ -10,28 +10,28 @@ See: .planning/PROJECT.md (updated 2026-03-14)
 ## Current Position
 
 Phase: 1 of 3 (Weekly Reporting)
-Plan: 0 of TBD in current phase
-Status: Ready to plan
-Last activity: 2026-03-14 — Roadmap created, phases derived from requirements
+Plan: 1 of 2 in current phase
+Status: In progress
+Last activity: 2026-03-14 — Plan 01-01 complete (workbook scaffold)
 
-Progress: [░░░░░░░░░░] 0%
+Progress: [█░░░░░░░░░] 10%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 0
-- Average duration: -
-- Total execution time: 0 hours
+- Total plans completed: 1
+- Average duration: 5 minutes
+- Total execution time: 0.1 hours
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
-| - | - | - | - |
+| 1. Weekly Reporting | 1 | 5 min | 5 min |
 
 **Recent Trend:**
-- Last 5 plans: -
-- Trend: -
+- Last 5 plans: 01-01 (5 min)
+- Trend: N/A (first plan)
 
 *Updated after each plan completion*
 
@@ -46,6 +46,10 @@ Recent decisions affecting current work:
 - [Init]: Google Sheets for reporting/payroll — Rez already lives in Google Workspace
 - [Init]: Next.js + Vercel for checklist — proven LeaseJenny pattern, free hosting
 - [Init]: Google Sheets as checklist data store — keeps everything in Google ecosystem
+- [01-01]: Placeholder headers in import tabs with ISNUMBER validation on MATCH-based formula — survives CSV column reorder
+- [01-01]: Prior-Week tab uses 26-column date-keyed structure; row-offset WoW explicitly avoided
+- [01-01]: Employee-Roster Square Name column is the VLOOKUP key to handle nickname mismatches
+- [01-01]: Location Calc and Summary tabs structure-only — formulas deferred to Plan 02 pending real CSV exports from Rez
 
 ### Pending Todos
 
@@ -62,5 +66,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-03-14
-Stopped at: Roadmap created, STATE.md initialized — ready to run /gsd:plan-phase 1
+Stopped at: Completed 01-01-PLAN.md — workbook scaffold complete, ready for Plan 02
 Resume file: None
