@@ -9,12 +9,12 @@ See: .planning/PROJECT.md (updated 2026-03-14)
 
 ## Current Position
 
-Phase: 1 of 3 (Weekly Reporting)
-Plan: 2 of 2 in current phase
-Status: Phase 1 complete — all plans executed and verified
-Last activity: 2026-03-14 — Plan 01-02 checkpoint approved, Phase 1 (Weekly Reporting) complete
+Phase: 2 of 3 (Payroll Prep)
+Plan: 1 of 2 in current phase (02-01 complete, 02-02 next)
+Status: Phase 2 in progress — Plan 02-01 executed and verified
+Last activity: 2026-03-14 — Plan 02-01 complete: Labor-Import tab built, Employee Roster extended with milestone columns H-K
 
-Progress: [████░░░░░░] 40%
+Progress: [█████░░░░░] 50%
 
 ## Performance Metrics
 
@@ -28,9 +28,10 @@ Progress: [████░░░░░░] 40%
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
 | 1. Weekly Reporting | 2 | 10 min | 5 min |
+| 2. Payroll Prep | 1 | 4 min | 4 min |
 
 **Recent Trend:**
-- Last 5 plans: 01-01 (5 min), 01-02 (5 min)
+- Last 5 plans: 01-01 (5 min), 01-02 (5 min), 02-01 (4 min)
 - Trend: Stable
 
 *Updated after each plan completion*
@@ -54,6 +55,10 @@ Recent decisions affecting current work:
 - [01-02]: BEK allocation = food-category SUMIF / 5 locations; falls back to all-items / 5 if no Category column
 - [01-02]: Est. Labor Cost is manual entry (yellow cell) for v1; Labor Cost % computed automatically; Phase 2 (PAY-01) automates
 - [01-02]: Summary WoW rows use raw +/- percentage with FormulaRule conditional formatting (not arrow-text strings)
+- [02-01]: build_labor_import freeze at A4 (not A3) — notice row pushes headers to row 2, data starts row 4
+- [02-01]: EMPLOYEE_ROSTER tuple extended to 11 elements; indices 9-10 are None (formula placeholders in Excel)
+- [02-01]: ISTEXT validation added for Employee Name/Location in Labor-Import row 3 — text paste errors as important as numeric ones
+- [02-01]: Conditional formatting stopIfTrue=True on red/overdue rule to prevent amber rule also firing for overdue cells
 
 ### Pending Todos
 
@@ -70,5 +75,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-03-14
-Stopped at: Completed 01-02-PLAN.md all 3 tasks — checkpoint:human-verify approved. Phase 1 (Weekly Reporting) fully complete. Next: Phase 2 (Payroll Prep).
+Stopped at: Completed 02-01-PLAN.md both tasks. Phase 2 Plan 1 (data foundation) fully complete. Next: Plan 02-02 — Overtime-Tracker formula engine, Payroll-Output Gusto tab, wire 17-tab workbook.
 Resume file: None
