@@ -13,7 +13,7 @@ Three systems that replace Rez's manual number-pulling workflow: a formula-drive
 Decimal phases appear between their surrounding integers in numeric order.
 
 - [x] **Phase 1: Weekly Reporting** - Operators paste CSVs into import tabs and get a consolidated, formula-driven weekly report across all 5 locations
-- [ ] **Phase 2: Payroll Prep** - Operators paste Square labor CSV and get overtime tracking, pay tier milestones, and a Gusto-ready output tab
+- [x] **Phase 2: Payroll Prep** - Operators paste Square labor CSV and get overtime tracking, pay tier milestones, and a Gusto-ready output tab
 - [ ] **Phase 3: Daily Checklist App** - Staff complete shift checklists on a shared tablet; managers see completion status across all locations
 
 ## Phase Details
@@ -47,7 +47,7 @@ Plans:
 
 Plans:
 - [x] 02-01-PLAN.md — Data foundation: extend sample data with multi-location labor rows, extend Employee Roster with milestone columns H-K, build Labor-Import tab
-- [ ] 02-02-PLAN.md — Formula engine: Overtime-Tracker with cross-location SUMIFS aggregation, Payroll-Output with Gusto-ready VLOOKUP formulas, wire 17-tab workbook
+- [x] 02-02-PLAN.md — Formula engine: Overtime-Tracker with cross-location SUMIFS aggregation, Payroll-Output with Gusto-ready VLOOKUP formulas, wire 17-tab workbook
 
 ### Phase 3: Daily Checklist App
 **Goal**: Staff at any location can complete a shift checklist on a shared tablet without logging in; managers can see today's completion status across all locations from a single dashboard view.
@@ -72,5 +72,5 @@ Phases execute in numeric order: 1 → 2 → 3
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Weekly Reporting | 2/2 | Complete | 2026-03-14 |
-| 2. Payroll Prep | 1/2 | In progress | - |
+| 2. Payroll Prep | 2/2 | Complete | 2026-03-14 |
 | 3. Daily Checklist App | 0/TBD | Not started | - |

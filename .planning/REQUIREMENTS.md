@@ -23,12 +23,12 @@ Requirements for initial release. Each maps to roadmap phases.
 ### Payroll
 
 - [ ] **PAY-01**: Operator can paste Square Labor CSV and daily hours per employee per location auto-populate
-- [ ] **PAY-02**: Weekly total hours per employee calculated with running daily breakdown
-- [ ] **PAY-03**: Overtime tracker flags employees approaching 40 hours by mid-week (color-coded: green <32, yellow 32-38, red 38+)
-- [ ] **PAY-04**: Cross-location hours aggregated per employee before overtime threshold applied (not per-location)
+- [x] **PAY-02**: Weekly total hours per employee calculated with running daily breakdown
+- [x] **PAY-03**: Overtime tracker flags employees approaching 40 hours by mid-week (color-coded: green <32, yellow 32-38, red 38+)
+- [x] **PAY-04**: Cross-location hours aggregated per employee before overtime threshold applied (not per-location)
 - [ ] **PAY-05**: Employee roster tab with hire date, current pay rate, pay tier, next milestone date, and days-until-milestone
 - [ ] **PAY-06**: Pay tier tracker auto-flags employees approaching a graduated raise milestone (90 days, certifications)
-- [ ] **PAY-07**: Gusto-ready prep output tab with employee name, total hours, overtime hours, and current pay rate
+- [x] **PAY-07**: Gusto-ready prep output tab with employee name, total hours, overtime hours, and current pay rate
 
 ### Daily Checklist
 
@@ -106,12 +106,12 @@ Which phases cover which requirements. Updated during roadmap creation.
 | RPT-09 | Phase 1 | Complete (01-02) |
 | RPT-10 | Phase 1 | Pending |
 | PAY-01 | Phase 2 | Pending |
-| PAY-02 | Phase 2 | Pending |
-| PAY-03 | Phase 2 | Pending |
-| PAY-04 | Phase 2 | Pending |
+| PAY-02 | Phase 2 | Complete (02-02) |
+| PAY-03 | Phase 2 | Complete (02-02) |
+| PAY-04 | Phase 2 | Complete (02-02) |
 | PAY-05 | Phase 2 | Pending |
 | PAY-06 | Phase 2 | Pending |
-| PAY-07 | Phase 2 | Pending |
+| PAY-07 | Phase 2 | Complete (02-02) |
 | CHK-01 | Phase 3 | Pending |
 | CHK-02 | Phase 3 | Pending |
 | CHK-03 | Phase 3 | Pending |
