@@ -59,10 +59,12 @@ Plans:
   3. Every completion writes to Google Sheets (staff name, location, shift, item, timestamp) — verified by checking the Completions-Log tab directly
   4. Manager dashboard shows today's checklist status across all locations — which shifts are complete, in progress, or not started — with no data entry required from managers
   5. App is deployed to Vercel, accessible via URL on store tablet bookmark, renders correctly on tablet screen without pinch-zoom
-**Plans**: TBD
+**Plans**: 3 plans
 
 Plans:
-- [ ] 03-01: TBD
+- [ ] 03-01-PLAN.md — Project scaffold and data layer: Next.js + Tailwind v4 + googleapis, Sheets auth, checklist config, Server Action for completions, session context
+- [ ] 03-02-PLAN.md — Staff checklist UI: session-start screen (location + shift + name), categorized checklist with tap-to-complete and notes
+- [ ] 03-03-PLAN.md — Manager dashboard, Google Sheet setup, Vercel deploy, and human verification
 
 ## Progress
 
@@ -73,4 +75,4 @@ Phases execute in numeric order: 1 → 2 → 3
 |-------|----------------|--------|-----------|
 | 1. Weekly Reporting | 2/2 | Complete | 2026-03-14 |
 | 2. Payroll Prep | 2/2 | Complete    | 2026-03-14 |
-| 3. Daily Checklist App | 0/TBD | Not started | - |
+| 3. Daily Checklist App | 0/3 | Not started | - |
