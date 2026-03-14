@@ -205,39 +205,132 @@ BEK_SAMPLE_ROWS = [
 
 # Square Labor (clock-in/clock-out) sample data
 # Columns: Date, Employee Name, Location, Clock In, Clock Out, Regular Hours, Overtime Hours, Total Hours
+#
+# Cross-location OT test case (PAY-04):
+#   Marcus Johnson works Mon-Fri at Moto Medi Lubbock (8 hrs/day = 40 hrs)
+#   PLUS two shifts at Moto Medi Amarillo on Tue and Thu (3 hrs each = 6 hrs extra)
+#   Weekly total: 46 hrs — proves cross-location aggregation triggers OT
+#
+# Split-shift test case:
+#   Marcus Johnson on 2026-03-10 has two rows (regular MML shift + MMA afternoon shift)
+#   to test SUMIFS aggregation across multiple rows per employee per day.
 SQUARE_LABOR_SAMPLE_ROWS = [
-    ["2026-03-09", "Marcus Johnson",    "Moto Medi Lubbock",   "08:00", "16:00", 8.0, 0.0, 8.0],
-    ["2026-03-09", "Ashley Torres",     "Moto Medi Lubbock",   "10:00", "18:00", 8.0, 0.0, 8.0],
-    ["2026-03-09", "Robert Kim",        "Moto Medi Amarillo",  "09:00", "17:00", 8.0, 0.0, 8.0],
-    ["2026-03-09", "Destiny Williams",  "Moto Medi Amarillo",  "11:00", "19:00", 8.0, 0.0, 8.0],
-    ["2026-03-09", "Jake Hernandez",    "Moto Medi 3rd",       "08:00", "16:00", 8.0, 0.0, 8.0],
-    ["2026-03-09", "Priya Patel",       "Tikka Shack 1",       "09:00", "17:00", 8.0, 0.0, 8.0],
-    ["2026-03-09", "Carlos Rivera",     "Tikka Shack 1",       "12:00", "20:00", 8.0, 0.0, 8.0],
-    ["2026-03-09", "Keisha Brown",      "Tikka Shack 2",       "10:00", "18:00", 8.0, 0.0, 8.0],
-    ["2026-03-10", "Marcus Johnson",    "Moto Medi Lubbock",   "08:00", "16:30", 8.0, 0.5, 8.5],
-    ["2026-03-10", "Ashley Torres",     "Moto Medi Lubbock",   "10:00", "18:00", 8.0, 0.0, 8.0],
-    ["2026-03-10", "Robert Kim",        "Moto Medi Amarillo",  "09:00", "17:00", 8.0, 0.0, 8.0],
-    ["2026-03-10", "Jake Hernandez",    "Moto Medi 3rd",       "08:00", "16:00", 8.0, 0.0, 8.0],
-    ["2026-03-10", "Priya Patel",       "Tikka Shack 1",       "09:00", "17:30", 8.0, 0.5, 8.5],
-    ["2026-03-10", "Keisha Brown",      "Tikka Shack 2",       "10:00", "18:00", 8.0, 0.0, 8.0],
+    # --- Monday 2026-03-09 ---
+    ["2026-03-09", "Marcus Johnson",    "Moto Medi Lubbock",   "08:00", "16:00", 8.0, 0.0,  8.0],
+    ["2026-03-09", "Ashley Torres",     "Moto Medi Lubbock",   "10:00", "18:00", 8.0, 0.0,  8.0],
+    ["2026-03-09", "Devon Scott",       "Moto Medi Lubbock",   "14:00", "18:00", 4.0, 0.0,  4.0],
+    ["2026-03-09", "Robert Kim",        "Moto Medi Amarillo",  "09:00", "17:00", 8.0, 0.0,  8.0],
+    ["2026-03-09", "Destiny Williams",  "Moto Medi Amarillo",  "11:00", "19:00", 8.0, 0.0,  8.0],
+    ["2026-03-09", "Jake Hernandez",    "Moto Medi 3rd",       "08:00", "16:00", 8.0, 0.0,  8.0],
+    ["2026-03-09", "Priya Patel",       "Tikka Shack 1",       "09:00", "17:00", 8.0, 0.0,  8.0],
+    ["2026-03-09", "Carlos Rivera",     "Tikka Shack 1",       "12:00", "20:00", 8.0, 0.0,  8.0],
+    ["2026-03-09", "Keisha Brown",      "Tikka Shack 2",       "10:00", "18:00", 8.0, 0.0,  8.0],
+    ["2026-03-09", "Jasmine Lee",       "Tikka Shack 2",       "14:00", "18:00", 4.0, 0.0,  4.0],
+
+    # --- Tuesday 2026-03-10 (split-shift day for Marcus: MML morning + MMA afternoon) ---
+    ["2026-03-10", "Marcus Johnson",    "Moto Medi Lubbock",   "08:00", "16:00", 8.0, 0.0,  8.0],
+    ["2026-03-10", "Marcus Johnson",    "Moto Medi Amarillo",  "17:00", "20:00", 3.0, 0.0,  3.0],  # cross-location shift
+    ["2026-03-10", "Ashley Torres",     "Moto Medi Lubbock",   "10:00", "18:00", 8.0, 0.0,  8.0],
+    ["2026-03-10", "Devon Scott",       "Moto Medi Lubbock",   "14:00", "18:00", 4.0, 0.0,  4.0],
+    ["2026-03-10", "Robert Kim",        "Moto Medi Amarillo",  "09:00", "17:00", 8.0, 0.0,  8.0],
+    ["2026-03-10", "Destiny Williams",  "Moto Medi Amarillo",  "11:00", "19:00", 8.0, 0.0,  8.0],
+    ["2026-03-10", "Jake Hernandez",    "Moto Medi 3rd",       "08:00", "16:00", 8.0, 0.0,  8.0],
+    ["2026-03-10", "Priya Patel",       "Tikka Shack 1",       "09:00", "17:30", 8.0, 0.5,  8.5],
+    ["2026-03-10", "Carlos Rivera",     "Tikka Shack 1",       "12:00", "20:00", 8.0, 0.0,  8.0],
+    ["2026-03-10", "Keisha Brown",      "Tikka Shack 2",       "10:00", "18:00", 8.0, 0.0,  8.0],
+
+    # --- Wednesday 2026-03-11 ---
+    ["2026-03-11", "Marcus Johnson",    "Moto Medi Lubbock",   "08:00", "16:00", 8.0, 0.0,  8.0],
+    ["2026-03-11", "Ashley Torres",     "Moto Medi Lubbock",   "10:00", "18:00", 8.0, 0.0,  8.0],
+    ["2026-03-11", "Robert Kim",        "Moto Medi Amarillo",  "09:00", "17:00", 8.0, 0.0,  8.0],
+    ["2026-03-11", "Destiny Williams",  "Moto Medi Amarillo",  "11:00", "19:00", 8.0, 0.0,  8.0],
+    ["2026-03-11", "Jake Hernandez",    "Moto Medi 3rd",       "08:00", "16:30", 8.0, 0.5,  8.5],
+    ["2026-03-11", "Priya Patel",       "Tikka Shack 1",       "09:00", "17:00", 8.0, 0.0,  8.0],
+    ["2026-03-11", "Carlos Rivera",     "Tikka Shack 1",       "12:00", "20:00", 8.0, 0.0,  8.0],
+    ["2026-03-11", "Keisha Brown",      "Tikka Shack 2",       "10:00", "18:00", 8.0, 0.0,  8.0],
+    ["2026-03-11", "Jasmine Lee",       "Tikka Shack 2",       "14:00", "18:00", 4.0, 0.0,  4.0],
+
+    # --- Thursday 2026-03-12 (Marcus cross-location shift again: MML + MMA) ---
+    ["2026-03-12", "Marcus Johnson",    "Moto Medi Lubbock",   "08:00", "16:00", 8.0, 0.0,  8.0],
+    ["2026-03-12", "Marcus Johnson",    "Moto Medi Amarillo",  "17:00", "20:00", 3.0, 0.0,  3.0],  # cross-location shift
+    ["2026-03-12", "Ashley Torres",     "Moto Medi Lubbock",   "10:00", "18:00", 8.0, 0.0,  8.0],
+    ["2026-03-12", "Devon Scott",       "Moto Medi Lubbock",   "14:00", "18:00", 4.0, 0.0,  4.0],
+    ["2026-03-12", "Robert Kim",        "Moto Medi Amarillo",  "09:00", "17:00", 8.0, 0.0,  8.0],
+    ["2026-03-12", "Destiny Williams",  "Moto Medi Amarillo",  "11:00", "19:00", 8.0, 0.0,  8.0],
+    ["2026-03-12", "Jake Hernandez",    "Moto Medi 3rd",       "08:00", "16:00", 8.0, 0.0,  8.0],
+    ["2026-03-12", "Priya Patel",       "Tikka Shack 1",       "09:00", "17:00", 8.0, 0.0,  8.0],
+    ["2026-03-12", "Carlos Rivera",     "Tikka Shack 1",       "12:00", "20:00", 8.0, 0.0,  8.0],
+    ["2026-03-12", "Keisha Brown",      "Tikka Shack 2",       "10:00", "18:30", 8.0, 0.5,  8.5],
+
+    # --- Friday 2026-03-13 ---
+    ["2026-03-13", "Marcus Johnson",    "Moto Medi Lubbock",   "08:00", "16:00", 8.0, 0.0,  8.0],
+    ["2026-03-13", "Ashley Torres",     "Moto Medi Lubbock",   "10:00", "18:00", 8.0, 0.0,  8.0],
+    ["2026-03-13", "Robert Kim",        "Moto Medi Amarillo",  "09:00", "17:00", 8.0, 0.0,  8.0],
+    ["2026-03-13", "Destiny Williams",  "Moto Medi Amarillo",  "11:00", "19:00", 8.0, 0.0,  8.0],
+    ["2026-03-13", "Jake Hernandez",    "Moto Medi 3rd",       "08:00", "16:00", 8.0, 0.0,  8.0],
+    ["2026-03-13", "Priya Patel",       "Tikka Shack 1",       "09:00", "17:00", 8.0, 0.0,  8.0],
+    ["2026-03-13", "Carlos Rivera",     "Tikka Shack 1",       "12:00", "20:00", 8.0, 0.0,  8.0],
+    ["2026-03-13", "Keisha Brown",      "Tikka Shack 2",       "10:00", "18:00", 8.0, 0.0,  8.0],
+    ["2026-03-13", "Jasmine Lee",       "Tikka Shack 2",       "14:00", "18:00", 4.0, 0.0,  4.0],
 ]
+# Marcus Johnson weekly total: 5 days x 8 hrs (MML) + 2 cross-loc shifts x 3 hrs (MMA) = 46 hrs
+# Cross-location locations used by Marcus: {"Moto Medi Lubbock", "Moto Medi Amarillo"}
 
 # ==============================================================================
 # SAMPLE EMPLOYEE ROSTER
 # ==============================================================================
 
-# Columns: Employee Name, Square Name (VLOOKUP key), Location, Hourly Rate, Hire Date, Pay Tier, Notes
+# Columns (11 total):
+#   0  Employee Name
+#   1  Square Name (VLOOKUP key — must match Square clock-in export exactly)
+#   2  Location (MML/MMA/MM3/TS1/TS2)
+#   3  Hourly Rate
+#   4  Hire Date
+#   5  Pay Tier
+#   6  Notes
+#   7  Next Milestone Date (YYYY-MM-DD string, or "" if none set)
+#   8  Milestone Type (string describing the milestone)
+#   9  Days Until Milestone (None — computed by formula =IFERROR(H{row}-TODAY(),"") in Excel)
+#  10  Milestone Status    (None — computed by formula =IF(J{row}="","",IF(J{row}<=0,"OVERDUE",IF(J{row}<=30,"SOON","OK"))) in Excel)
+#
+# Milestone test cases:
+#   Marcus Johnson:  "2026-04-01" / "90-Day Review"    → SOON (18 days from sample week)
+#   Jake Hernandez:  "2026-03-10" / "Food Handler Cert" → OVERDUE (3 days before end of sample week)
+#   Ashley Torres:   "" / ""                            → blank (IFERROR returns "")
+#   Devon Scott:     "" / ""                            → blank
+#   Jasmine Lee:     "" / ""                            → blank
 EMPLOYEE_ROSTER = [
-    ["Marcus Johnson",   "Marcus Johnson",   "MML", 16.50, "2024-06-01", "Line Cook",    "Lead cook — Lubbock"],
-    ["Ashley Torres",    "Ashley Torres",    "MML", 14.00, "2024-09-15", "Cashier",      "Cross-trained on prep"],
-    ["Destiny Williams", "Destiny Williams", "MMA", 14.50, "2025-01-10", "Cashier",      ""],
-    ["Robert Kim",       "Robert Kim",       "MMA", 15.75, "2024-08-20", "Line Cook",    ""],
-    ["Jake Hernandez",   "Jake Hernandez",   "MM3", 15.00, "2025-03-01", "Line Cook",    "Newer location"],
-    ["Priya Patel",      "Priya Patel",      "TS1", 16.00, "2024-07-14", "Line Cook",    "Tikka Shack specialist"],
-    ["Carlos Rivera",    "Carlos Rivera",    "TS1", 13.50, "2025-02-01", "Cashier",      ""],
-    ["Keisha Brown",     "Keisha Brown",     "TS2", 14.25, "2024-11-05", "Line Cook",    ""],
-    ["Devon Scott",      "Devon Scott",      "MML", 12.50, "2025-10-20", "Kitchen Help", "Part-time"],
-    ["Jasmine Lee",      "Jasmine Lee",      "TS2", 13.00, "2025-11-01", "Cashier",      "Part-time"],
+    # Name               Square Name          Loc    Rate   Hire Date    Pay Tier        Notes                    Next Milestone   Milestone Type          J    K
+    ["Marcus Johnson",   "Marcus Johnson",   "MML", 16.50, "2024-06-01", "Line Cook",    "Lead cook — Lubbock",  "2026-04-01",    "90-Day Review",        None, None],
+    ["Ashley Torres",    "Ashley Torres",    "MML", 14.00, "2024-09-15", "Cashier",      "Cross-trained on prep", "",             "",                     None, None],
+    ["Destiny Williams", "Destiny Williams", "MMA", 14.50, "2025-01-10", "Cashier",      "",                     "2026-06-01",    "6-Month Check-In",     None, None],
+    ["Robert Kim",       "Robert Kim",       "MMA", 15.75, "2024-08-20", "Line Cook",    "",                     "2026-08-20",    "Annual Review",        None, None],
+    ["Jake Hernandez",   "Jake Hernandez",   "MM3", 15.00, "2025-03-01", "Line Cook",    "Newer location",       "2026-03-10",    "Food Handler Cert",    None, None],
+    ["Priya Patel",      "Priya Patel",      "TS1", 16.00, "2024-07-14", "Line Cook",    "Tikka Shack specialist","2026-07-14",   "Annual Review",        None, None],
+    ["Carlos Rivera",    "Carlos Rivera",    "TS1", 13.50, "2025-02-01", "Cashier",      "",                     "2026-05-01",    "90-Day Pay Review",    None, None],
+    ["Keisha Brown",     "Keisha Brown",     "TS2", 14.25, "2024-11-05", "Line Cook",    "",                     "2026-11-05",    "Annual Review",        None, None],
+    ["Devon Scott",      "Devon Scott",      "MML", 12.50, "2025-10-20", "Kitchen Help", "Part-time",            "",             "",                     None, None],
+    ["Jasmine Lee",      "Jasmine Lee",      "TS2", 13.00, "2025-11-01", "Cashier",      "Part-time",            "",             "",                     None, None],
+]
+
+# ==============================================================================
+# PAYROLL SAMPLE EMPLOYEES
+# Unique employee names extracted from SQUARE_LABOR_SAMPLE_ROWS.
+# Used by Overtime-Tracker and Payroll-Output builders (Plan 02-02).
+# Order matches first-appearance order in the labor rows.
+# ==============================================================================
+
+PAYROLL_SAMPLE_EMPLOYEES = [
+    "Marcus Johnson",
+    "Ashley Torres",
+    "Devon Scott",
+    "Robert Kim",
+    "Destiny Williams",
+    "Jake Hernandez",
+    "Priya Patel",
+    "Carlos Rivera",
+    "Keisha Brown",
+    "Jasmine Lee",
 ]
 
 # ==============================================================================
