@@ -5,33 +5,33 @@
 See: .planning/PROJECT.md (updated 2026-03-14)
 
 **Core value:** Eliminate hours of manual weekly reporting across 5 locations by consolidating Square, delivery platforms, and BEK Entree data into a single automated view.
-**Current focus:** Phase 1 — Weekly Reporting
+**Current focus:** Phase 2 — Payroll Prep
 
 ## Current Position
 
 Phase: 2 of 3 (Payroll Prep)
-Plan: 1 of 2 in current phase (02-01 complete, 02-02 next)
-Status: Phase 2 in progress — Plan 02-01 executed and verified
-Last activity: 2026-03-14 — Plan 02-01 complete: Labor-Import tab built, Employee Roster extended with milestone columns H-K
+Plan: 2 of 2 in current phase (02-02 Task 1 complete, awaiting checkpoint:human-verify at Task 2)
+Status: Phase 2 in progress — Plan 02-02 Task 1 complete (Overtime-Tracker + Payroll-Output built); paused at human verification checkpoint
+Last activity: 2026-03-14 — Plan 02-02 Task 1 complete: Overtime-Tracker (MATCH-based SUMIFS, PAY-04 compliant), Payroll-Output (VLOOKUP pay rates), 17-tab workbook
 
-Progress: [█████░░░░░] 50%
+Progress: [███████░░░] 70%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 2
+- Total plans completed: 3 (02-02 partially complete — at checkpoint)
 - Average duration: 5 minutes
-- Total execution time: 0.2 hours
+- Total execution time: 0.3 hours
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
 | 1. Weekly Reporting | 2 | 10 min | 5 min |
-| 2. Payroll Prep | 1 | 4 min | 4 min |
+| 2. Payroll Prep | 1.5 | 11 min | ~5 min |
 
 **Recent Trend:**
-- Last 5 plans: 01-01 (5 min), 01-02 (5 min), 02-01 (4 min)
+- Last 5 plans: 01-01 (5 min), 01-02 (5 min), 02-01 (4 min), 02-02 Task 1 (7 min)
 - Trend: Stable
 
 *Updated after each plan completion*
@@ -59,10 +59,12 @@ Recent decisions affecting current work:
 - [02-01]: EMPLOYEE_ROSTER tuple extended to 11 elements; indices 9-10 are None (formula placeholders in Excel)
 - [02-01]: ISTEXT validation added for Employee Name/Location in Labor-Import row 3 — text paste errors as important as numeric ones
 - [02-01]: Conditional formatting stopIfTrue=True on red/overdue rule to prevent amber rule also firing for overdue cells
+- [02-02]: SUMIFS formulas use INDEX/MATCH for column resolution on Labor-Import (MATCH targets row 2, not row 1, because row 1 is PLACEHOLDER notice)
+- [02-02]: VLOOKUP in Payroll-Output uses Employee-Roster col B (Square Name) as key — col D (Hourly Rate) is 3rd column in B:D range
 
 ### Pending Todos
 
-None yet.
+- Rez: verify workbook in Google Sheets — check Overtime-Tracker daily hours, Marcus Johnson >40 hrs OT, Payroll-Output pay rates resolve
 
 ### Blockers/Concerns
 
@@ -75,5 +77,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-03-14
-Stopped at: Completed 02-01-PLAN.md both tasks. Phase 2 Plan 1 (data foundation) fully complete. Next: Plan 02-02 — Overtime-Tracker formula engine, Payroll-Output Gusto tab, wire 17-tab workbook.
-Resume file: None
+Stopped at: Plan 02-02 Task 1 committed (48b8e1e). Paused at checkpoint:human-verify (Task 2). Need Rez to open Rez-Weekly-Report.xlsx and verify Overtime-Tracker daily hours, Marcus OT, Payroll-Output pay rates, Employee-Roster milestone columns, and Instructions Payroll Prep section.
+Resume signal: Type "approved" or describe issues in reply to checkpoint message.
