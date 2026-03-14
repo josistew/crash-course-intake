@@ -1,11 +1,11 @@
 """
-build_weekly_report.py — Generates the Rez Weekly Report workbook structure.
+build_weekly_report.py — Generates the Rez Weekly Report workbook with all formulas.
 
 Produces: Rez-Weekly-Report.xlsx (saved in the project root)
 
 Usage:
     cd /Users/josi/crash-course-intake
-    python3 scripts/build_weekly_report.py
+    python3 scripts/build_weekly_report.py [--output path/to/file.xlsx]
 
 IMPORTANT: Column headers in import tabs are PLACEHOLDERS. After Rez's first
 CSV export from each platform, update header rows in each import tab to match
@@ -13,6 +13,7 @@ actual column names. Formulas use MATCH() on these headers — they must match
 exactly.
 """
 
+import argparse
 import os
 import sys
 
@@ -22,13 +23,17 @@ try:
     from openpyxl.styles import (
         Font, PatternFill, Alignment, Border, Side, numbers
     )
-    from openpyxl.formatting.rule import CellIsRule
+    from openpyxl.formatting.rule import CellIsRule, FormulaRule
     from openpyxl.utils import get_column_letter
     from openpyxl.worksheet.datavalidation import DataValidation
     from openpyxl.comments import Comment
 except ImportError:
     print("ERROR: openpyxl is required. Install with: pip3 install openpyxl")
     sys.exit(1)
+
+# Add scripts dir to path so sample_data imports correctly
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, SCRIPT_DIR)
 
 from sample_data import (
     SQUARE_HEADERS, DOORDASH_HEADERS, UBEREATS_HEADERS,
@@ -43,9 +48,8 @@ from sample_data import (
 # OUTPUT PATH
 # ==============================================================================
 
-SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 PROJECT_ROOT = os.path.dirname(SCRIPT_DIR)
-OUTPUT_PATH = os.path.join(PROJECT_ROOT, "Rez-Weekly-Report.xlsx")
+DEFAULT_OUTPUT = os.path.join(PROJECT_ROOT, "Rez-Weekly-Report.xlsx")
 
 # ==============================================================================
 # STYLE CONSTANTS
@@ -74,6 +78,12 @@ FILL_MOTO_MEDI   = PatternFill("solid", fgColor="FDE9D9")  # light orange — MM
 FILL_TIKKA_SHACK = PatternFill("solid", fgColor="D0E2F1")  # light teal — TS brand band
 FILL_AMBER_LIGHT = PatternFill("solid", fgColor="FFF2CC")  # light amber — summary title
 FILL_SUMMARY_HDR = PatternFill("solid", fgColor="434343")  # dark — summary column headers
+FILL_SECTION_HDR = PatternFill("solid", fgColor="E8F0FE")  # light blue — section headers
+FILL_MANUAL_ENTRY = PatternFill("solid", fgColor="FFF9C4") # light yellow — manual entry cells
+
+# Conditional formatting fills
+FILL_CF_GREEN = PatternFill(start_color="D9EAD3", end_color="D9EAD3", fill_type="solid")
+FILL_CF_RED   = PatternFill(start_color="FBE4E4", end_color="FBE4E4", fill_type="solid")
 
 # Fonts
 FONT_DEFAULT = Font(name="Calibri", size=11)
@@ -84,11 +94,46 @@ FONT_SUMMARY_TITLE = Font(name="Calibri", size=18, bold=True)
 FONT_VALID_BAD = Font(name="Calibri", size=10, color="CC0000")
 FONT_VALID_OK  = Font(name="Calibri", size=10, color="006100")
 FONT_SECTION   = Font(name="Calibri", size=12, bold=True, color="2F5496")
+FONT_CF_GREEN  = Font(color="006100", bold=True, name="Calibri", size=11)
+FONT_CF_RED    = Font(color="9C0006", bold=True, name="Calibri", size=11)
 
 # Alignment
 ALIGN_CENTER = Alignment(horizontal="center", vertical="center", wrap_text=True)
 ALIGN_LEFT   = Alignment(horizontal="left",   vertical="center", wrap_text=True)
 ALIGN_LEFT_NW = Alignment(horizontal="left",  vertical="top",    wrap_text=True)
+
+
+# ==============================================================================
+# LOCATION CONFIG
+# Prior-Week tab has 5 KPIs per location. Column offsets (1-based within B:Z):
+#   offset 1 = Net Revenue, 2 = Purchase Cost %, 3 = Labor Cost %,
+#   offset 4 = Orders, 5 = Avg Ticket
+# Location order: MML=1, MMA=2, MM3=3, TS1=4, TS2=5
+# Column layout: A=Week Ending, B=MML Net Rev (col 2), ..., F=MML Avg Ticket (col 6),
+#                G=MMA Net Rev (col 7), ..., Z=TS2 Avg Ticket (col 26)
+# ==============================================================================
+
+LOC_ORDER = ["MML", "MMA", "MM3", "TS1", "TS2"]
+
+# For each location: full name as it appears in CSVs
+LOC_FULL_NAMES = {
+    "MML": "Moto Medi Lubbock",
+    "MMA": "Moto Medi Amarillo",
+    "MM3": "Moto Medi 3rd",
+    "TS1": "Tikka Shack 1",
+    "TS2": "Tikka Shack 2",
+}
+
+# Prior-Week column offsets for MATCH lookup
+# Col A = Week Ending. Col B onward = KPIs in blocks of 5 per location.
+# For location index i (0-based): Net Rev = 2 + 5*i, ..., Avg Ticket = 6 + 5*i
+def prior_week_col_offset(loc_idx, metric_idx):
+    """
+    loc_idx: 0-based (MML=0, MMA=1, MM3=2, TS1=3, TS2=4)
+    metric_idx: 0=Net Revenue, 1=Purchase Cost %, 2=Labor Cost %, 3=Orders, 4=Avg Ticket
+    Returns 1-based column number in Prior-Week tab.
+    """
+    return 2 + (loc_idx * 5) + metric_idx
 
 
 def col_width_for(text, padding=4):
@@ -133,16 +178,17 @@ def build_instructions(ws):
     ws.column_dimensions["A"].width = 80
     ws.column_dimensions["B"].width = 20
 
-    rows = [
-        # (row_offset_from_current, text, is_section_header)
-    ]
-
     content = [
         ("", False),
         ("IMPORTANT: Column headers in each import tab are PLACEHOLDERS. After your first "
          "CSV export from each platform, update the header row in each import tab to match "
          "your actual column names. The formulas use MATCH() on these headers — they must "
          "match exactly.", False),
+        ("", False),
+        ("LABOR COST NOTE: The 'Est. Labor Cost (manual)' cell in each Location Calc tab "
+         "requires manual entry for v1. Enter the total labor cost for that location from your "
+         "Square Labor report each week. Labor Cost % is then computed automatically. Phase 2 "
+         "will automate this via Square Labor CSV import.", False),
         ("", False),
         ("WEEKLY CADENCE", True),
         ("Every Monday morning: clear last week's data from each import tab (delete rows 3 "
@@ -192,6 +238,15 @@ def build_instructions(ws):
         ("4. Open the CSV, select all, copy", False),
         ("5. Click into cell A3 of the BEK-Import tab", False),
         ("6. Paste (plain paste only)", False),
+        ("NOTE: BEK purchases are company-wide (not per-location). The workbook divides "
+         "BEK total evenly across 5 locations as an estimate. For exact allocation, enter "
+         "the per-location amount manually in the BEK Purchases cell of each Calc tab.", False),
+        ("", False),
+        ("LABOR COST (MANUAL ENTRY — v1)", True),
+        ("After pasting all CSV data: open each Location Calc tab and enter total labor cost "
+         "for that location in the yellow 'Est. Labor Cost (manual)' cell. Get this number from "
+         "your Square Labor report (Total Hours x Average Hourly Rate for that location). "
+         "Labor Cost % is computed automatically once you enter the dollar amount.", False),
         ("", False),
         ("TROUBLESHOOTING", True),
         ("If you see $0 or ERROR in the Summary tab, check the validation row (row 2) in "
@@ -281,7 +336,6 @@ def build_import_tab(ws, tab_name, headers, sample_rows):
         ws.row_dimensions[3].height = 22
 
     # Conditional formatting: if cell = "OK" → green fill
-    from openpyxl.formatting.rule import FormulaRule
     ok_fill = PatternFill(start_color="D9EAD3", end_color="D9EAD3", fill_type="solid")
     ok_font = Font(color="006100", bold=True, name="Calibri", size=10)
     # Apply per-cell since row content varies
@@ -423,12 +477,41 @@ def build_prior_week(ws):
 
 
 def build_location_calc(ws, loc_id):
-    """Build a Location Calc tab (structure only — formulas added in Plan 02)."""
-    apply_tab_color(ws, TAB_CALC)
-    full_name = LOCATIONS[loc_id]
+    """
+    Build a Location Calc tab with full MATCH-based SUMIFS formulas.
 
-    # Row 1: Location name merged across A-F
-    ws.merge_cells("A1:F1")
+    Row layout (matches formula references throughout):
+      1:  Location name header
+      2:  Week Ending date cell (linked to Summary!B2)
+      3:  Column headers (This Week / Prior Week / WoW Change / WoW %)
+      4:  "Revenue Breakdown" section header
+      5:  Square Net Sales
+      6:  DoorDash Net Revenue
+      7:  UberEats Net Revenue
+      8:  Grubhub Net Revenue
+      9:  Total Net Revenue
+      10: "Cost Metrics" section header
+      11: [blank spacer]
+      12: BEK Purchases
+      13: Purchase Cost %
+      14: "Labor" section header
+      15: [blank spacer]
+      16: Est. Labor Cost (manual entry)
+      17: Labor Cost %
+      18: "Volume" section header
+      19: [blank spacer]
+      20: Total Orders
+      21: Avg Ticket Size
+      22: [notes/blank]
+    """
+    apply_tab_color(ws, TAB_CALC)
+    full_name = LOC_FULL_NAMES[loc_id]
+
+    # Determine this location's Prior-Week column offset (0-based index)
+    loc_idx = LOC_ORDER.index(loc_id)
+
+    # --- Row 1: Location name merged across A-E ---
+    ws.merge_cells("A1:E1")
     header_cell = ws["A1"]
     header_cell.value     = full_name
     header_cell.font      = Font(name="Calibri", size=14, bold=True, color="FFFFFF")
@@ -436,187 +519,543 @@ def build_location_calc(ws, loc_id):
     header_cell.alignment = ALIGN_CENTER
     ws.row_dimensions[1].height = 28
 
-    # Row 2: Week Ending label + blank date cell
+    # --- Row 2: Week Ending — linked to Summary!B2 ---
     ws.cell(row=2, column=1, value="Week Ending:").font = FONT_BOLD
     ws.cell(row=2, column=1).alignment = ALIGN_LEFT
-    date_cell = ws.cell(row=2, column=2, value="")
+    date_cell = ws.cell(row=2, column=2)
+    date_cell.value = "='Summary'!B2"
     date_cell.number_format = "YYYY-MM-DD"
     date_cell.fill = PatternFill("solid", fgColor="FFF9C4")
-    date_note = Comment(
-        "Link this to the master week-ending date cell, or enter manually each Monday.",
-        "Build Script"
-    )
-    date_cell.comment = date_note
 
-    # Column headers row 3 (blank separator) and then B-E
-    ws.cell(row=3, column=2, value="This Week").font  = FONT_BOLD
-    ws.cell(row=3, column=3, value="Prior Week").font = FONT_BOLD
-    ws.cell(row=3, column=4, value="WoW Change").font = FONT_BOLD
-    ws.cell(row=3, column=5, value="WoW %").font      = FONT_BOLD
-    for c in [2, 3, 4, 5]:
-        cell = ws.cell(row=3, column=c)
-        cell.fill      = FILL_CALC_HDR
+    # --- Row 3: Column headers ---
+    col_headers = {2: "This Week", 3: "Prior Week", 4: "WoW Change", 5: "WoW %"}
+    for col, label in col_headers.items():
+        cell = ws.cell(row=3, column=col, value=label)
         cell.font      = FONT_HEADER
+        cell.fill      = FILL_CALC_HDR
         cell.alignment = ALIGN_CENTER
 
     # Column widths
-    ws.column_dimensions["A"].width = 24
+    ws.column_dimensions["A"].width = 26
     ws.column_dimensions["B"].width = 16
     ws.column_dimensions["C"].width = 16
     ws.column_dimensions["D"].width = 16
     ws.column_dimensions["E"].width = 12
 
-    # --- Section: Revenue Breakdown ---
-    ws.cell(row=4, column=1, value="Revenue Breakdown").font = FONT_SECTION
-    ws.cell(row=4, column=1).fill = PatternFill("solid", fgColor="E8F0FE")
+    # ===========================================================================
+    # SECTION: Revenue Breakdown (rows 4-9)
+    # ===========================================================================
+
+    # Row 4: Section header
     ws.merge_cells("A4:E4")
+    section_cell = ws.cell(row=4, column=1, value="Revenue Breakdown")
+    section_cell.font = FONT_SECTION
+    section_cell.fill = FILL_SECTION_HDR
 
-    revenue_labels = [
-        "Square Net Sales",
-        "DoorDash Net Revenue",
-        "UberEats Net Revenue",
-        "Grubhub Net Revenue",
-        "Total Net Revenue",
-    ]
-    for i, label in enumerate(revenue_labels, start=5):
-        cell = ws.cell(row=i, column=1, value=label)
-        cell.font = FONT_BOLD if label.startswith("Total") else FONT_DEFAULT
-        cell.alignment = ALIGN_LEFT
-        if label.startswith("Total"):
-            cell.fill = PatternFill("solid", fgColor="E8F0FE")
-            for c in [2, 3, 4, 5]:
-                ws.cell(row=i, column=c).fill = PatternFill("solid", fgColor="E8F0FE")
-        # Format B and C as currency, E as percentage
-        ws.cell(row=i, column=2).number_format = '"$"#,##0.00'
-        ws.cell(row=i, column=3).number_format = '"$"#,##0.00'
-        ws.cell(row=i, column=4).number_format = '"$"#,##0.00'
-        ws.cell(row=i, column=5).number_format = '0.0%'
+    # Helper: write a revenue formula row
+    def write_revenue_row(row, label, import_tab, amount_col, loc_col, loc_match_col=None, is_total=False):
+        """
+        Write a metric row with This Week formula (col B), Prior Week (col C),
+        WoW Change (col D), WoW % (col E).
+        """
+        # Label (col A)
+        cell_a = ws.cell(row=row, column=1, value=label)
+        cell_a.font = FONT_BOLD if is_total else FONT_DEFAULT
+        cell_a.alignment = ALIGN_LEFT
+        if is_total:
+            for c in range(1, 6):
+                ws.cell(row=row, column=c).fill = FILL_SECTION_HDR
 
-    # --- Section: Cost Metrics ---
-    ws.cell(row=10, column=1, value="Cost Metrics").font = FONT_SECTION
-    ws.cell(row=10, column=1).fill = PatternFill("solid", fgColor="E8F0FE")
+        # This Week formula (col B)
+        cell_b = ws.cell(row=row, column=2)
+        if is_total:
+            cell_b.value = "=SUM(B5:B8)"
+        else:
+            if loc_match_col:
+                # SUMIFS with location filter
+                cell_b.value = (
+                    f"=IFERROR(SUMIFS("
+                    f"INDEX('{import_tab}'!A:Z,0,MATCH(\"{amount_col}\",'{import_tab}'!1:1,0)),"
+                    f"INDEX('{import_tab}'!A:Z,0,MATCH(\"{loc_match_col}\",'{import_tab}'!1:1,0)),"
+                    f"\"{full_name}\""
+                    f"),0)"
+                )
+            else:
+                cell_b.value = f"=0"  # fallback
+
+        # Prior Week (col C) — INDEX/MATCH on Prior-Week tab by date (B2-7)
+        pw_col = prior_week_col_offset(loc_idx, 0)  # Net Revenue column for this loc
+        cell_c = ws.cell(row=row, column=3)
+        if is_total:
+            # Total Net Revenue references the Prior-Week Net Revenue column
+            cell_c.value = (
+                f"=IFERROR(INDEX('Prior-Week'!A:Z,"
+                f"MATCH(B2-7,'Prior-Week'!A:A,0),"
+                f"{pw_col}),0)"
+            )
+        else:
+            # Component rows (Square, DoorDash, UberEats, Grubhub) not stored individually
+            # in Prior-Week tab — show 0 so WoW % formula evaluates cleanly
+            cell_c.value = 0
+
+        # WoW Change (col D)
+        cell_d = ws.cell(row=row, column=4)
+        if is_total:
+            cell_d.value = "=B9-C9"
+        else:
+            # Component rows have Prior Week = 0 (not tracked individually), so WoW = B-0
+            cell_d.value = f"=B{row}-C{row}"
+
+        # WoW % (col E)
+        cell_e = ws.cell(row=row, column=5)
+        if is_total:
+            cell_e.value = "=IF(C9>0,(B9-C9)/C9,0)"
+        else:
+            cell_e.value = f"=IF(C{row}>0,(B{row}-C{row})/C{row},0)"
+
+        # Number formats
+        for c in [2, 3, 4]:
+            ws.cell(row=row, column=c).number_format = '"$"#,##0'
+        ws.cell(row=row, column=5).number_format = '0.0%'
+
+    # Row 5: Square Net Sales
+    write_revenue_row(5, "Square Net Sales",    "Square-Import",   "Net Sales",  "Location", "Location")
+    # Row 6: DoorDash
+    write_revenue_row(6, "DoorDash Net Revenue", "DoorDash-Import", "Net Payout", "Store Name", "Store Name")
+    # Row 7: UberEats
+    write_revenue_row(7, "UberEats Net Revenue", "UberEats-Import", "Net Payout", "Restaurant Name", "Restaurant Name")
+    # Row 8: Grubhub
+    write_revenue_row(8, "Grubhub Net Revenue",  "Grubhub-Import",  "Net Payout", "Restaurant", "Restaurant")
+    # Row 9: Total Net Revenue (is_total=True)
+    write_revenue_row(9, "Total Net Revenue", None, None, None, None, is_total=True)
+
+    # WoW conditional formatting on E9 (Total Net Revenue WoW %)
+    ws.conditional_formatting.add(
+        "E9",
+        FormulaRule(formula=["E9>0.05"], fill=FILL_CF_GREEN, font=FONT_CF_GREEN)
+    )
+    ws.conditional_formatting.add(
+        "E9",
+        FormulaRule(formula=["E9<-0.05"], fill=FILL_CF_RED, font=FONT_CF_RED)
+    )
+
+    # ===========================================================================
+    # SECTION: Cost Metrics (rows 10-13)
+    # ===========================================================================
+
+    # Row 10: Section header
     ws.merge_cells("A10:E10")
+    ws.cell(row=10, column=1, value="Cost Metrics").font = FONT_SECTION
+    ws.cell(row=10, column=1).fill = FILL_SECTION_HDR
 
-    cost_labels = ["BEK Purchases", "Purchase Cost %"]
-    for i, label in enumerate(cost_labels, start=11):
-        cell = ws.cell(row=i, column=1, value=label)
-        cell.font = FONT_DEFAULT
-        cell.alignment = ALIGN_LEFT
-        ws.cell(row=i, column=2).number_format = '"$"#,##0.00' if "Purchases" in label else '0.0%'
-        ws.cell(row=i, column=3).number_format = '"$"#,##0.00' if "Purchases" in label else '0.0%'
-        ws.cell(row=i, column=5).number_format = '0.0%'
+    # Row 11: blank spacer
+    ws.row_dimensions[11].height = 6
 
-    # --- Section: Labor ---
-    ws.cell(row=13, column=1, value="Labor").font = FONT_SECTION
-    ws.cell(row=13, column=1).fill = PatternFill("solid", fgColor="E8F0FE")
-    ws.merge_cells("A13:E13")
+    # Row 12: BEK Purchases
+    # BEK is company-wide — sum all Food rows, divide by 5 locations
+    # If BEK has no "Category" column, MATCH returns error and we fall back to sum all items / 5
+    bek_formula = (
+        "=IFERROR("
+        "SUMIF("
+        "INDEX('BEK-Import'!A:Z,0,MATCH(\"Category\",'BEK-Import'!1:1,0)),"
+        "\"Food\","
+        "INDEX('BEK-Import'!A:Z,0,MATCH(\"Total\",'BEK-Import'!1:1,0))"
+        ")/5,"
+        "IFERROR("
+        "SUMIF("
+        "INDEX('BEK-Import'!A:Z,0,MATCH(\"Total\",'BEK-Import'!1:1,0)),"
+        "\">0\","
+        "INDEX('BEK-Import'!A:Z,0,MATCH(\"Total\",'BEK-Import'!1:1,0))"
+        ")/5,"
+        "0)"
+        ")"
+    )
+    cell_b12 = ws.cell(row=12, column=1, value="BEK Purchases")
+    cell_b12.font = FONT_DEFAULT
+    cell_b12.alignment = ALIGN_LEFT
 
-    labor_labels = ["Estimated Labor Cost", "Labor Cost %"]
-    for i, label in enumerate(labor_labels, start=14):
-        cell = ws.cell(row=i, column=1, value=label)
-        cell.font = FONT_DEFAULT
-        cell.alignment = ALIGN_LEFT
-        ws.cell(row=i, column=2).number_format = '"$"#,##0.00' if "Cost $" in label or "Estimated" in label else '0.0%'
-        ws.cell(row=i, column=3).number_format = '"$"#,##0.00' if "Estimated" in label else '0.0%'
-        ws.cell(row=i, column=5).number_format = '0.0%'
+    ws.cell(row=12, column=2).value = bek_formula
+    ws.cell(row=12, column=2).number_format = '"$"#,##0'
 
-    # --- Section: Volume ---
-    ws.cell(row=16, column=1, value="Volume").font = FONT_SECTION
-    ws.cell(row=16, column=1).fill = PatternFill("solid", fgColor="E8F0FE")
-    ws.merge_cells("A16:E16")
+    # Prior Week for BEK purchases — not tracked in Prior-Week tab per KPI (no direct column)
+    # Leave blank; BEK is an allocation estimate anyway
+    ws.cell(row=12, column=3).value = ""
+    ws.cell(row=12, column=4).value = ""
+    ws.cell(row=12, column=5).value = ""
 
-    volume_labels = ["Total Orders", "Avg Ticket Size"]
-    for i, label in enumerate(volume_labels, start=17):
-        cell = ws.cell(row=i, column=1, value=label)
-        cell.font = FONT_DEFAULT
-        cell.alignment = ALIGN_LEFT
-        if "Avg Ticket" in label:
-            ws.cell(row=i, column=2).number_format = '"$"#,##0.00'
-            ws.cell(row=i, column=3).number_format = '"$"#,##0.00'
-            ws.cell(row=i, column=4).number_format = '"$"#,##0.00'
-        ws.cell(row=i, column=5).number_format = '0.0%'
+    # Add comment explaining BEK allocation
+    bek_comment = Comment(
+        "BEK purchases are company-wide (not per-location). This divides the total food "
+        "purchases by 5 locations as an estimate. If BEK CSV has no 'Category' column, "
+        "it sums all invoice line items divided by 5. For precise allocation, enter manually.",
+        "Build Script"
+    )
+    ws.cell(row=12, column=2).comment = bek_comment
 
-    # Note: formulas added in Plan 02
-    note_row = 20
-    note_cell = ws.cell(row=note_row, column=1,
-        value=f"[{loc_id}] Formulas for This Week values will be added in Plan 02 — "
-              "once CSV column names are validated with Rez's actual exports.")
+    # Row 13: Purchase Cost %
+    pw_col_purchase = prior_week_col_offset(loc_idx, 1)  # Purchase Cost % column
+    ws.cell(row=13, column=1, value="Purchase Cost %").font = FONT_DEFAULT
+    ws.cell(row=13, column=1).alignment = ALIGN_LEFT
+    ws.cell(row=13, column=2).value = "=IF(B9>0,B12/B9,0)"
+    ws.cell(row=13, column=2).number_format = '0.0%'
+    ws.cell(row=13, column=3).value = (
+        f"=IFERROR(INDEX('Prior-Week'!A:Z,"
+        f"MATCH(B2-7,'Prior-Week'!A:A,0),"
+        f"{pw_col_purchase}),0)"
+    )
+    ws.cell(row=13, column=3).number_format = '0.0%'
+    ws.cell(row=13, column=4).value = "=B13-C13"
+    ws.cell(row=13, column=4).number_format = '0.0%'
+    ws.cell(row=13, column=5).value = "=IF(C13>0,(B13-C13)/C13,0)"
+    ws.cell(row=13, column=5).number_format = '0.0%'
+
+    # Conditional formatting on E13
+    ws.conditional_formatting.add(
+        "E13",
+        FormulaRule(formula=["E13>0.05"], fill=FILL_CF_GREEN, font=FONT_CF_GREEN)
+    )
+    ws.conditional_formatting.add(
+        "E13",
+        FormulaRule(formula=["E13<-0.05"], fill=FILL_CF_RED, font=FONT_CF_RED)
+    )
+
+    # ===========================================================================
+    # SECTION: Labor (rows 14-17)
+    # ===========================================================================
+
+    # Row 14: Section header
+    ws.merge_cells("A14:E14")
+    ws.cell(row=14, column=1, value="Labor").font = FONT_SECTION
+    ws.cell(row=14, column=1).fill = FILL_SECTION_HDR
+
+    # Row 15: blank spacer
+    ws.row_dimensions[15].height = 6
+
+    # Row 16: Estimated Labor Cost — MANUAL ENTRY for v1
+    ws.cell(row=16, column=1, value="Est. Labor Cost (manual)").font = FONT_DEFAULT
+    ws.cell(row=16, column=1).alignment = ALIGN_LEFT
+    # Manual entry cell — yellow background to indicate input required
+    labor_cell = ws.cell(row=16, column=2, value=0)
+    labor_cell.number_format = '"$"#,##0'
+    labor_cell.fill = FILL_MANUAL_ENTRY
+    labor_comment = Comment(
+        "MANUAL ENTRY — v1: Enter total labor cost for this location from your Square "
+        "Labor report (Total Hours x Avg Hourly Rate). Phase 2 will automate this via "
+        "Square Labor CSV import. Example: if 80 hours @ avg $14.50/hr, enter 1160.",
+        "Build Script"
+    )
+    labor_cell.comment = labor_comment
+
+    # Prior Week labor — from Prior-Week tab
+    pw_col_labor = prior_week_col_offset(loc_idx, 2)  # Labor Cost % column
+    # Prior Week for labor $ — not stored (only %). Leave blank.
+    ws.cell(row=16, column=3).value = ""
+    ws.cell(row=16, column=4).value = ""
+    ws.cell(row=16, column=5).value = ""
+
+    # Row 17: Labor Cost %
+    ws.cell(row=17, column=1, value="Labor Cost %").font = FONT_DEFAULT
+    ws.cell(row=17, column=1).alignment = ALIGN_LEFT
+    ws.cell(row=17, column=2).value = "=IF(B9>0,B16/B9,0)"
+    ws.cell(row=17, column=2).number_format = '0.0%'
+    ws.cell(row=17, column=3).value = (
+        f"=IFERROR(INDEX('Prior-Week'!A:Z,"
+        f"MATCH(B2-7,'Prior-Week'!A:A,0),"
+        f"{pw_col_labor}),0)"
+    )
+    ws.cell(row=17, column=3).number_format = '0.0%'
+    ws.cell(row=17, column=4).value = "=B17-C17"
+    ws.cell(row=17, column=4).number_format = '0.0%'
+    ws.cell(row=17, column=5).value = "=IF(C17>0,(B17-C17)/C17,0)"
+    ws.cell(row=17, column=5).number_format = '0.0%'
+
+    # Conditional formatting on E17
+    ws.conditional_formatting.add(
+        "E17",
+        FormulaRule(formula=["E17>0.05"], fill=FILL_CF_GREEN, font=FONT_CF_GREEN)
+    )
+    ws.conditional_formatting.add(
+        "E17",
+        FormulaRule(formula=["E17<-0.05"], fill=FILL_CF_RED, font=FONT_CF_RED)
+    )
+
+    # ===========================================================================
+    # SECTION: Volume (rows 18-21)
+    # ===========================================================================
+
+    # Row 18: Section header
+    ws.merge_cells("A18:E18")
+    ws.cell(row=18, column=1, value="Volume").font = FONT_SECTION
+    ws.cell(row=18, column=1).fill = FILL_SECTION_HDR
+
+    # Row 19: blank spacer
+    ws.row_dimensions[19].height = 6
+
+    # Row 20: Total Orders — sum across all platforms
+    orders_formula = (
+        f"=IFERROR(SUMIFS("
+        f"INDEX('Square-Import'!A:Z,0,MATCH(\"Order Count\",'Square-Import'!1:1,0)),"
+        f"INDEX('Square-Import'!A:Z,0,MATCH(\"Location\",'Square-Import'!1:1,0)),"
+        f"\"{full_name}\""
+        f"),0)"
+        f"+IFERROR(SUMIFS("
+        f"INDEX('DoorDash-Import'!A:Z,0,MATCH(\"Order Count\",'DoorDash-Import'!1:1,0)),"
+        f"INDEX('DoorDash-Import'!A:Z,0,MATCH(\"Store Name\",'DoorDash-Import'!1:1,0)),"
+        f"\"{full_name}\""
+        f"),0)"
+        f"+IFERROR(SUMIFS("
+        f"INDEX('UberEats-Import'!A:Z,0,MATCH(\"Trips\",'UberEats-Import'!1:1,0)),"
+        f"INDEX('UberEats-Import'!A:Z,0,MATCH(\"Restaurant Name\",'UberEats-Import'!1:1,0)),"
+        f"\"{full_name}\""
+        f"),0)"
+        f"+IFERROR(SUMIFS("
+        f"INDEX('Grubhub-Import'!A:Z,0,MATCH(\"Orders\",'Grubhub-Import'!1:1,0)),"
+        f"INDEX('Grubhub-Import'!A:Z,0,MATCH(\"Restaurant\",'Grubhub-Import'!1:1,0)),"
+        f"\"{full_name}\""
+        f"),0)"
+    )
+
+    ws.cell(row=20, column=1, value="Total Orders").font = FONT_DEFAULT
+    ws.cell(row=20, column=1).alignment = ALIGN_LEFT
+    ws.cell(row=20, column=2).value = orders_formula
+    ws.cell(row=20, column=2).number_format = '#,##0'
+
+    # Prior Week orders
+    pw_col_orders = prior_week_col_offset(loc_idx, 3)  # Orders column
+    ws.cell(row=20, column=3).value = (
+        f"=IFERROR(INDEX('Prior-Week'!A:Z,"
+        f"MATCH(B2-7,'Prior-Week'!A:A,0),"
+        f"{pw_col_orders}),0)"
+    )
+    ws.cell(row=20, column=3).number_format = '#,##0'
+    ws.cell(row=20, column=4).value = "=B20-C20"
+    ws.cell(row=20, column=4).number_format = '#,##0'
+    ws.cell(row=20, column=5).value = "=IF(C20>0,(B20-C20)/C20,0)"
+    ws.cell(row=20, column=5).number_format = '0.0%'
+
+    # Conditional formatting on E20
+    ws.conditional_formatting.add(
+        "E20",
+        FormulaRule(formula=["E20>0.05"], fill=FILL_CF_GREEN, font=FONT_CF_GREEN)
+    )
+    ws.conditional_formatting.add(
+        "E20",
+        FormulaRule(formula=["E20<-0.05"], fill=FILL_CF_RED, font=FONT_CF_RED)
+    )
+
+    # Row 21: Avg Ticket
+    ws.cell(row=21, column=1, value="Avg Ticket Size").font = FONT_DEFAULT
+    ws.cell(row=21, column=1).alignment = ALIGN_LEFT
+    ws.cell(row=21, column=2).value = "=IF(B20>0,B9/B20,0)"
+    ws.cell(row=21, column=2).number_format = '"$"#,##0.00'
+
+    # Prior Week avg ticket
+    pw_col_ticket = prior_week_col_offset(loc_idx, 4)  # Avg Ticket column
+    ws.cell(row=21, column=3).value = (
+        f"=IFERROR(INDEX('Prior-Week'!A:Z,"
+        f"MATCH(B2-7,'Prior-Week'!A:A,0),"
+        f"{pw_col_ticket}),0)"
+    )
+    ws.cell(row=21, column=3).number_format = '"$"#,##0.00'
+    ws.cell(row=21, column=4).value = "=B21-C21"
+    ws.cell(row=21, column=4).number_format = '"$"#,##0.00'
+    ws.cell(row=21, column=5).value = "=IF(C21>0,(B21-C21)/C21,0)"
+    ws.cell(row=21, column=5).number_format = '0.0%'
+
+    # Conditional formatting on E21
+    ws.conditional_formatting.add(
+        "E21",
+        FormulaRule(formula=["E21>0.05"], fill=FILL_CF_GREEN, font=FONT_CF_GREEN)
+    )
+    ws.conditional_formatting.add(
+        "E21",
+        FormulaRule(formula=["E21<-0.05"], fill=FILL_CF_RED, font=FONT_CF_RED)
+    )
+
+    # Row 22: thin separator, then notes
+    note_cell = ws.cell(row=23, column=1,
+        value=f"[{loc_id}] Labor Cost requires manual entry — enter weekly labor total in the yellow B16 cell. "
+              "Phase 2 automates via Square Labor CSV import (PAY-01).")
     note_cell.font = Font(name="Calibri", size=10, italic=True, color="AAAAAA")
     note_cell.alignment = Alignment(wrap_text=True, horizontal="left")
-    ws.merge_cells(f"A{note_row}:E{note_row}")
-    ws.row_dimensions[note_row].height = 40
+    ws.merge_cells(f"A23:E23")
+    ws.row_dimensions[23].height = 32
+
+    freeze(ws, "B4")
 
 
 def build_summary(ws):
-    """Build the Summary tab (structure only — formulas in Plan 02)."""
+    """
+    Build the Summary tab with cross-tab references, WoW display, and conditional formatting.
+
+    Row layout:
+      1:  Title
+      2:  Week Ending (master date cell — drives all WoW lookups via calc tabs)
+      3:  blank separator
+      4:  Location column headers (MML | MMA | MM3 | TS1 | TS2)
+      5:  Net Revenue row
+      6:  WoW Net Revenue row
+      7:  Purchase Cost % row
+      8:  WoW Purchase Cost % row
+      9:  Labor Cost % row
+      10: WoW Labor Cost % row
+      11: Order Volume row
+      12: WoW Order Volume row
+      13: Avg Ticket row
+      14: WoW Avg Ticket row
+      15: blank
+      16: blank
+      17: Notes section header
+      18: Note: Purchase Cost %
+      19: Note: Labor Cost %
+      20: Note: Delivery revenue
+    """
     apply_tab_color(ws, TAB_AMBER)
 
-    # Row 1: Title
+    # --- Row 1: Title ---
     ws.merge_cells("A1:F1")
     title_cell = ws["A1"]
     title_cell.value     = "Weekly Report Summary"
     title_cell.font      = Font(name="Calibri", size=18, bold=True, color="1C3557")
-    title_cell.fill      = PatternFill("solid", fgColor="FFF2CC")
+    title_cell.fill      = FILL_AMBER_LIGHT
     title_cell.alignment = ALIGN_CENTER
     ws.row_dimensions[1].height = 36
 
-    # Row 2: Week Ending
+    # --- Row 2: Week Ending (master date — all calc tabs link to Summary!B2) ---
     ws.cell(row=2, column=1, value="Week Ending:").font = FONT_BOLD
-    week_cell = ws.cell(row=2, column=2, value="")
+    ws.cell(row=2, column=1).alignment = ALIGN_LEFT
+    week_cell = ws.cell(row=2, column=2)
     week_cell.number_format = "YYYY-MM-DD"
-    week_cell.fill = PatternFill("solid", fgColor="FFF9C4")
+    week_cell.fill = FILL_MANUAL_ENTRY
     week_note = Comment(
-        "Enter the Sunday date of the week you are reporting (e.g., 2026-03-15). "
-        "WoW comparison formulas reference this cell.",
+        "Enter the Sunday date for this reporting week (e.g., 2026-03-15). "
+        "All calc tabs link to this cell, so WoW comparisons update automatically.",
         "Build Script"
     )
     week_cell.comment = week_note
     ws.row_dimensions[2].height = 20
 
-    # Row 3: blank separator
+    # --- Row 3: blank separator ---
     ws.row_dimensions[3].height = 8
 
-    # Row 4: Column headers — blank | MML | MMA | MM3 | TS1 | TS2
-    loc_order = ["MML", "MMA", "MM3", "TS1", "TS2"]
+    # --- Row 4: Column headers ---
+    loc_order = LOC_ORDER  # ["MML", "MMA", "MM3", "TS1", "TS2"]
     loc_full  = [LOCATIONS[l] for l in loc_order]
 
     header_labels = [""] + loc_full
     for c_idx, label in enumerate(header_labels, start=1):
         cell = ws.cell(row=4, column=c_idx, value=label)
         cell.font      = FONT_HEADER
-        cell.fill      = PatternFill("solid", fgColor="434343")
+        cell.fill      = FILL_SUMMARY_HDR
         cell.alignment = ALIGN_CENTER
     ws.row_dimensions[4].height = 28
 
-    # Brand color bands — apply to rows 5-14 for Moto Medi (cols B-D) and Tikka Shack (cols E-F)
+    # --- Brand color bands (rows 5-14) ---
     for row in range(5, 15):
-        for col in range(2, 5):  # B-D = MML, MMA, MM3 = Moto Medi
+        for col in range(2, 5):   # B-D = MML, MMA, MM3 = Moto Medi
             ws.cell(row=row, column=col).fill = FILL_MOTO_MEDI
-        for col in range(5, 7):  # E-F = TS1, TS2 = Tikka Shack
+        for col in range(5, 7):   # E-F = TS1, TS2 = Tikka Shack
             ws.cell(row=row, column=col).fill = FILL_TIKKA_SHACK
 
-    # KPI rows (rows 5-14)
-    kpi_rows = [
-        (5,  "Net Revenue",      False),
-        (6,  "  WoW",            True),
-        (7,  "Purchase Cost %",  False),
-        (8,  "  WoW",            True),
-        (9,  "Labor Cost %",     False),
-        (10, "  WoW",            True),
-        (11, "Order Volume",     False),
-        (12, "  WoW",            True),
-        (13, "Avg Ticket",       False),
-        (14, "  WoW",            True),
-    ]
-    for (row_num, label, is_wow) in kpi_rows:
-        cell = ws.cell(row=row_num, column=1, value=label)
-        cell.font = Font(name="Calibri", size=11, italic=is_wow,
-                         color="666666" if is_wow else "111111",
-                         bold=not is_wow)
-        cell.alignment = ALIGN_LEFT
-        ws.row_dimensions[row_num].height = 20
+    # Column letters for each location
+    loc_cols = {
+        "MML": 2, "MMA": 3, "MM3": 4, "TS1": 5, "TS2": 6
+    }
 
-    # Freeze row 4 and column A
+    # -------------------------------------------------------------------
+    # KPI reference rows
+    # Calc tab row references:
+    #   Net Revenue   → {loc}-Calc!B9  (Prior: C9, WoW%: E9)
+    #   Purchase Cost → {loc}-Calc!B13 (Prior: C13, WoW%: E13)
+    #   Labor Cost    → {loc}-Calc!B17 (Prior: C17, WoW%: E17)
+    #   Orders        → {loc}-Calc!B20 (Prior: C20, WoW%: E20)
+    #   Avg Ticket    → {loc}-Calc!B21 (Prior: C21, WoW%: E21)
+    # -------------------------------------------------------------------
+
+    kpi_defs = [
+        # (metric_row, wow_row, label, calc_row, fmt_value, fmt_wow)
+        (5,  6,  "Net Revenue",     9,  '"$"#,##0',  '"+0.0%;-0.0%"'),
+        (7,  8,  "Purchase Cost %", 13, '0.0%',      '"+0.0%;-0.0%"'),
+        (9,  10, "Labor Cost %",    17, '0.0%',      '"+0.0%;-0.0%"'),
+        (11, 12, "Order Volume",    20, '#,##0',     '"+0.0%;-0.0%"'),
+        (13, 14, "Avg Ticket",      21, '"$"#,##0.00', '"+0.0%;-0.0%"'),
+    ]
+
+    for (metric_row, wow_row, label, calc_row, fmt_val, fmt_wow) in kpi_defs:
+        # --- Metric row label (col A) ---
+        cell_a = ws.cell(row=metric_row, column=1, value=label)
+        cell_a.font = FONT_BOLD
+        cell_a.alignment = ALIGN_LEFT
+
+        # --- WoW row label (col A) ---
+        cell_wow_a = ws.cell(row=wow_row, column=1, value="  WoW")
+        cell_wow_a.font = Font(name="Calibri", size=9, italic=True, color="666666")
+        cell_wow_a.alignment = ALIGN_LEFT
+        ws.row_dimensions[wow_row].height = 16
+
+        for loc_id in LOC_ORDER:
+            col = loc_cols[loc_id]
+            calc_tab = f"{loc_id}-Calc"
+
+            # Metric value cell
+            metric_cell = ws.cell(row=metric_row, column=col)
+            metric_cell.value = f"='{calc_tab}'!B{calc_row}"
+            metric_cell.number_format = fmt_val
+            metric_cell.alignment = ALIGN_CENTER
+
+            # WoW display cell — raw percentage (colored by conditional formatting)
+            wow_cell = ws.cell(row=wow_row, column=col)
+            wow_cell.value = f"='{calc_tab}'!E{calc_row}"
+            wow_cell.number_format = '+0.0%;-0.0%'
+            wow_cell.alignment = ALIGN_CENTER
+            wow_cell.font = Font(name="Calibri", size=9)
+
+            # Conditional formatting on WoW cell
+            col_letter = get_column_letter(col)
+            cf_ref = f"='{calc_tab}'!E{calc_row}"
+            ws.conditional_formatting.add(
+                f"{col_letter}{wow_row}",
+                FormulaRule(
+                    formula=[f"'{calc_tab}'!E{calc_row}>0.05"],
+                    fill=FILL_CF_GREEN,
+                    font=Font(name="Calibri", size=9, color="006100", bold=True)
+                )
+            )
+            ws.conditional_formatting.add(
+                f"{col_letter}{wow_row}",
+                FormulaRule(
+                    formula=[f"'{calc_tab}'!E{calc_row}<-0.05"],
+                    fill=FILL_CF_RED,
+                    font=Font(name="Calibri", size=9, color="9C0006", bold=True)
+                )
+            )
+
+    # --- Row 15-16: blank separators ---
+    ws.row_dimensions[15].height = 8
+    ws.row_dimensions[16].height = 8
+
+    # --- Row 17: Notes section header ---
+    ws.merge_cells("A17:F17")
+    notes_header = ws.cell(row=17, column=1, value="Notes")
+    notes_header.font = FONT_SECTION
+    notes_header.fill = FILL_SECTION_HDR
+
+    # --- Rows 18-20: Note text ---
+    notes = [
+        "Purchase Cost % = BEK food purchases (company-wide, divided by 5 locations) / net revenue. "
+        "Not true COGS — does not include inventory variance or waste.",
+        "Labor Cost % is estimated from manual entry in each Location Calc tab. "
+        "Phase 2 automates this via Square Labor CSV import.",
+        "All delivery revenue (DoorDash, UberEats, Grubhub) uses net payout after platform fees/commissions.",
+    ]
+    for i, note_text in enumerate(notes, start=18):
+        ws.merge_cells(f"A{18 + i - 18}:F{18 + i - 18}")
+        cell = ws.cell(row=18 + i - 18, column=1, value=note_text)
+        cell.font = Font(name="Calibri", size=10, italic=True, color="444444")
+        cell.alignment = Alignment(horizontal="left", vertical="top", wrap_text=True)
+        ws.row_dimensions[18 + i - 18].height = 30
+
+    # Freeze row 4 and column A (freeze at B5)
     freeze(ws, "B5")
 
     # Column widths
@@ -625,25 +1064,26 @@ def build_summary(ws):
         ws.column_dimensions[col_letter].width = 18
 
     # Print area
-    ws.print_area = "A1:F14"
+    ws.print_area = "A1:F20"
 
-    # Placeholder note
-    note_cell = ws.cell(row=16, column=1,
-        value="Formulas for all KPI cells will be added in Plan 02, after CSV column names are "
-              "confirmed with Rez's real exports. Brand color bands: columns B-D = Moto Medi (orange), "
-              "columns E-F = Tikka Shack (teal).")
-    note_cell.font = Font(name="Calibri", size=10, italic=True, color="AAAAAA")
-    note_cell.alignment = Alignment(wrap_text=True, horizontal="left")
-    ws.merge_cells("A16:F16")
-    ws.row_dimensions[16].height = 50
+    # Add thin bottom borders between metric groups
+    thin_side = Side(style="thin", color="CCCCCC")
+    thin_border = Border(bottom=thin_side)
+    for row_num in [6, 8, 10, 12, 14]:
+        for col in range(1, 7):
+            ws.cell(row=row_num, column=col).border = thin_border
 
 
 # ==============================================================================
 # MAIN
 # ==============================================================================
 
-def build_workbook():
+def build_workbook(output_path=None):
+    if output_path is None:
+        output_path = DEFAULT_OUTPUT
+
     print("Building Rez Weekly Report workbook...")
+    print(f"Output: {output_path}")
 
     wb = Workbook()
 
@@ -675,12 +1115,13 @@ def build_workbook():
         apply_tab_color(ws, tab_color)
         builder_fn(ws)
 
-    print(f"\nSaving workbook to: {OUTPUT_PATH}")
-    wb.save(OUTPUT_PATH)
-    print(f"Done. File saved: {OUTPUT_PATH}")
+    print(f"\nSaving workbook to: {output_path}")
+    wb.save(output_path)
+    print(f"Done. File saved: {output_path}")
+    print(f"Total tabs: {len(tab_defs)}")
 
     # Quick sanity check
-    wb2 = openpyxl.load_workbook(OUTPUT_PATH)
+    wb2 = openpyxl.load_workbook(output_path)
     expected_tabs = [t[0] for t in tab_defs]
     actual_tabs   = wb2.sheetnames
     if actual_tabs != expected_tabs:
@@ -688,8 +1129,12 @@ def build_workbook():
     else:
         print(f"Verified: All {len(expected_tabs)} tabs present in correct order.")
 
-    return OUTPUT_PATH
+    return output_path
 
 
 if __name__ == "__main__":
-    build_workbook()
+    parser = argparse.ArgumentParser(description="Build Rez Weekly Report workbook")
+    parser.add_argument("--output", default=None,
+                        help="Output path for the .xlsx file (default: Rez-Weekly-Report.xlsx in project root)")
+    args = parser.parse_args()
+    build_workbook(output_path=args.output)
