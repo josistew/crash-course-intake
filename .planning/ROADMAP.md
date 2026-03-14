@@ -28,10 +28,11 @@ Decimal phases appear between their surrounding integers in numeric order.
   3. The consolidated summary tab shows all 5 locations side-by-side with Moto Medi and Tikka Shack grouped separately
   4. Week-over-week comparison highlights any metric that moved more than 5% in red (decline) or green (gain) — correct even when prior week had different column ordering in the paste
   5. Formulas survive CSV column reordering from any platform (MATCH-based, not fixed column index)
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
-- [ ] 01-01: TBD
+- [ ] 01-01-PLAN.md — Workbook scaffold: 14 tabs, import tab layouts with placeholder headers and validation rows, Instructions tab, Employee Roster, sample data
+- [ ] 01-02-PLAN.md — Formula engine: MATCH-based SUMIFS on calc tabs, Summary tab with cross-tab KPIs and WoW variance formatting
 
 ### Phase 2: Payroll Prep
 **Goal**: Operators can paste Square labor CSV and immediately see daily/weekly hours per employee, overtime flags, pay tier milestones, and a Gusto-ready output tab — all cross-location before overtime threshold is applied.
@@ -69,6 +70,6 @@ Phases execute in numeric order: 1 → 2 → 3
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Weekly Reporting | 0/TBD | Not started | - |
+| 1. Weekly Reporting | 0/2 | Planning complete | - |
 | 2. Payroll Prep | 0/TBD | Not started | - |
 | 3. Daily Checklist App | 0/TBD | Not started | - |
