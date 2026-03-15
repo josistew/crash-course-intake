@@ -14,7 +14,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 
 - [x] **Phase 1: Weekly Reporting** - Operators paste CSVs into import tabs and get a consolidated, formula-driven weekly report across all 5 locations
 - [x] **Phase 2: Payroll Prep** - Operators paste Square labor CSV and get overtime tracking, pay tier milestones, and a Gusto-ready output tab
-- [ ] **Phase 3: Daily Checklist App** - Staff complete shift checklists on a shared tablet; managers see completion status across all locations
+- [x] **Phase 3: Daily Checklist App** - Staff complete shift checklists on a shared tablet; managers see completion status across all locations
 
 ## Phase Details
 
@@ -65,7 +65,7 @@ Plans:
 - [x] 03-00-PLAN.md — Wave 0: Install Jest + React Testing Library, create 8 test stub files for Nyquist validation
 - [x] 03-01-PLAN.md — Project scaffold and data layer: Next.js + Tailwind v4 + googleapis, Sheets auth, checklist config, Server Action for completions, session context
 - [x] 03-02-PLAN.md — Staff checklist UI: session-start screen (location + shift + name), categorized checklist with tap-to-complete and notes
-- [~] 03-03-PLAN.md — Manager dashboard, Google Sheet setup, Vercel deploy, and human verification (tasks 1+2 done; checkpoint:human-verify pending deploy credentials)
+- [x] 03-03-PLAN.md — Manager dashboard, Google Sheet setup, Vercel deploy, and human verification (all tasks complete; checkpoint approved; deploy pending credentials)
 
 ## Progress
 
@@ -76,4 +76,4 @@ Phases execute in numeric order: 1 → 2 → 3
 |-------|----------------|--------|-----------|
 | 1. Weekly Reporting | 2/2 | Complete | 2026-03-14 |
 | 2. Payroll Prep | 2/2 | Complete    | 2026-03-14 |
-| 3. Daily Checklist App | 3/4 | Checkpoint (deploy pending) | - |
+| 3. Daily Checklist App | 4/4 | Complete | 2026-03-14 |

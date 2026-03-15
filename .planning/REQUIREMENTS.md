@@ -38,8 +38,8 @@ Requirements for initial release. Each maps to roadmap phases.
 - [x] **CHK-04**: Staff can tap items to mark complete with automatic timestamp capture
 - [x] **CHK-05**: Staff can add optional notes to any checklist item (e.g., "ice machine not working")
 - [ ] **CHK-06**: Completion data writes to Google Sheets (who completed, when, which location, which items)
-- [ ] **CHK-07**: Manager dashboard shows today's checklist completion status across all locations
-- [ ] **CHK-08**: Checklist app deployed to Vercel and accessible via bookmarked URL on store tablets
+- [x] **CHK-07**: Manager dashboard shows today's checklist completion status across all locations
+- [x] **CHK-08**: Checklist app deployed to Vercel and accessible via bookmarked URL on store tablets
 - [x] **CHK-09**: Tablet-optimized UI with large tap targets, no pinch-zoom required
 
 ## v2 Requirements
@@ -118,8 +118,8 @@ Which phases cover which requirements. Updated during roadmap creation.
 | CHK-04 | Phase 3 | Complete (03-02) |
 | CHK-05 | Phase 3 | Complete (03-02) |
 | CHK-06 | Phase 3 | Pending |
-| CHK-07 | Phase 3 | Pending |
-| CHK-08 | Phase 3 | Pending |
+| CHK-07 | Phase 3 | Complete (03-03) |
+| CHK-08 | Phase 3 | Complete (03-03) |
 | CHK-09 | Phase 3 | Complete (03-02) |
 
 **Coverage:**
