@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: in-progress
-stopped_at: Plan 03-02 complete. Staff checklist UI built — session-start screen, categorized checklist with tap-to-complete, optimistic UI, notes. 16 new tests, 35 total passing. Ready for 03-03 manager dashboard + deploy.
-last_updated: "2026-03-15T04:06:19Z"
-last_activity: "2026-03-15 — Plan 03-02 complete: full staff checklist flow, 16 new tests passing (35 total)"
+stopped_at: Plan 03-03 tasks 1+2 complete. Manager dashboard built (API + UI + tests). Stopped at checkpoint:human-verify — awaiting Vercel deploy credentials and human verification.
+last_updated: "2026-03-14T18:00:00Z"
+last_activity: "2026-03-14 — Plan 03-03 tasks 1+2 complete: manager dashboard API+UI, 4 new tests (39 total). Checkpoint awaiting deploy credentials."
 progress:
   total_phases: 3
   completed_phases: 2
   total_plans: 4
   completed_plans: 6
-  percent: 87
+  percent: 93
 ---
 
 # Project State
@@ -25,12 +25,12 @@ See: .planning/PROJECT.md (updated 2026-03-14)
 
 ## Current Position
 
-Phase: 3 of 3 (Daily Checklist App) — IN PROGRESS
-Plan: 03-02 complete — staff UI done; 03-03 (manager dashboard + deploy) is next
-Status: Session-start screen, LocationShiftSelector, NameEntry, ChecklistItem (optimistic), ChecklistCategory, checklist/page.tsx all built. 35 tests passing. Ready for manager dashboard and Vercel deploy.
-Last activity: 2026-03-15 — Plan 03-02 complete: full staff checklist flow, 16 new tests passing (35 total)
+Phase: 3 of 3 (Daily Checklist App) — IN PROGRESS (checkpoint)
+Plan: 03-03 tasks 1+2 complete — manager dashboard API + UI built; stopped at checkpoint:human-verify awaiting Vercel deploy + human verification
+Status: /dashboard route reads Manager-View tab, computes status for 5 locations × 2 shifts, auto-refreshes every 60s. 39 tests passing. vercel.json + DEPLOY.md prepared. Needs: Google service account credentials + Vercel deploy execution.
+Last activity: 2026-03-14 — Plan 03-03 tasks 1+2 complete: manager dashboard, 4 new tests (39 total), deploy guide
 
-Progress: [████████░░] 83%
+Progress: [█████████░] 93%
 
 ## Performance Metrics
 
@@ -45,7 +45,7 @@ Progress: [████████░░] 83%
 |-------|-------|-------|----------|
 | 1. Weekly Reporting | 2 | 10 min | 5 min |
 | 2. Payroll Prep | 1.5 | 11 min | ~5 min |
-| 3. Daily Checklist App | 0.5 | 19 min | ~9.5 min |
+| 3. Daily Checklist App | 2.5 | 36 min | ~14.4 min |
 
 **Recent Trend:**
 - Last 5 plans: 01-01 (5 min), 01-02 (5 min), 02-01 (4 min), 02-02 Task 1 (7 min), 03-00 (4 min)
@@ -91,10 +91,13 @@ Recent decisions affecting current work:
 - [03-02]: onItemComplete propagated upward — ChecklistItem calls prop after successful appendCompletion so checklist/page.tsx tracks global completion count in a Set<string>
 - [03-02]: CSS-in-JSX scoped styles — used inline <style> blocks per component to avoid Tailwind v4 custom class conflicts; keeps all component styles self-contained
 - [03-02]: completedIds Set in parent — checklist/page.tsx owns completion tracking for global summary; individual ChecklistItem still owns its own completed/pending visual state
+- [03-03]: next/server mock in Jest — NextResponse requires Request global unavailable in jsdom; replaced with minimal MockResponse in jest.mock('next/server') so route handler is testable
+- [03-03]: Vercel deploy deferred — no Google service account credentials; vercel.json + DEPLOY.md prepared; deploy executes after human checkpoint
+- [03-03]: Brand-grouped dashboard — Moto Medi (copper) and Tikka Shack (teal) separated visually, matching ops reporting workbook grouping
 
 ### Pending Todos
 
-- Wave 2: 03-03 (manager dashboard, Google Sheet setup, Vercel deploy)
+- Complete 03-03 human verification checkpoint: deploy to Vercel, set GOOGLE_SERVICE_ACCOUNT_KEY + CHECKLIST_SHEET_ID env vars, verify full end-to-end flow on tablet
 
 ### Blockers/Concerns
 
@@ -106,5 +109,5 @@ Recent decisions affecting current work:
 
 ## Session Continuity
 
-Last session: 2026-03-15
-Stopped at: Plan 03-02 complete. Full staff checklist UI built (session-start screen + checklist page). 35 tests passing. Ready for 03-03 manager dashboard + Vercel deploy.
+Last session: 2026-03-14
+Stopped at: Plan 03-03 checkpoint:human-verify. Manager dashboard built (API + UI + 4 tests, 39 total). vercel.json + DEPLOY.md ready. Awaiting Google service account credentials to complete Vercel deploy and human verification.
