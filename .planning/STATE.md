@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: verifying
-stopped_at: Plan 02-02 complete (all tasks done, human-verify approved). Phase 2 complete. Ready to begin Phase 3 — Tablet Checklist.
-last_updated: "2026-03-14T20:29:07.774Z"
-last_activity: "2026-03-14 — Plan 02-02 complete: human-verify checkpoint approved by user"
+status: in-progress
+stopped_at: Plan 03-00 complete. Jest + RTL installed, 8 test stubs created in rez-checklist. 03-01 running in parallel (Wave 0).
+last_updated: "2026-03-15T03:13:00Z"
+last_activity: "2026-03-15 — Plan 03-00 complete: Jest test infrastructure and all 8 test stubs created"
 progress:
   total_phases: 3
   completed_phases: 2
   total_plans: 4
-  completed_plans: 4
-  percent: 80
+  completed_plans: 5
+  percent: 83
 ---
 
 # Project State
@@ -21,23 +21,23 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-14)
 
 **Core value:** Eliminate hours of manual weekly reporting across 5 locations by consolidating Square, delivery platforms, and BEK Entree data into a single automated view.
-**Current focus:** Phase 2 — Payroll Prep
+**Current focus:** Phase 3 — Daily Checklist App
 
 ## Current Position
 
-Phase: 2 of 3 (Payroll Prep) — COMPLETE
-Plan: All 2 plans complete — ready for Phase 3 (Tablet Checklist)
-Status: Phase 2 complete — Overtime-Tracker, Payroll-Output, Labor-Import all built; human-verify checkpoint approved; 17-tab workbook confirmed
-Last activity: 2026-03-14 — Plan 02-02 complete: human-verify checkpoint approved by user
+Phase: 3 of 3 (Daily Checklist App) — IN PROGRESS
+Plan: 03-00 complete — Jest infrastructure done; 03-01 running in parallel (Wave 0)
+Status: Wave 0 test stubs complete — rez-checklist project exists at /Users/josi/rez-checklist/ with Jest 30 + RTL configured
+Last activity: 2026-03-15 — Plan 03-00 complete: Jest test infrastructure and all 8 test stubs created
 
-Progress: [████████░░] 80%
+Progress: [████████░░] 83%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 3 (02-02 partially complete — at checkpoint)
-- Average duration: 5 minutes
-- Total execution time: 0.3 hours
+- Total plans completed: 5
+- Average duration: ~5 minutes
+- Total execution time: ~0.35 hours
 
 **By Phase:**
 
@@ -45,9 +45,10 @@ Progress: [████████░░] 80%
 |-------|-------|-------|----------|
 | 1. Weekly Reporting | 2 | 10 min | 5 min |
 | 2. Payroll Prep | 1.5 | 11 min | ~5 min |
+| 3. Daily Checklist App | 0.25 | 4 min | - |
 
 **Recent Trend:**
-- Last 5 plans: 01-01 (5 min), 01-02 (5 min), 02-01 (4 min), 02-02 Task 1 (7 min)
+- Last 5 plans: 01-01 (5 min), 01-02 (5 min), 02-01 (4 min), 02-02 Task 1 (7 min), 03-00 (4 min)
 - Trend: Stable
 
 *Updated after each plan completion*
@@ -77,10 +78,15 @@ Recent decisions affecting current work:
 - [02-01]: Conditional formatting stopIfTrue=True on red/overdue rule to prevent amber rule also firing for overdue cells
 - [02-02]: SUMIFS formulas use INDEX/MATCH for column resolution on Labor-Import (MATCH targets row 2, not row 1, because row 1 is PLACEHOLDER notice)
 - [02-02]: VLOOKUP in Payroll-Output uses Employee-Roster col B (Square Name) as key — col D (Hourly Rate) is 3rd column in B:D range
+- [03-00]: Used next/jest wrapper (not raw ts-jest) so Next.js CSS/image transforms are handled automatically
+- [03-00]: Removed conflicting jest key from package.json (create-next-app generated one) — jest.config.ts is the single source of truth
+- [03-00]: testPathPattern replaced with testMatch glob — deprecated in Jest 30
 
 ### Pending Todos
 
-- Begin Phase 3: Tablet Checklist (Next.js + Vercel + Google Sheets data store)
+- Complete Phase 3 Wave 0: 03-01 (scaffold + data layer) running in parallel
+- Then Wave 1: 03-02 (staff checklist UI)
+- Then Wave 2: 03-03 (manager dashboard + deploy)
 
 ### Blockers/Concerns
 
@@ -92,5 +98,5 @@ Recent decisions affecting current work:
 
 ## Session Continuity
 
-Last session: 2026-03-14
-Stopped at: Plan 02-02 complete (all tasks done, human-verify approved). Phase 2 complete. Ready to begin Phase 3 — Tablet Checklist.
+Last session: 2026-03-15
+Stopped at: Plan 03-00 complete. Jest + RTL installed, 8 test stubs created in rez-checklist. 03-01 running in parallel (Wave 0).
