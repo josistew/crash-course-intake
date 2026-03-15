@@ -32,15 +32,15 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Daily Checklist
 
-- [ ] **CHK-01**: Staff can select their location and shift type (Opening/Closing) on a tablet-friendly interface
-- [ ] **CHK-02**: Staff can enter their name at shift start (no password/login required)
-- [ ] **CHK-03**: Checklist displays categorized items: opening procedures, closing procedures, cleaning/sanitation, equipment checks
-- [ ] **CHK-04**: Staff can tap items to mark complete with automatic timestamp capture
-- [ ] **CHK-05**: Staff can add optional notes to any checklist item (e.g., "ice machine not working")
+- [x] **CHK-01**: Staff can select their location and shift type (Opening/Closing) on a tablet-friendly interface
+- [x] **CHK-02**: Staff can enter their name at shift start (no password/login required)
+- [x] **CHK-03**: Checklist displays categorized items: opening procedures, closing procedures, cleaning/sanitation, equipment checks
+- [x] **CHK-04**: Staff can tap items to mark complete with automatic timestamp capture
+- [x] **CHK-05**: Staff can add optional notes to any checklist item (e.g., "ice machine not working")
 - [ ] **CHK-06**: Completion data writes to Google Sheets (who completed, when, which location, which items)
 - [ ] **CHK-07**: Manager dashboard shows today's checklist completion status across all locations
 - [ ] **CHK-08**: Checklist app deployed to Vercel and accessible via bookmarked URL on store tablets
-- [ ] **CHK-09**: Tablet-optimized UI with large tap targets, no pinch-zoom required
+- [x] **CHK-09**: Tablet-optimized UI with large tap targets, no pinch-zoom required
 
 ## v2 Requirements
 
@@ -112,15 +112,15 @@ Which phases cover which requirements. Updated during roadmap creation.
 | PAY-05 | Phase 2 | Pending |
 | PAY-06 | Phase 2 | Pending |
 | PAY-07 | Phase 2 | Complete (02-02) |
-| CHK-01 | Phase 3 | Pending |
-| CHK-02 | Phase 3 | Pending |
-| CHK-03 | Phase 3 | Pending |
-| CHK-04 | Phase 3 | Pending |
-| CHK-05 | Phase 3 | Pending |
+| CHK-01 | Phase 3 | Complete (03-02) |
+| CHK-02 | Phase 3 | Complete (03-02) |
+| CHK-03 | Phase 3 | Complete (03-02) |
+| CHK-04 | Phase 3 | Complete (03-02) |
+| CHK-05 | Phase 3 | Complete (03-02) |
 | CHK-06 | Phase 3 | Pending |
 | CHK-07 | Phase 3 | Pending |
 | CHK-08 | Phase 3 | Pending |
-| CHK-09 | Phase 3 | Pending |
+| CHK-09 | Phase 3 | Complete (03-02) |
 
 **Coverage:**
 - v1 requirements: 26 total

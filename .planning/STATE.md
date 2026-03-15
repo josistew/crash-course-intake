@@ -3,9 +3,9 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: in-progress
-stopped_at: Plan 03-01 complete. Next.js scaffold, Tailwind v4, Barlow Condensed font, warm industrial theme, full data layer (types, sheets, checklist-config, appendCompletion Server Action, SessionContext) done. Ready for 03-02 staff UI.
-last_updated: "2026-03-15T03:23:00Z"
-last_activity: "2026-03-15 — Plan 03-01 complete: Next.js scaffold + data layer, all 19 tests passing"
+stopped_at: Plan 03-02 complete. Staff checklist UI built — session-start screen, categorized checklist with tap-to-complete, optimistic UI, notes. 16 new tests, 35 total passing. Ready for 03-03 manager dashboard + deploy.
+last_updated: "2026-03-15T04:06:19Z"
+last_activity: "2026-03-15 — Plan 03-02 complete: full staff checklist flow, 16 new tests passing (35 total)"
 progress:
   total_phases: 3
   completed_phases: 2
@@ -26,9 +26,9 @@ See: .planning/PROJECT.md (updated 2026-03-14)
 ## Current Position
 
 Phase: 3 of 3 (Daily Checklist App) — IN PROGRESS
-Plan: 03-01 complete — data layer done; 03-02 (staff UI) is next
-Status: Scaffold + data layer complete — Barlow Condensed font, copper/charcoal theme, googleapis read-write auth, checklist config, appendCompletion Server Action (INSERT_ROWS + backoff), SessionContext (in-memory); 19 tests passing
-Last activity: 2026-03-15 — Plan 03-01 complete: Next.js scaffold + full data layer, 19 tests passing
+Plan: 03-02 complete — staff UI done; 03-03 (manager dashboard + deploy) is next
+Status: Session-start screen, LocationShiftSelector, NameEntry, ChecklistItem (optimistic), ChecklistCategory, checklist/page.tsx all built. 35 tests passing. Ready for manager dashboard and Vercel deploy.
+Last activity: 2026-03-15 — Plan 03-02 complete: full staff checklist flow, 16 new tests passing (35 total)
 
 Progress: [████████░░] 83%
 
@@ -87,10 +87,13 @@ Recent decisions affecting current work:
 - [03-01]: Barlow Condensed chosen as display font — bold, industrial, legible at large sizes on tablets; avoids generic AI defaults
 - [03-01]: Warm industrial theme (deep charcoal #1a1714 + copper #c8702a) — references kitchen/ops environment
 - [03-01]: Checklist items hardcoded as placeholders — getItemsForSession filter already supports locationOverride for future per-location customization
+- [03-02]: onComplete callback pattern — LocationShiftSelector fires when both location+shift selected regardless of order; either tap can trigger completion if the other is already chosen
+- [03-02]: onItemComplete propagated upward — ChecklistItem calls prop after successful appendCompletion so checklist/page.tsx tracks global completion count in a Set<string>
+- [03-02]: CSS-in-JSX scoped styles — used inline <style> blocks per component to avoid Tailwind v4 custom class conflicts; keeps all component styles self-contained
+- [03-02]: completedIds Set in parent — checklist/page.tsx owns completion tracking for global summary; individual ChecklistItem still owns its own completed/pending visual state
 
 ### Pending Todos
 
-- Wave 1: 03-02 (staff checklist UI — session-start screen, categorized checklist with tap-to-complete)
 - Wave 2: 03-03 (manager dashboard, Google Sheet setup, Vercel deploy)
 
 ### Blockers/Concerns
@@ -104,4 +107,4 @@ Recent decisions affecting current work:
 ## Session Continuity
 
 Last session: 2026-03-15
-Stopped at: Plan 03-01 complete. Next.js scaffold + full data layer built. Ready for 03-02 staff UI.
+Stopped at: Plan 03-02 complete. Full staff checklist UI built (session-start screen + checklist page). 35 tests passing. Ready for 03-03 manager dashboard + Vercel deploy.

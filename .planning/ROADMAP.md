@@ -64,7 +64,7 @@ Plans:
 Plans:
 - [x] 03-00-PLAN.md — Wave 0: Install Jest + React Testing Library, create 8 test stub files for Nyquist validation
 - [x] 03-01-PLAN.md — Project scaffold and data layer: Next.js + Tailwind v4 + googleapis, Sheets auth, checklist config, Server Action for completions, session context
-- [ ] 03-02-PLAN.md — Staff checklist UI: session-start screen (location + shift + name), categorized checklist with tap-to-complete and notes
+- [x] 03-02-PLAN.md — Staff checklist UI: session-start screen (location + shift + name), categorized checklist with tap-to-complete and notes
 - [ ] 03-03-PLAN.md — Manager dashboard, Google Sheet setup, Vercel deploy, and human verification
 
 ## Progress
@@ -76,4 +76,4 @@ Phases execute in numeric order: 1 → 2 → 3
 |-------|----------------|--------|-----------|
 | 1. Weekly Reporting | 2/2 | Complete | 2026-03-14 |
 | 2. Payroll Prep | 2/2 | Complete    | 2026-03-14 |
-| 3. Daily Checklist App | 2/4 | In progress | - |
+| 3. Daily Checklist App | 3/4 | In progress | - |
