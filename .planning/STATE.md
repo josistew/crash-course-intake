@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: in-progress
-stopped_at: Plan 03-00 complete. Jest + RTL installed, 8 test stubs created in rez-checklist. 03-01 running in parallel (Wave 0).
-last_updated: "2026-03-15T03:13:00Z"
-last_activity: "2026-03-15 — Plan 03-00 complete: Jest test infrastructure and all 8 test stubs created"
+stopped_at: Plan 03-01 complete. Next.js scaffold, Tailwind v4, Barlow Condensed font, warm industrial theme, full data layer (types, sheets, checklist-config, appendCompletion Server Action, SessionContext) done. Ready for 03-02 staff UI.
+last_updated: "2026-03-15T03:23:00Z"
+last_activity: "2026-03-15 — Plan 03-01 complete: Next.js scaffold + data layer, all 19 tests passing"
 progress:
   total_phases: 3
   completed_phases: 2
   total_plans: 4
-  completed_plans: 5
-  percent: 83
+  completed_plans: 6
+  percent: 87
 ---
 
 # Project State
@@ -26,9 +26,9 @@ See: .planning/PROJECT.md (updated 2026-03-14)
 ## Current Position
 
 Phase: 3 of 3 (Daily Checklist App) — IN PROGRESS
-Plan: 03-00 complete — Jest infrastructure done; 03-01 running in parallel (Wave 0)
-Status: Wave 0 test stubs complete — rez-checklist project exists at /Users/josi/rez-checklist/ with Jest 30 + RTL configured
-Last activity: 2026-03-15 — Plan 03-00 complete: Jest test infrastructure and all 8 test stubs created
+Plan: 03-01 complete — data layer done; 03-02 (staff UI) is next
+Status: Scaffold + data layer complete — Barlow Condensed font, copper/charcoal theme, googleapis read-write auth, checklist config, appendCompletion Server Action (INSERT_ROWS + backoff), SessionContext (in-memory); 19 tests passing
+Last activity: 2026-03-15 — Plan 03-01 complete: Next.js scaffold + full data layer, 19 tests passing
 
 Progress: [████████░░] 83%
 
@@ -45,7 +45,7 @@ Progress: [████████░░] 83%
 |-------|-------|-------|----------|
 | 1. Weekly Reporting | 2 | 10 min | 5 min |
 | 2. Payroll Prep | 1.5 | 11 min | ~5 min |
-| 3. Daily Checklist App | 0.25 | 4 min | - |
+| 3. Daily Checklist App | 0.5 | 19 min | ~9.5 min |
 
 **Recent Trend:**
 - Last 5 plans: 01-01 (5 min), 01-02 (5 min), 02-01 (4 min), 02-02 Task 1 (7 min), 03-00 (4 min)
@@ -81,12 +81,17 @@ Recent decisions affecting current work:
 - [03-00]: Used next/jest wrapper (not raw ts-jest) so Next.js CSS/image transforms are handled automatically
 - [03-00]: Removed conflicting jest key from package.json (create-next-app generated one) — jest.config.ts is the single source of truth
 - [03-00]: testPathPattern replaced with testMatch glob — deprecated in Jest 30
+- [03-01]: Read-write spreadsheets scope (not readonly) — completions Server Action requires append access
+- [03-01]: INSERT_ROWS (not OVERWRITE) for concurrent tablet safety — multiple tablets may write simultaneously
+- [03-01]: In-memory React context only for session state — prevents ghost sessions on shared tablets
+- [03-01]: Barlow Condensed chosen as display font — bold, industrial, legible at large sizes on tablets; avoids generic AI defaults
+- [03-01]: Warm industrial theme (deep charcoal #1a1714 + copper #c8702a) — references kitchen/ops environment
+- [03-01]: Checklist items hardcoded as placeholders — getItemsForSession filter already supports locationOverride for future per-location customization
 
 ### Pending Todos
 
-- Complete Phase 3 Wave 0: 03-01 (scaffold + data layer) running in parallel
-- Then Wave 1: 03-02 (staff checklist UI)
-- Then Wave 2: 03-03 (manager dashboard + deploy)
+- Wave 1: 03-02 (staff checklist UI — session-start screen, categorized checklist with tap-to-complete)
+- Wave 2: 03-03 (manager dashboard, Google Sheet setup, Vercel deploy)
 
 ### Blockers/Concerns
 
@@ -99,4 +104,4 @@ Recent decisions affecting current work:
 ## Session Continuity
 
 Last session: 2026-03-15
-Stopped at: Plan 03-00 complete. Jest + RTL installed, 8 test stubs created in rez-checklist. 03-01 running in parallel (Wave 0).
+Stopped at: Plan 03-01 complete. Next.js scaffold + full data layer built. Ready for 03-02 staff UI.
